@@ -1,27 +1,33 @@
 import { describe, expect, it } from "vitest";
 import { autoReport } from "./auto.js";
+import type { Archetype, AutoReportOptions } from "./auto.js";
+import { buildChart } from "./chart/build.js";
+import { chartToSvg } from "./chart/svg.js";
 import { evaluateMeasure } from "./data/measure.js";
 import { isStockMeasure } from "./data/profile.js";
 import { createDataContext } from "./data/resolve.js";
 import { renderTemplate } from "./data/template.js";
 import type { DataContext } from "./data/types.js";
 import { toNumber } from "./data/values.js";
+import { inspectReport } from "./inspect.js";
 import { ReportSpec } from "./spec.js";
-import type { Block, ChartSpec, Measure } from "./spec.js";
+import type { Block, ChartSpec, Measure, Row } from "./spec.js";
+import { validateReport } from "./validate.js";
 import { ordersPayload, saasRows, salesRows, ticketRows, trafficCsv } from "../../../examples/playground/src/samples.js";
 
 const maxAbs = (ctx: DataContext, data: string, field: string) =>
   Math.max(0, ...ctx.datasets.get(data)!.rows.map((r) => Math.abs(toNumber(r[field]) ?? 0)));
 
-/** Parse, resolve and render every template, and enforce the draft's reading-order invariants. */
-function check(input: unknown, opts?: Parameters<typeof autoReport>[1]) {
+/** Invariants of every archetype: valid spec, resolvable data, bound numbers, unique ids, no level metric summed across periods. */
+function checkDraft(input: unknown, opts?: AutoReportOptions) {
   const draft = autoReport(input, opts);
   // Must be JSON-serializable as an agent would send it.
   const spec = ReportSpec.parse(JSON.parse(JSON.stringify(draft)));
   const { context, issues } = createDataContext(spec);
   expect(issues).toEqual([]);
+  expect(validateReport(spec).issues.filter((i) => i.severity === "error")).toEqual([]);
   const blocks = spec.sections.flatMap((s) => s.blocks);
-  const texts = [spec.summary ?? "", ...blocks.flatMap((b) => (b.type === "text" ? [b.content] : []))];
+  const texts = [spec.summary ?? "", ...blocks.flatMap((b) => (b.type === "text" || b.type === "callout" ? [b.content] : []))];
   for (const t of texts) {
     expect(t).toMatch(/\{\{/);
     expect(renderTemplate(t, context).issues).toEqual([]);
@@ -29,8 +35,40 @@ function check(input: unknown, opts?: Parameters<typeof autoReport>[1]) {
   const ids = [...spec.sections.map((s) => s.id), ...blocks.map((b) => b.id), ...Object.keys(spec.datasets)];
   for (const id of ids) expect(id).toMatch(/^[a-z][a-z0-9_]*$/);
   expect(new Set(ids).size).toBe(ids.length);
-
+  const values = blocks.flatMap((b) =>
+    b.type === "kpi" ? b.items.flatMap((k) => [k.value, ...(k.compareTo === undefined ? [] : [k.compareTo])]) : b.type === "comparison" ? b.metrics.flatMap((m) => m.values) : [],
+  );
+  for (const v of values) expect(isMeasure(v)).toBe(true);
+  // Aggregation sanity: rates are never summed; level metrics are never summed across periods.
+  for (const [id, ds] of Object.entries(spec.datasets)) {
+    const source = ds.from === undefined ? undefined : context.datasets.get(ds.from);
+    if (!source) continue;
+    const times = source.fields.filter((f) => f.type === "date" || /month|week|year/.test(f.name)).map((f) => f.name);
+    (ds.transform ?? []).forEach((t, i) => {
+      if (t.op !== "aggregate") return;
+      for (const m of t.measures) {
+        const f = source.fields.find((x) => x.name === m.field);
+        if (f?.format === "percent" || /rate|ratio/.test(m.field ?? "")) expect(m.agg, `${id}: ${m.field}`).not.toBe("sum");
+        if (m.agg !== "sum" || !m.field || !isStockMeasure(m.field) || t.groupBy.some((g) => times.includes(g))) continue;
+        const pinned = (ds.transform ?? []).slice(0, i).some((p) => p.op === "filter" && times.some((tf) => p.expr.startsWith(`\`${tf}\` ==`)));
+        expect(pinned, `${id} sums level metric ${m.field} across periods`).toBe(true);
+      }
+    });
+  }
   const charts: ChartSpec[] = blocks.flatMap((b) => (b.type === "chart" ? [b.chart] : []));
+  // Every chart renders with data and without engine complaints (wrong encodings, ignored options).
+  for (const c of charts) {
+    const model = buildChart(c, context, { width: 640, height: 320 });
+    expect(model.empty, `${c.kind} ${c.data}`).toBe(false);
+    expect(model.warnings, `${c.kind} ${c.data}`).toEqual([]);
+    expect(chartToSvg(model)).toMatch(/^<svg/);
+  }
+  return { spec, context, blocks, charts };
+}
+
+/** checkDraft plus the overview's reading-order invariants. */
+function check(input: unknown, opts?: AutoReportOptions) {
+  const { spec, context, blocks, charts } = checkDraft(input, opts);
   expect(charts.length).toBeLessThanOrEqual(3);
   // One chart per dimension: no two charts share an x field.
   expect(new Set(charts.map((c) => c.x)).size).toBe(charts.length);
@@ -51,30 +89,10 @@ function check(input: unknown, opts?: Parameters<typeof autoReport>[1]) {
   });
   const kpiItems = blocks.flatMap((b) => (b.type === "kpi" ? b.items : []));
   expect(kpiItems.length).toBeLessThanOrEqual(3);
-  for (const k of kpiItems) {
-    expect(k.sparkline).toBeUndefined();
-    expect(isMeasure(k.value)).toBe(true);
-    if (k.compareTo !== undefined) expect(isMeasure(k.compareTo)).toBe(true);
-  }
+  for (const k of kpiItems) expect(k.sparkline).toBeUndefined();
   const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
   expect(table.maxRows).toBe(20);
   for (const col of table.columns ?? []) expect(col.emphasis).toBeUndefined();
-  // Aggregation sanity: rates are never summed; level metrics are never summed across periods.
-  for (const [id, ds] of Object.entries(spec.datasets)) {
-    const source = ds.from === undefined ? undefined : context.datasets.get(ds.from);
-    if (!source) continue;
-    const times = source.fields.filter((f) => f.type === "date" || /month|week|year/.test(f.name)).map((f) => f.name);
-    (ds.transform ?? []).forEach((t, i) => {
-      if (t.op !== "aggregate") return;
-      for (const m of t.measures) {
-        const f = source.fields.find((x) => x.name === m.field);
-        if (f?.format === "percent" || /rate|ratio/.test(m.field ?? "")) expect(m.agg, `${id}: ${m.field}`).not.toBe("sum");
-        if (m.agg !== "sum" || !m.field || !isStockMeasure(m.field) || t.groupBy.some((g) => times.includes(g))) continue;
-        const pinned = (ds.transform ?? []).slice(0, i).some((p) => p.op === "filter" && times.some((tf) => p.expr.startsWith(`\`${tf}\` ==`)));
-        expect(pinned, `${id} sums level metric ${m.field} across periods`).toBe(true);
-      }
-    });
-  }
   return { spec, context, blocks, charts, table, kpis: kpiItems };
 }
 
@@ -100,7 +118,7 @@ describe("autoReport", () => {
     expect(evaluateMeasure(revenue.value as Measure, context)).toBe(1500);
     expect(evaluateMeasure(revenue.compareTo as Measure, context)).toBe(1400);
     expect((revenue.compareTo as Measure).where).toBe("`month` == '2026-02-01'");
-    expect(revenue.format).toBe("currency");
+    expect(revenue.format).toBe("currency:0");
     expect(charts).toHaveLength(1);
     expect(charts[0]).toMatchObject({ kind: "line", y: "revenue", secondary: { y: "conversion_rate", format: "percent" } });
     expect(table).toMatchObject({ data: "data", sortBy: "-month" });
@@ -207,7 +225,7 @@ describe("autoReport", () => {
     it("SaaS: MRR headline, level metrics shown as the latest snapshot, churn rate averaged", () => {
       const { spec, context, charts, kpis, blocks } = check(saasRows());
       expect(kpis.map((k) => k.label)).toEqual(["MRR", "Customers", "Avg logo churn rate"]);
-      expect(kpis[0]!.format).toBe("currency");
+      expect(kpis[0]!.format).toBe("currency:0");
       expect(kpis[2]).toMatchObject({ format: "percent", goodWhen: "down" });
       const latestMrr = evaluateMeasure(kpis[0]!.value as Measure, context) as number;
       const sep = saasRows().filter((r) => r.month === "2026-09-01");
@@ -220,7 +238,7 @@ describe("autoReport", () => {
       expect(blocks.find((b) => b.type === "chart" && b.chart.x === "plan")!.title).toMatch(/latest month$/);
       // Acronym-aware labels reach the renderer through field overrides.
       expect(context.datasets.get("data")!.fields.find((f) => f.name === "new_mrr")!.label).toBe("New MRR");
-      expect(spec.datasets.data!.fields).toContainEqual({ name: "mrr", format: "currency", label: "MRR" });
+      expect(spec.datasets.data!.fields).toContainEqual({ name: "mrr", format: "currency:0", label: "MRR" });
     });
 
     it("sales cross-tab: no record count, revenue headline", () => {
@@ -255,5 +273,155 @@ describe("autoReport", () => {
       const { kpis } = check(ordersPayload());
       expect(kpiFields(kpis)).toEqual(["total", "records", "total"]);
     });
+  });
+});
+
+describe("autoReport archetypes", () => {
+  const ARCHETYPES: Archetype[] = ["overview", "brief", "trend", "compare", "breakdown", "bridge"];
+  const SAMPLES: Record<string, () => unknown> = { salesRows, saasRows, trafficCsv, ticketRows, ordersPayload };
+  /** Multiset of block types / chart kinds: what a reader sees, regardless of order. */
+  const shape = (blocks: Block[]) =>
+    blocks
+      .map((b) => (b.type === "chart" ? `chart:${b.chart.kind}` : b.type))
+      .sort()
+      .join(",");
+  const sum = (rows: Row[], field: string) => rows.reduce((a, r) => a + (toNumber(r[field]) ?? 0), 0);
+  const rowsOf = (ctx: DataContext, id: string) => ctx.datasets.get(id)!.rows;
+  const value = (v: unknown, ctx: DataContext) => evaluateMeasure(v as Measure, ctx);
+
+  for (const [name, sample] of Object.entries(SAMPLES)) {
+    it(`${name}: every archetype is valid, resolvable and structurally distinct`, () => {
+      const drafts = ARCHETYPES.map((archetype) => checkDraft(sample(), { archetype }));
+      const shapes = drafts.map((d) => shape(d.blocks));
+      expect(new Set(shapes).size, shapes.join("\n")).toBe(ARCHETYPES.length);
+      const titles = drafts.map((d) => d.spec.sections.map((s) => s.title).join("|"));
+      expect(new Set(titles).size).toBe(ARCHETYPES.length);
+      // Section titles are specific; "Analysis"/"Summary"/"Detail" stay the overview's.
+      for (const d of drafts.slice(1)) expect(d.spec.sections.map((s) => s.title)).not.toContain("Analysis");
+    });
+  }
+
+  it("brief: ≤ 3 KPIs, one chart and one bound insight callout on a single printed page", () => {
+    for (const sample of Object.values(SAMPLES)) {
+      const { spec, context, blocks } = checkDraft(sample(), { archetype: "brief" });
+      expect(spec.page?.targetPages).toBe(1);
+      expect(blocks.map((b) => b.type)).toEqual(["kpi", "chart", "callout"]);
+      expect((blocks[0] as Extract<Block, { type: "kpi" }>).items.length).toBeLessThanOrEqual(3);
+      expect(blocks[2]).toMatchObject({ variant: "insight" });
+      expect(inspectReport({ spec, context, issues: [] }).pages).toBe(1);
+    }
+  });
+
+  it("trend: moving-average series, growth bars around zero, best/worst months, latest-change callout", () => {
+    const { spec, context, blocks, charts } = checkDraft(saasRows(), { archetype: "trend" });
+    expect(spec.sections.map((s) => s.title)).toEqual(["Latest month", "MRR over time", "Best and worst months"]);
+    const [line, growth] = charts;
+    expect(line).toMatchObject({ kind: "line", x: "month" });
+    const [mrr, ma] = line!.y as string[];
+    const trend = rowsOf(context, line!.data);
+    expect(trend.at(-1)![ma!]).toBeCloseTo(sum(trend.slice(-3), mrr!) / 3, 6);
+    expect(growth).toMatchObject({ kind: "bar", x: "month", yFormat: "percent", reference: [{ value: 0 }] });
+    const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
+    const extremes = rowsOf(context, table.data).map((r) => r[mrr!] as number);
+    const all = trend.map((r) => r[mrr!] as number).sort((a, b) => b - a);
+    expect(extremes).toEqual([...all.slice(0, 3), ...all.slice(-3)]);
+    expect(blocks.find((b) => b.type === "callout")).toMatchObject({ variant: "insight" });
+  });
+
+  it("compare: latest six months vs the previous six, dumbbell by region, movers across region × channel", () => {
+    const rows = salesRows();
+    const { context, blocks, charts } = checkDraft(rows, { archetype: "compare" });
+    const cmp = blocks.find((b): b is Extract<Block, { type: "comparison" }> => b.type === "comparison")!;
+    expect(cmp.entities).toEqual(["Jul 2025–Dec 2025", "Jan 2026–Jun 2026"]);
+    const between = (from: string, to: string) => sum(rows.filter((r) => (r.month as string) >= from && (r.month as string) <= to), "revenue");
+    const [prev, latest] = [between("2025-07-01", "2025-12-01"), between("2026-01-01", "2026-06-01")];
+    const revenue = cmp.metrics.find((m) => m.label === "Revenue")!;
+    expect(revenue.values.map((v) => value(v, context))).toEqual([prev, latest]);
+    const dumbbell = charts.find((c) => c.kind === "dumbbell")!;
+    expect(dumbbell.x).toBe("region");
+    const [from, to] = dumbbell.y as string[];
+    const byRegion = rowsOf(context, dumbbell.data);
+    expect(byRegion).toHaveLength(5);
+    expect([sum(byRegion, from!), sum(byRegion, to!)]).toEqual([prev, latest]);
+    expect(context.datasets.get(dumbbell.data)!.fields.find((f) => f.name === to)!.label).toBe("Jan 2026–Jun 2026");
+    const movers = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
+    expect(rowsOf(context, movers.data)).toHaveLength(15);
+    expect(movers.columns!.slice(0, 2).map((c) => c.field)).toEqual(["region", "channel"]);
+  });
+
+  it("compare and bridge read level metrics (MRR) at each window's last snapshot", () => {
+    const rows = saasRows();
+    const at = (month: string) => sum(rows.filter((r) => r.month === month), "mrr");
+    const c = checkDraft(rows, { archetype: "compare" });
+    const cmp = c.blocks.find((b): b is Extract<Block, { type: "comparison" }> => b.type === "comparison")!;
+    expect(cmp.entities).toEqual(["Oct 2025–Mar 2026", "Apr 2026–Sep 2026"]);
+    expect(cmp.metrics.find((m) => m.label === "MRR")!.values.map((v) => value(v, c.context))).toEqual([at("2026-03-01"), at("2026-09-01")]);
+
+    const b = checkDraft(rows, { archetype: "bridge" });
+    expect(b.spec.sections.map((s) => s.title)).toEqual(["What changed", "Contributors", "Detail"]);
+    const waterfall = b.charts.find((x) => x.kind === "waterfall")!;
+    expect(waterfall).toMatchObject({ base: "first", total: "Apr 2026–Sep 2026" });
+    const y = waterfall.y as string;
+    const steps = rowsOf(b.context, waterfall.data);
+    expect(steps).toHaveLength(4);
+    expect(steps[0]).toMatchObject({ [waterfall.x]: "Oct 2025–Mar 2026", [y]: at("2026-03-01") });
+    // Start + every plan's change = the latest total; changes run largest first.
+    expect(sum(steps, y)).toBe(at("2026-09-01"));
+    const changes = steps.slice(1).map((r) => r[y] as number);
+    expect(changes).toEqual([...changes].sort((p, q) => q - p));
+    const callout = b.blocks.find((x) => x.type === "callout")!;
+    const text = renderTemplate((callout as Extract<Block, { type: "callout" }>).content, b.context).text;
+    expect(text).toMatch(/\*\*(Starter|Pro|Enterprise)\*\* added the most \(\+\$/);
+  });
+
+  it("bridge: an ‘Other’ step keeps waterfalls readable for many categories and the bridge still adds up", () => {
+    const rows = ["2026-08-01", "2026-09-01"].flatMap((month, m) =>
+      Array.from({ length: 20 }, (_, i) => ({ month, store: `Store ${i + 1}`, sales: 1000 + i * 37 + m * (i % 3 === 0 ? -150 : 90 + i) })),
+    );
+    const { context, charts } = checkDraft(rows, { archetype: "bridge" });
+    const waterfall = charts.find((x) => x.kind === "waterfall")!;
+    const steps = rowsOf(context, waterfall.data);
+    expect(steps).toHaveLength(12);
+    expect(steps.map((r) => r[waterfall.x])).toContain("Other");
+    expect(sum(steps, waterfall.y as string)).toBe(sum(rows.filter((r) => r.month === "2026-09-01"), "sales"));
+  });
+
+  it("breakdown: horizontal ranking, share donut, 100% channel mix, ranked table with share and rank", () => {
+    const { context, blocks, charts } = checkDraft(salesRows(), { archetype: "breakdown" });
+    expect(charts.map((c) => c.kind)).toEqual(["bar", "donut", "bar"]);
+    expect(charts[0]).toMatchObject({ x: "region", horizontal: true, sort: "-y" });
+    expect(charts[2]).toMatchObject({ x: "region", series: "channel", stack: "percent" });
+    const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
+    const ranked = rowsOf(context, table.data);
+    expect(ranked.map((r) => r[table.sortBy as string])).toEqual([1, 2, 3, 4, 5]);
+    const share = table.columns!.find((c) => c.format === "percent")!.field;
+    expect(sum(ranked, share)).toBeCloseTo(1, 12);
+  });
+
+  it("without a date field: compare pits the top two categories; trend and bridge fall back with a note", () => {
+    const rows = ["North", "South", "East", "West"].flatMap((region, i) =>
+      ["Shoes", "Bags", "Hats"].map((product, j) => ({ region, product, revenue: (4 - i) * 1000 + j * 300 + (i === 1 && j === 2 ? 2000 : 0), units: 10 + i + j })),
+    );
+    const c = checkDraft(rows, { archetype: "compare" });
+    const cmp = c.blocks.find((b): b is Extract<Block, { type: "comparison" }> => b.type === "comparison")!;
+    expect(cmp.entities).toEqual(["North", "South"]);
+    const revenue = (region: string) => sum(rows.filter((r) => r.region === region), "revenue");
+    expect(cmp.metrics[0]!.values.map((v) => value(v, c.context))).toEqual([revenue("North"), revenue("South")]);
+    const dumbbell = c.charts.find((x) => x.kind === "dumbbell")!;
+    expect(dumbbell.x).toBe("product");
+    // South beats North on hats, so the text says so.
+    expect(textOf(c.blocks, c.context)).toMatch(/South is ahead in \*\*Hats\*\*/);
+
+    const overview = checkDraft(rows);
+    const trend = checkDraft(rows, { archetype: "trend" });
+    expect(trend.spec.summary).toMatch(/No date field/);
+    expect(shape(trend.blocks)).toBe(shape(overview.blocks));
+    const bridge = checkDraft(rows, { archetype: "bridge" });
+    expect(bridge.spec.summary).toMatch(/No date field/);
+    expect(shape(bridge.blocks)).toBe(shape(checkDraft(rows, { archetype: "breakdown" }).blocks));
+    // Brief leads with the strongest breakdown when there is no trend.
+    const brief = checkDraft(rows, { archetype: "brief" });
+    expect(brief.charts).toEqual([expect.objectContaining({ kind: "bar", x: "region" })]);
+    expect(inspectReport({ spec: brief.spec, context: brief.context, issues: [] }).pages).toBe(1);
   });
 });

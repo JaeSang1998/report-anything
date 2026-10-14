@@ -17,6 +17,7 @@ export { evaluateMeasure, resolveValue } from "./data/measure.js";
 export { renderTemplate } from "./data/template.js";
 export { profileDataset, suggestCharts } from "./data/profile.js";
 export { autoReport } from "./auto.js";
+export type { Archetype, AutoReportOptions } from "./auto.js";
 
 // Charts
 export type * from "./chart/types.js";
@@ -30,6 +31,7 @@ export { pageGeometry } from "./layout/geometry.js";
 export { chartPlotHeight, estimateBlockHeight } from "./layout/estimate.js";
 export { layoutReport } from "./layout/engine.js";
 export { estimateTextWidth } from "./text.js";
+export { mermaidKind } from "./diagram.js";
 export { uiStrings } from "./i18n.js";
 export type { UiStrings } from "./i18n.js";
 

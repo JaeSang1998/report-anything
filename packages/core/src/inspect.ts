@@ -2,6 +2,7 @@ import type { Block, Issue, ReportSpec } from "./spec.js";
 import type { DataContext } from "./data/types.js";
 import type { LayoutMode, LayoutPlan } from "./layout/types.js";
 import { layoutReport } from "./layout/engine.js";
+import { mermaidKind } from "./diagram.js";
 
 /** Compact, token-cheap view of a report for agents: what exists, where it landed, what is wrong. */
 export interface Inspection {
@@ -33,6 +34,8 @@ function blockSummary(block: Block): string {
       return `${block.entities.join(" vs ")}: ${block.metrics.length} metrics`;
     case "list":
       return `${block.items.length} ${block.style} items`;
+    case "diagram":
+      return `${block.syntax} ${mermaidKind(block.source) ?? "diagram"}, ${block.source.trim().split("\n").length} lines`;
     case "text":
     case "callout": {
       const text = block.content.replace(/\s+/g, " ").trim();

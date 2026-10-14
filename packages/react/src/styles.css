@@ -499,3 +499,34 @@
   font-family: ui-monospace, monospace;
   font-size: 12px;
 }
+
+/* ─── Diagram (Mermaid) ──────────────────────────────────────────────────── */
+.ra-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.ra-diagram__svg,
+.ra-diagram .mermaid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.ra-diagram__svg svg,
+.ra-diagram .mermaid svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+.ra-diagram__source {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ra-secondary);
+  white-space: pre;
+  overflow: hidden;
+}

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { ComponentType } from "react";
 import {
   buildComparisonModel,
@@ -222,6 +222,46 @@ function ComparisonBody({ block, context, cell }: BlockProps<"comparison">) {
   );
 }
 
+/**
+ * Mermaid diagram fitted into the chart height preset. Mermaid is an optional peer dependency loaded on demand;
+ * until it renders (and during server rendering) the source is shown in a `.mermaid` element, which static
+ * HTML upgrades with `mermaid.run()`.
+ */
+function DiagramBody({ block }: BlockProps<"diagram">) {
+  const height = METRICS.chart.plot[block.height ?? "md"];
+  const id = `ra-diagram-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+  const [state, setState] = useState<{ svg?: string; error?: string }>({});
+  useEffect(() => {
+    let cancelled = false;
+    setState({});
+    import("mermaid")
+      .then(async ({ default: mermaid }) => {
+        mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: "neutral", fontFamily: "inherit" });
+        const { svg } = await mermaid.render(id, block.source);
+        if (!cancelled) setState({ svg });
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) setState({ error: err instanceof Error ? err.message : String(err) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [block.source, id]);
+  return (
+    <div className="ra-diagram" style={{ height }}>
+      {state.svg ? (
+        <div className="ra-diagram__svg" dangerouslySetInnerHTML={{ __html: state.svg }} />
+      ) : state.error ? (
+        <p className="ra-block-error">
+          <strong>Cannot render diagram:</strong> {state.error}
+        </p>
+      ) : (
+        <pre className="ra-diagram__source mermaid">{block.source}</pre>
+      )}
+    </div>
+  );
+}
+
 export const DEFAULT_BLOCKS: { [T in BlockType]: ComponentType<BlockProps<T>> } = {
   text: TextBody,
   callout: CalloutBody,
@@ -230,4 +270,5 @@ export const DEFAULT_BLOCKS: { [T in BlockType]: ComponentType<BlockProps<T>> } 
   chart: ChartBody,
   table: TableBody,
   comparison: ComparisonBody,
+  diagram: DiagramBody,
 };

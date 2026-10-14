@@ -59,7 +59,7 @@ export function rankMeasures(fields: readonly FieldProfile[]): FieldProfile[] {
     if (f.name.endsWith(".count")) return 4;
     if (f.suggestedFormat === "percent") return 3;
     if (defaultAgg(f) === "avg") return 2;
-    return f.suggestedFormat === "currency" || AMOUNT_NAME.test(f.name) || REVENUE_ACRONYM.test(f.name) ? 0 : 1;
+    return f.suggestedFormat?.startsWith("currency") || AMOUNT_NAME.test(f.name) || REVENUE_ACRONYM.test(f.name) ? 0 : 1;
   };
   return fields
     .filter((f) => f.role === "measure" && f.distinct > 0)
@@ -114,7 +114,10 @@ function profileField(ds: ResolvedDataset, name: string, type: FieldProfile["typ
   if (p.role === "measure") {
     const ratioScale = nums.length > 0 && nums.every((n) => n >= -1.5 && n <= 1.5) && nums.some((n) => !Number.isInteger(n));
     if (ratioScale && PERCENT_NAME.test(name)) p.suggestedFormat = "percent";
-    else if (CURRENCY_NAME.test(name) || REVENUE_ACRONYM.test(name)) p.suggestedFormat = "currency";
+    // Cents are noise once amounts reach the thousands (or are whole numbers anyway).
+    else if (CURRENCY_NAME.test(name) || REVENUE_ACRONYM.test(name)) {
+      p.suggestedFormat = nums.every(Number.isInteger) || Math.max(...nums.map(Math.abs)) >= 1000 ? "currency:0" : "currency";
+    }
   }
   return p;
 }

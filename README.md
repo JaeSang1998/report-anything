@@ -81,6 +81,37 @@ The default theme has no cards, tiles or pills — whitespace, type and table ru
 
 </td>
 </tr>
+<tr>
+<td valign="top">
+
+**A real chart vocabulary**<br/>
+Bar, line, area, scatter, pie/donut, heatmap — plus `waterfall` (what changed), `funnel` (where people drop off) and `dumbbell` (before → after per category). Secondary axes, reference lines, stacking and percent stacks included.
+
+</td>
+<td valign="top">
+
+**Diagrams next to data**<br/>
+A `diagram` block takes Mermaid source — flowcharts, sequences, state machines, ER, timelines — and lays it out with the rest of the report.
+
+</td>
+</tr>
+</table>
+
+## One dataset, six shapes
+
+A report should be shaped by its question. `autoReport` (CLI: `report-anything auto --shape …`, playground: just ask) drafts six different structures from the same data — here, the regional sales sample:
+
+<table>
+<tr>
+<td width="33%" valign="top"><img src="docs/screenshots/shape-bridge.png" alt="bridge" /><br/><b>bridge</b> · <sub>“Why did revenue change?” — waterfall by contributor, top movers</sub></td>
+<td width="33%" valign="top"><img src="docs/screenshots/shape-compare.png" alt="compare" /><br/><b>compare</b> · <sub>“This half vs last” — comparison, dumbbell, biggest movers</sub></td>
+<td width="33%" valign="top"><img src="docs/screenshots/shape-trend.png" alt="trend" /><br/><b>trend</b> · <sub>“How is it trending?” — moving average, growth, best/worst periods</sub></td>
+</tr>
+<tr>
+<td valign="top"><img src="docs/screenshots/shape-breakdown.png" alt="breakdown" /><br/><b>breakdown</b> · <sub>“Where does it come from?” — ranking, shares, mix</sub></td>
+<td valign="top"><img src="docs/screenshots/shape-brief.png" alt="brief" /><br/><b>brief</b> · <sub>“One page for the board” — KPIs, one chart, one insight</sub></td>
+<td valign="top"><img src="docs/screenshots/shape-overview.png" alt="overview" /><br/><b>overview</b> · <sub>Default — KPIs, a few views, detail table</sub></td>
+</tr>
 </table>
 
 ## The playground
@@ -94,11 +125,11 @@ The report is written **into the conversation**. While the agent streams its ops
 </tr>
 <tr>
 <td align="center"><sub>Building live — ops apply while the model is still writing them</sub></td>
-<td align="center"><sub>"Turn the second chart into a table" — earlier versions stay in the thread</sub></td>
+<td align="center"><sub>"Make the first chart a bar chart" — earlier versions stay in the thread</sub></td>
 </tr>
 </table>
 
-- **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) and handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename.
+- **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) in the shape your question implies ("why did…" → bridge, "compare…" → comparison, "one-page…" → brief), handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename — and turns a pasted ```` ```mermaid ```` block into a diagram.
 - **Locally with a key**, the same UI talks to Claude or GPT through the AI SDK. The system prompt *is* the [agent skill](skills/report-anything/SKILL.md); the browser owns the report session and executes the agent's tools, so the model always sees the real validation and layout result.
 - **See what the agent sees.** Click any data chip to open the dataset: the table the engine actually works on (after CSV parsing, JSON flattening and transforms), the raw source, and each field's inferred type and role.
 
@@ -162,22 +193,29 @@ No spans, no heights, no page breaks — the engine pairs the chart and the call
 
 ## Examples
 
-Three hand-written specs in [`examples/specs`](examples/specs), each with its data embedded. Render any of them with `report-anything render <file> [--mode print]`.
+Four hand-written specs in [`examples/specs`](examples/specs), each with its data embedded. Render any of them with `report-anything render <file> [--mode print]`.
 
 <table>
 <tr>
-<td width="33%" valign="top"><a href="examples/specs/regional-sales.json"><img src="docs/screenshots/example-regional-sales.png" alt="H1 sales review" /></a></td>
-<td width="33%" valign="top"><a href="examples/specs/saas-board.json"><img src="docs/screenshots/example-saas-board.png" alt="SaaS board update" /></a></td>
-<td width="33%" valign="top"><a href="examples/specs/support-review.json"><img src="docs/screenshots/example-support-review.png" alt="Support quarter in review" /></a></td>
+<td width="50%" valign="top"><a href="examples/specs/regional-sales.json"><img src="docs/screenshots/example-regional-sales.png" alt="H1 sales review" /></a><br/><b>H1 sales review</b><br/><sub>KPIs with year-over-year baselines, bars + growth on a second axis, horizontal and 100% stacked bars, comparison, totals, action list.</sub></td>
+<td width="50%" valign="top"><a href="examples/specs/saas-board.json"><img src="docs/screenshots/example-saas-board.png" alt="SaaS board update" /></a><br/><b>SaaS board update</b><br/><sub>Stacked area by plan, MRR movement with churn below zero, a net-new-MRR waterfall, plan table with ARPA, board asks.</sub></td>
 </tr>
 <tr>
-<td valign="top"><b>H1 sales review</b><br/><sub>KPIs with year-over-year baselines, bars + growth line on a second axis, horizontal and 100% stacked bars, comparison, totals, action list.</sub></td>
-<td valign="top"><b>SaaS board update</b><br/><sub>Stacked area by plan, MRR movement with churn below zero, latest-month plan table with ARPA, risk callout, board asks.</sub></td>
-<td valign="top"><b>Support quarter in review</b><br/><sub>Event data: counts and medians, heatmap of resolution time by category × priority, CSAT heat column, open-ticket table.</sub></td>
+<td valign="top"><a href="examples/specs/growth-funnel.json"><img src="docs/screenshots/example-growth-funnel.png" alt="Growth funnel" /></a><br/><b>Growth funnel</b><br/><sub>Funnel from visit to paid, dumbbell of conversion by channel (Q2 → Q3), signups bridge as a waterfall, signed deltas.</sub></td>
+<td valign="top"><a href="examples/specs/support-review.json"><img src="docs/screenshots/example-support-review.png" alt="Support quarter in review" /></a><br/><b>Support quarter in review</b><br/><sub>Event data: counts and medians, resolution heatmap by category × priority, CSAT heat column, and an escalation flow as a Mermaid diagram.</sub></td>
 </tr>
 </table>
 
-<p align="center"><img src="docs/screenshots/example-regional-sales-print.png" alt="H1 sales review, A4 page 1" width="480" /><br/><sub>The same H1 review in print mode: A4, paginated by the engine.</sub></p>
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/example-diagram.png" alt="Mermaid diagram inside a report" /></td>
+<td width="50%"><img src="docs/screenshots/example-regional-sales-print.png" alt="H1 sales review, A4 page 1" /></td>
+</tr>
+<tr>
+<td align="center"><sub>A Mermaid flowchart laid out next to its explanation</sub></td>
+<td align="center"><sub>Print mode: A4, paginated by the engine</sub></td>
+</tr>
+</table>
 
 ## How it works
 
@@ -243,7 +281,7 @@ const plan = layoutReport(s, context, { mode: "print" });
 
 ```sh
 report-anything profile orders.json                  # field roles, stats, chart suggestions
-report-anything auto orders.json --title Orders -o spec.json
+report-anything auto orders.json --shape bridge -o spec.json   # overview|brief|trend|compare|breakdown|bridge
 report-anything validate spec.json                   # schema + data checks, did-you-mean hints
 report-anything inspect spec.json --mode print       # spans, heights, pages, layout diagnostics
 report-anything apply spec.json edits.jsonl -o spec.json

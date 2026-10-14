@@ -1,0 +1,443 @@
+{
+  "title": "Growth funnel, Q3 2026",
+  "subtitle": "From first visit to paid, and which channels moved",
+  "summary": "Q3 brought **{{last(quarters.visitors) | compact}}** visitors and **{{last(quarters.paid) | integer}}** new paying customers. Activation is the weakest step after sign-up; email is the channel that improved most.",
+  "meta": {
+    "author": "Growth team",
+    "date": "2026-10-06",
+    "locale": "en-US"
+  },
+  "page": {
+    "size": "A4",
+    "targetPages": 2
+  },
+  "datasets": {
+    "quarters": {
+      "rows": [
+        {
+          "quarter": "Q2 2026",
+          "visitors": 171000,
+          "signups": 8920,
+          "paid": 540
+        },
+        {
+          "quarter": "Q3 2026",
+          "visitors": 182400,
+          "signups": 9840,
+          "paid": 610
+        }
+      ],
+      "transform": [
+        {
+          "op": "derive",
+          "as": "visit_to_paid",
+          "expr": "paid / visitors"
+        }
+      ],
+      "fields": [
+        {
+          "name": "visitors",
+          "label": "Visitors",
+          "format": "compact"
+        },
+        {
+          "name": "signups",
+          "label": "Signups",
+          "format": "integer"
+        },
+        {
+          "name": "paid",
+          "label": "New paying customers",
+          "format": "integer"
+        },
+        {
+          "name": "visit_to_paid",
+          "label": "Visit \u2192 paid",
+          "format": "percent:2"
+        }
+      ],
+      "source": "warehouse.funnel_quarterly"
+    },
+    "funnel": {
+      "rows": [
+        {
+          "stage": "Visited",
+          "users": 182400
+        },
+        {
+          "stage": "Signed up",
+          "users": 9840
+        },
+        {
+          "stage": "Activated",
+          "users": 5210
+        },
+        {
+          "stage": "Started trial",
+          "users": 2380
+        },
+        {
+          "stage": "Converted to paid",
+          "users": 610
+        }
+      ],
+      "transform": [
+        {
+          "op": "window",
+          "fn": "pctChange",
+          "field": "users",
+          "as": "change"
+        },
+        {
+          "op": "derive",
+          "as": "step_rate",
+          "expr": "1 + change"
+        }
+      ],
+      "fields": [
+        {
+          "name": "stage",
+          "label": "Stage"
+        },
+        {
+          "name": "users",
+          "label": "Users",
+          "format": "integer"
+        },
+        {
+          "name": "step_rate",
+          "label": "Step conversion",
+          "format": "percent"
+        }
+      ],
+      "source": "warehouse.funnel_q3"
+    },
+    "channels": {
+      "rows": [
+        {
+          "channel": "Email",
+          "q2_rate": 0.0071,
+          "q3_rate": 0.0083,
+          "q2_signups": 1540,
+          "q3_signups": 1870
+        },
+        {
+          "channel": "Referral",
+          "q2_rate": 0.0052,
+          "q3_rate": 0.0058,
+          "q2_signups": 720,
+          "q3_signups": 790
+        },
+        {
+          "channel": "Paid search",
+          "q2_rate": 0.0042,
+          "q3_rate": 0.0039,
+          "q2_signups": 2310,
+          "q3_signups": 2070
+        },
+        {
+          "channel": "Organic search",
+          "q2_rate": 0.0031,
+          "q3_rate": 0.0036,
+          "q2_signups": 3480,
+          "q3_signups": 4090
+        },
+        {
+          "channel": "Social",
+          "q2_rate": 0.0011,
+          "q3_rate": 0.0014,
+          "q2_signups": 870,
+          "q3_signups": 1020
+        }
+      ],
+      "transform": [
+        {
+          "op": "derive",
+          "as": "rate_change",
+          "expr": "q3_rate - q2_rate"
+        },
+        {
+          "op": "derive",
+          "as": "signup_change",
+          "expr": "q3_signups - q2_signups"
+        },
+        {
+          "op": "sort",
+          "by": "-q3_rate"
+        }
+      ],
+      "fields": [
+        {
+          "name": "channel",
+          "label": "Channel"
+        },
+        {
+          "name": "q2_rate",
+          "label": "Q2 visit \u2192 paid",
+          "format": "percent:2"
+        },
+        {
+          "name": "q3_rate",
+          "label": "Q3 visit \u2192 paid",
+          "format": "percent:2"
+        },
+        {
+          "name": "rate_change",
+          "label": "Change",
+          "format": "percent:2"
+        },
+        {
+          "name": "q3_signups",
+          "label": "Q3 signups",
+          "format": "integer"
+        },
+        {
+          "name": "signup_change",
+          "label": "Signups vs Q2",
+          "format": "integer"
+        }
+      ]
+    },
+    "signup_bridge": {
+      "rows": [
+        {
+          "step": "Q2 signups",
+          "signups": 8920
+        },
+        {
+          "step": "Organic search",
+          "signups": 610
+        },
+        {
+          "step": "Paid search",
+          "signups": -240
+        },
+        {
+          "step": "Email",
+          "signups": 330
+        },
+        {
+          "step": "Social",
+          "signups": 150
+        },
+        {
+          "step": "Referral",
+          "signups": 70
+        }
+      ],
+      "fields": [
+        {
+          "name": "signups",
+          "label": "Signups",
+          "format": "integer"
+        }
+      ]
+    },
+    "activation": {
+      "from": "funnel",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "stage == 'Activated'"
+        }
+      ]
+    },
+    "trial_to_paid": {
+      "from": "funnel",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "stage == 'Converted to paid'"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "id": "summary",
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "kpis",
+          "type": "kpi",
+          "items": [
+            {
+              "label": "Visitors",
+              "value": {
+                "data": "quarters",
+                "field": "visitors",
+                "where": "quarter == 'Q3 2026'"
+              },
+              "compareTo": {
+                "data": "quarters",
+                "field": "visitors",
+                "where": "quarter == 'Q2 2026'"
+              },
+              "format": "compact",
+              "deltaLabel": "vs Q2"
+            },
+            {
+              "label": "Signups",
+              "value": {
+                "data": "quarters",
+                "field": "signups",
+                "where": "quarter == 'Q3 2026'"
+              },
+              "compareTo": {
+                "data": "quarters",
+                "field": "signups",
+                "where": "quarter == 'Q2 2026'"
+              },
+              "format": "integer",
+              "deltaLabel": "vs Q2"
+            },
+            {
+              "label": "New paying customers",
+              "value": {
+                "data": "quarters",
+                "field": "paid",
+                "where": "quarter == 'Q3 2026'"
+              },
+              "compareTo": {
+                "data": "quarters",
+                "field": "paid",
+                "where": "quarter == 'Q2 2026'"
+              },
+              "format": "integer",
+              "deltaLabel": "vs Q2"
+            },
+            {
+              "label": "Visit \u2192 paid",
+              "value": {
+                "data": "quarters",
+                "field": "visit_to_paid",
+                "agg": "last"
+              },
+              "compareTo": {
+                "data": "quarters",
+                "field": "visit_to_paid",
+                "agg": "first"
+              },
+              "format": "percent:2",
+              "deltaLabel": "vs Q2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "funnel_section",
+      "title": "Where people drop off",
+      "blocks": [
+        {
+          "id": "funnel_chart",
+          "type": "chart",
+          "title": "Q3 funnel",
+          "chart": {
+            "kind": "funnel",
+            "data": "funnel",
+            "x": "stage",
+            "y": "users"
+          }
+        },
+        {
+          "id": "funnel_note",
+          "type": "callout",
+          "tone": "warning",
+          "variant": "risk",
+          "title": "Activation is the leak",
+          "content": "Only {{first(activation.step_rate) | percent}} of signups activate, and {{first(trial_to_paid.step_rate) | percent}} of trials convert to paid. Fixing onboarding moves more customers than any channel change."
+        }
+      ]
+    },
+    {
+      "id": "channels_section",
+      "title": "Channels",
+      "description": "Visit-to-paid conversion by channel, and how each channel moved signups from Q2 to Q3.",
+      "blocks": [
+        {
+          "id": "rate_dumbbell",
+          "type": "chart",
+          "title": "Visit \u2192 paid, Q2 \u2192 Q3",
+          "chart": {
+            "kind": "dumbbell",
+            "data": "channels",
+            "x": "channel",
+            "y": [
+              "q2_rate",
+              "q3_rate"
+            ]
+          }
+        },
+        {
+          "id": "signup_waterfall",
+          "type": "chart",
+          "title": "Signups bridge, Q2 \u2192 Q3",
+          "chart": {
+            "kind": "waterfall",
+            "data": "signup_bridge",
+            "x": "step",
+            "y": "signups",
+            "base": "first",
+            "total": "Q3 signups"
+          }
+        },
+        {
+          "id": "channel_table",
+          "type": "table",
+          "title": "Channel detail",
+          "data": "channels",
+          "columns": [
+            {
+              "field": "channel"
+            },
+            {
+              "field": "q2_rate"
+            },
+            {
+              "field": "q3_rate"
+            },
+            {
+              "field": "rate_change",
+              "emphasis": "delta"
+            },
+            {
+              "field": "q3_signups"
+            },
+            {
+              "field": "signup_change",
+              "emphasis": "delta"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "next",
+      "title": "Next quarter",
+      "blocks": [
+        {
+          "id": "plan",
+          "type": "list",
+          "style": "numbered",
+          "items": [
+            {
+              "text": "Rebuild the first-run checklist",
+              "detail": "Goal: activation from 53% to 65% of signups",
+              "tag": "Product"
+            },
+            {
+              "text": "Double email nurture volume",
+              "detail": "Email has the best visit \u2192 paid rate and is still small",
+              "tag": "Lifecycle"
+            },
+            {
+              "text": "Cap paid search bids on non-converting terms",
+              "tag": "Paid"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

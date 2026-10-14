@@ -3,6 +3,7 @@ import type { DataContext } from "../data/types.js";
 import type { Scene, SceneOptions } from "./axes.js";
 import type { ChartBuildOptions, ChartModel } from "./types.js";
 import { buildCartesian } from "./cartesian.js";
+import { buildDumbbell, buildFunnel, buildWaterfall } from "./flow.js";
 import { buildHeatmap, prepareHeatmap } from "./heatmap.js";
 import { loadSource, prepareCategorical } from "./prepare.js";
 import { buildRadial } from "./radial.js";
@@ -46,6 +47,20 @@ export function buildChart(spec: ChartSpec, ctx: DataContext, opts: ChartBuildOp
       const data = prepareHeatmap(spec, source, ctx);
       if (data.cells.length === 0) return empty([noRows]);
       scene = buildHeatmap(spec, data, o, ctx);
+      break;
+    }
+    case "waterfall":
+    case "funnel":
+    case "dumbbell": {
+      // Data order matters (steps, stages); dumbbell sorts and limits its own rows.
+      const prep = prepareCategorical({ ...spec, series: undefined, secondary: undefined, sort: "none", limit: undefined }, source, ctx);
+      const need = spec.kind === "dumbbell" ? 2 : 1;
+      if (prep.series.length < need) return empty([`dumbbell charts need two y fields [from, to]; got ${prep.series.length}.`]);
+      if (!prep.series.slice(0, need).some((s) => s.values.some((v) => v !== null))) return empty([noRows]);
+      scene = spec.kind === "waterfall" ? buildWaterfall(spec, prep, o, ctx) : spec.kind === "funnel" ? buildFunnel(spec, prep, o, ctx) : buildDumbbell(spec, prep, o, ctx);
+      const used = prep.series.slice(0, need).map((s) => `"${s.label}"`);
+      if (prep.series.length > need) scene.warnings.unshift(`${spec.kind} charts plot ${need === 1 ? "one measure" : "two measures"}; only ${used.join(" and ")} ${need === 1 ? "is" : "are"} plotted.`);
+      if (spec.series || spec.secondary) scene.warnings.unshift(`${spec.kind} charts ignore series and secondary.`);
       break;
     }
     default: {

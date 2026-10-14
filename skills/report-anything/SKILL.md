@@ -13,7 +13,7 @@ CLI: `report-anything <command>` (in this repo: `node packages/cli/dist/bin.js <
 
 1. **Profile the data.** Save it to a file and run `report-anything profile data.json` (or `.csv`; `--path a.b` for a nested array). Read field `role`s (time / measure / dimension / identifier), cardinalities, `suggestedFormat`s and ranked chart suggestions. Done when you can name the primary measure, the time field (if any) and the 1–3 dimensions worth breaking down.
 2. **Decide the questions.** Write down, in one line each, the 3–6 questions the report answers, in reading order (headline → trend → breakdown → detail → actions). Every block you add must answer one of them.
-3. **Write the spec.** Optional starting point: `report-anything auto data.json --title "…" --locale ko-KR --currency KRW -o spec.json`, then rewrite it around your questions. Rules:
+3. **Write the spec.** Optional starting point: `report-anything auto data.json --shape <overview|brief|trend|compare|breakdown|bridge> --title "…" -o spec.json` — pick the shape that matches the question (why did X change → `bridge`; this vs last period → `compare`), then rewrite it around your questions. Rules:
    - Put raw data in one dataset; derive every aggregate with `from` + `transform` (`aggregate`, `filter`, `window`, `timeUnit`, `top`, `fold`, `pivot`, `lookup`, `derive`). Compute in the data layer, not in your head.
    - Numbers in prose and KPIs are **bound**, never typed: KPI `value`/`compareTo` are Measures `{ "data", "field", "agg", "where" }`; text uses `{{sum(sales.revenue) | currency:KRW}}`. A literal number in a spec is a hallucination risk.
    - Give fields `label` and `format` in `datasets.<id>.fields` once; charts, tables and templates reuse them.
@@ -33,6 +33,8 @@ A report is a document someone reads top to bottom, not a widget inventory.
 - Never put measures with different units or magnitudes on one axis; use `secondary` only for a rate next to an amount.
 - Text next to a chart says what the chart does not: the cause, the exception, the decision. Callouts carry a `variant` (`insight`, `risk`, `recommendation`, `note`) so their role is in words.
 - Table `emphasis` (`bar`, `heat`, `delta`) only where the encoding answers a question; `delta` for signed changes.
+- Pick the chart for the question: change between two totals → `waterfall`; drop-off through ordered stages → `funnel`; before/after per category → `dumbbell`; share of a whole (≤ 6 parts) → `donut`; everything else usually `bar` or `line`.
+- Processes, escalation paths, org or data structures → a `diagram` block with Mermaid source, never an image or ASCII art.
 
 ## Reference
 

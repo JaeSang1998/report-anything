@@ -17,12 +17,18 @@ import { attachmentFromFile, SAMPLE_DATA } from "./data.js";
 import type { Attachment } from "./data.js";
 import { createLocalReportModel } from "./local-agent.js";
 
+/** One starter per report shape, so the same engine visibly produces different structures. */
 const STARTERS = [
-  { label: "Executive sales review", prompt: "Build an executive report for H1 2026: year-over-year growth, which regions and channels drove it, and what to do next.", sample: SAMPLE_DATA.sales },
-  { label: "SaaS board update", prompt: "Write a board update on MRR: growth by plan, churn, and where expansion comes from.", sample: SAMPLE_DATA.saas },
-  { label: "Acquisition channel review", prompt: "Which acquisition channels and devices convert best, and how did traffic trend over the last six months?", sample: SAMPLE_DATA.traffic },
-  { label: "Support quarter in review", prompt: "Review support for Q3: ticket volume, resolution time by priority and category, and customer satisfaction.", sample: SAMPLE_DATA.tickets },
-  { label: "Orders API deep dive", prompt: "Analyze this orders API response: what drives revenue and where do refunds come from?", sample: SAMPLE_DATA.orders },
+  { label: "Why did revenue change?", prompt: "Why did revenue change between H1 2025 and H1 2026? Show which regions drove it.", sample: SAMPLE_DATA.sales },
+  { label: "One-page MRR brief", prompt: "Give me a one-page brief on MRR for the board.", sample: SAMPLE_DATA.saas },
+  { label: "Traffic and conversion trend", prompt: "How have traffic and conversion trended over the last six months?", sample: SAMPLE_DATA.traffic },
+  { label: "Where is the support load?", prompt: "Break down support tickets by category and priority — where is the load?", sample: SAMPLE_DATA.tickets },
+  { label: "Compare order periods", prompt: "Compare this month's orders with last month.", sample: SAMPLE_DATA.orders },
+  { label: "Full overview", prompt: "Build an overview report of this sales data.", sample: SAMPLE_DATA.sales },
+  {
+    label: "Paste a Mermaid diagram",
+    prompt: "Ticket escalation flow\n\n```mermaid\nflowchart LR\n  A[New ticket] --> B{Priority?}\n  B -- P1 --> C[Page on-call]\n  B -- P2/P3 --> D[Queue by category]\n  B -- P4 --> E[Backlog]\n  C --> F[Incident channel]\n  D --> G{Resolved in SLA?}\n  G -- no --> C\n  G -- yes --> H[Close and survey]\n```",
+  },
 ];
 
 const AgentShape = z.object({ provider: z.enum(["anthropic", "openai"]), modelId: z.string() }).nullable();

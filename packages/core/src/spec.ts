@@ -195,7 +195,7 @@ export type ValueOrMeasure = z.infer<typeof ValueOrMeasure>;
 
 // ─── Charts ────────────────────────────────────────────────────────────────────
 
-export const ChartKind = z.enum(["bar", "line", "area", "scatter", "pie", "donut", "heatmap"]);
+export const ChartKind = z.enum(["bar", "line", "area", "scatter", "pie", "donut", "heatmap", "waterfall", "funnel", "dumbbell"]);
 export type ChartKind = z.infer<typeof ChartKind>;
 
 export const ChartSpec = z
@@ -233,6 +233,14 @@ export const ChartSpec = z
     labels: z.boolean().optional().describe("Print value labels on marks."),
     legend: z.boolean().optional().describe("Force legend on/off (default: shown with 2+ series)."),
     curve: z.enum(["linear", "monotone", "step"]).optional(),
+    base: z
+      .enum(["zero", "first"])
+      .optional()
+      .describe("Waterfall only. 'first': the first row is the starting level (drawn as a total bar) and later rows are signed changes. Default 'zero'."),
+    total: z
+      .union([z.boolean(), z.string()])
+      .optional()
+      .describe("Waterfall only. Append an ending total bar; a string sets its label. Default true when base is 'first', else false."),
   })
   .describe("Declarative chart encoding. The engine aggregates, scales and lays out marks.");
 export type ChartSpec = z.infer<typeof ChartSpec>;
@@ -342,7 +350,43 @@ export const ComparisonBlock = z.object({
   showDelta: z.boolean().optional().describe("Show change from first to last entity (default true)."),
 });
 
-export const Block = z.discriminatedUnion("type", [TextBlock, KpiBlock, ChartBlock, TableBlock, CalloutBlock, ListBlock, ComparisonBlock]);
+/** Diagram types a Mermaid source may start with (after optional `---` front matter and `%%` comments). */
+export const MERMAID_DIAGRAMS = [
+  "flowchart",
+  "graph",
+  "sequenceDiagram",
+  "classDiagram",
+  "stateDiagram",
+  "stateDiagram-v2",
+  "erDiagram",
+  "journey",
+  "gantt",
+  "pie",
+  "mindmap",
+  "timeline",
+  "quadrantChart",
+  "sankey-beta",
+  "xychart-beta",
+  "block-beta",
+  "gitGraph",
+  "requirementDiagram",
+  "C4Context",
+] as const;
+
+export const DiagramBlock = z.object({
+  ...blockBase,
+  type: z.literal("diagram"),
+  syntax: z.literal("mermaid").default("mermaid").describe("Diagram language. Only Mermaid for now."),
+  source: z
+    .string()
+    .min(1)
+    .describe(
+      "Mermaid source, e.g. 'flowchart LR\\n  A[Ticket] --> B{P1?}\\n  B -- yes --> C[Page on-call]'. Use for processes, sequences, org/ER structures, timelines — not for data charts (use chart blocks, which bind to datasets).",
+    ),
+  height: z.enum(["sm", "md", "lg"]).optional().describe("Box the diagram is fitted into (default md)."),
+});
+
+export const Block = z.discriminatedUnion("type", [TextBlock, KpiBlock, ChartBlock, TableBlock, CalloutBlock, ListBlock, ComparisonBlock, DiagramBlock]);
 export type Block = z.infer<typeof Block>;
 export type BlockType = Block["type"];
 export type BlockOf<T extends BlockType> = Extract<Block, { type: T }>;

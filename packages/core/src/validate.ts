@@ -1,4 +1,4 @@
-import { ReportSpec } from "./spec.js";
+import { MERMAID_DIAGRAMS, ReportSpec } from "./spec.js";
 import type { Block, Issue, Measure, ValueOrMeasure } from "./spec.js";
 import type { DataContext, ResolvedDataset } from "./data/types.js";
 import { createDataContext } from "./data/resolve.js";
@@ -7,6 +7,7 @@ import { evaluateMeasure } from "./data/measure.js";
 import { renderTemplate } from "./data/template.js";
 import { closest } from "./data/values.js";
 import { zodIssues } from "./issues.js";
+import { mermaidKind } from "./diagram.js";
 
 export interface Analysis {
   context: DataContext;
@@ -133,22 +134,47 @@ function checkBlock(block: Block, c: BlockChecker): void {
       if (radial && (ys.length > 1 || ch.series)) {
         c.error("chart_encoding", ".chart", `${ch.kind} charts take one y measure and no series`, "use a stacked bar for multi-measure shares");
       }
+      const flowY = ch.kind === "dumbbell" ? 2 : ch.kind === "waterfall" || ch.kind === "funnel" ? 1 : undefined;
+      if (flowY !== undefined && ys.length !== flowY) {
+        c.error(
+          "chart_encoding",
+          ".chart.y",
+          `${ch.kind} charts take exactly ${flowY === 1 ? "one y measure" : "two y fields [from, to]"}; got ${ys.length}`,
+          flowY === 1 ? "plot one signed measure; use a grouped bar to compare several measures" : 'e.g. y: ["h1_2025", "h1_2026"]; pivot long data with a `pivot` transform first',
+        );
+      }
+      if (flowY !== undefined && ch.series) {
+        c.error("chart_encoding", ".chart.series", `${ch.kind} charts take no series`, "filter to one series, or use a grouped/stacked bar");
+      }
       if (ch.kind === "heatmap" && ch.value === undefined) {
         c.error("chart_encoding", ".chart.value", "heatmap needs `value` (cell measure); x and y are categories");
       }
-      if (ch.series && ys.length > 1) {
+      if (ch.series && ys.length > 1 && flowY === undefined) {
         c.error("chart_encoding", ".chart", "use either several y fields or a series field, not both", "fold the y fields into long format with a `fold` transform, then set series");
       }
       if (ch.stack && ch.kind !== "bar" && ch.kind !== "area") c.warn("ignored_option", ".chart.stack", `stack has no effect on ${ch.kind} charts`);
       if (ch.horizontal && ch.kind !== "bar") c.warn("ignored_option", ".chart.horizontal", "horizontal applies only to bar charts");
-      if (secondary.length && (radial || ch.kind === "heatmap" || ch.kind === "scatter")) {
+      if (secondary.length && (radial || flowY !== undefined || ch.kind === "heatmap" || ch.kind === "scatter")) {
         c.warn("ignored_option", ".chart.secondary", `secondary axis is not supported on ${ch.kind} charts`);
+      }
+      if (ch.kind !== "waterfall") {
+        if (ch.base !== undefined) c.warn("ignored_option", ".chart.base", "base applies only to waterfall charts");
+        if (ch.total !== undefined) c.warn("ignored_option", ".chart.total", "total applies only to waterfall charts");
       }
       if (ds && ds.rows.length === 0) c.warn("empty_data", ".chart.data", `dataset '${ds.id}' has no rows; the chart will be empty`);
       return;
     }
     case "list":
       return;
+    case "diagram": {
+      // Full Mermaid parsing needs a browser; catch the common mistake (no/unknown diagram type) here.
+      const kind = mermaidKind(block.source);
+      if (!kind || !(MERMAID_DIAGRAMS as readonly string[]).includes(kind)) {
+        const guess = kind ? closest(kind, MERMAID_DIAGRAMS) : undefined;
+        c.error("unknown_diagram", ".source", `Mermaid source must start with a diagram type, got '${kind ?? ""}'`, guess ? `did you mean '${guess}'?` : `start with one of: ${MERMAID_DIAGRAMS.slice(0, 6).join(", ")}, …`);
+      }
+      return;
+    }
   }
 }
 

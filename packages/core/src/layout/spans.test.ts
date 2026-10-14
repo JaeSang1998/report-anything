@@ -89,6 +89,16 @@ describe("assignRows", () => {
     expect(spans({ id: "s", blocks: [chart("c", "bar", "many", "name", { limit: 10, horizontal: true }), text("n")] })).toEqual([[8, 4]]);
   });
 
+  it("treats funnels and dumbbells like horizontal bars and waterfalls like vertical bars", () => {
+    // 20 categories: one row each for funnel/dumbbell → full width; a waterfall stays pairable up to 24 steps.
+    expect(spans({ id: "s", blocks: [chart("c", "funnel", "many", "name"), text("n")] })).toEqual([[12], [12]]);
+    expect(spans({ id: "s", blocks: [chart("c", "dumbbell", "many", "name", { y: ["revenue", "revenue"] }), text("n")] })).toEqual([[12], [12]]);
+    expect(spans({ id: "s", blocks: [chart("c", "waterfall", "many", "name"), text("n")] })).toEqual([[8, 4]]);
+    // Few categories: not round, so they pair 8/4 with a narrative (pie/donut get 6/6) and never join a compact trio.
+    expect(spans({ id: "s", blocks: [chart("c", "funnel", "small", "name", { y: "a" }), text("n")] })).toEqual([[8, 4]]);
+    expect(spans({ id: "s", blocks: [chart("c", "dumbbell", "small", "name", { y: ["a", "b"] }), callout("x"), list("l")] })).toEqual([[8, 4], [12]]);
+  });
+
   it("text over 500 chars does not pair with a chart", () => {
     expect(spans({ id: "s", blocks: [chart("c", "line"), text("n", "word ".repeat(110))] })).toEqual([[12], [12]]);
   });

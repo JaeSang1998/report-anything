@@ -54,6 +54,15 @@ describe("chartToSvg", () => {
     expectWellFormed(svg);
   });
 
+  it.each(["waterfall", "funnel", "dumbbell"] as const)("renders %s charts as well-formed, escaped SVG", (kind) => {
+    const model = buildChart({ kind, data: "d", x: "c", y: kind === "dumbbell" ? ["v", "v"] : "v", ...(kind === "waterfall" ? { base: "first" as const } : {}) }, ctx, { width: 480, height: 240 });
+    expect(model.empty).toBe(false);
+    const svg = chartToSvg(model);
+    expectWellFormed(svg);
+    expect(svg).toContain("&lt;b&gt;Tom &amp; Jerry&lt;/b&gt;");
+    expect(svg).toMatch(kind === "dumbbell" ? /<circle / : /<rect x=/);
+  });
+
   it("resolves palette indices, sequential scales and named roles", () => {
     const model: ChartModel = {
       kind: "bar",

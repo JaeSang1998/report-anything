@@ -11,7 +11,7 @@
   },
   "page": {
     "size": "A4",
-    "targetPages": 2
+    "targetPages": 3
   },
   "datasets": {
     "subs": {
@@ -915,6 +915,54 @@
           "format": "percent"
         }
       ]
+    },
+    "sep_movement": {
+      "from": "monthly",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "month == '2026-09-01'"
+        },
+        {
+          "op": "rename",
+          "fields": {
+            "new_mrr": "New",
+            "expansion_mrr": "Expansion",
+            "churned_negative": "Churned"
+          }
+        },
+        {
+          "op": "select",
+          "fields": [
+            "New",
+            "Expansion",
+            "Churned"
+          ]
+        },
+        {
+          "op": "fold",
+          "fields": [
+            "New",
+            "Expansion",
+            "Churned"
+          ],
+          "as": [
+            "step",
+            "mrr"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "name": "step",
+          "label": "Movement"
+        },
+        {
+          "name": "mrr",
+          "label": "MRR",
+          "format": "currency:0"
+        }
+      ]
     }
   },
   "sections": [
@@ -1043,6 +1091,19 @@
           "variant": "risk",
           "title": "Starter churn is rising",
           "content": "Starter logo churn averaged {{avg(starter_churn.logo_churn_rate) | percent}} over two years but ran higher in Q3. Starter is small in MRR, but it feeds Pro upgrades."
+        },
+        {
+          "id": "sep_bridge",
+          "type": "chart",
+          "title": "September net new MRR",
+          "height": "sm",
+          "chart": {
+            "kind": "waterfall",
+            "data": "sep_movement",
+            "x": "step",
+            "y": "mrr",
+            "total": "Net new MRR"
+          }
         }
       ]
     },

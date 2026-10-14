@@ -22,7 +22,7 @@ import {
   suggestCharts,
   validateReport,
 } from "@report-anything/core";
-import type { Issue, LayoutMode, Row } from "@report-anything/core";
+import type { Archetype, LayoutMode, Row } from "@report-anything/core";
 import { Report } from "@report-anything/react";
 
 const HELP = `report-anything — headless report engine CLI
@@ -32,7 +32,8 @@ Usage:
   report-anything validate <spec.json>                   schema + data/field checks (exit 1 on errors)
   report-anything inspect  <spec.json> [--mode print]    outline, spans, pages, layout diagnostics
   report-anything profile  <data.json|csv> [--path a.b]  field roles/stats + chart suggestions
-  report-anything auto     <data.json|csv> [--title T] [--locale ko-KR] [--currency KRW] [-o spec.json]
+  report-anything auto     <data.json|csv> [--shape overview|brief|trend|compare|breakdown|bridge]
+                           [--title T] [--locale ko-KR] [--currency KRW] [-o spec.json]
   report-anything apply    <spec.json> <ops.jsonl|-> [-o out.json]
   report-anything render   <spec.json> [-o report.html] [--mode web|print]
   report-anything chart    <spec.json> <blockId> [-o chart.svg] [--width 640]
@@ -68,6 +69,14 @@ async function readData(path: string): Promise<unknown> {
 
 class UsageError extends Error {}
 
+const SHAPES: Record<string, Archetype> = { overview: "overview", brief: "brief", trend: "trend", compare: "compare", breakdown: "breakdown", bridge: "bridge" };
+
+function parseShape(value: string): Archetype {
+  const shape = SHAPES[value];
+  if (!shape) throw new UsageError(`--shape must be one of ${Object.keys(SHAPES).join(", ")}`);
+  return shape;
+}
+
 async function emit(value: unknown, out: string | undefined): Promise<void> {
   const text = typeof value === "string" ? value : `${JSON.stringify(value, null, 2)}\n`;
   if (out) {
@@ -91,6 +100,16 @@ async function renderHtml(spec: ReportSpec, mode: LayoutMode): Promise<string> {
   const body = renderToStaticMarkup(<Report spec={spec} mode={mode} />);
   const lang = spec.meta?.locale ?? "en";
   const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  // Mermaid needs a browser: static HTML ships the source in `.mermaid` elements and upgrades them on load.
+  const hasDiagram = spec.sections.some((s) => s.blocks.some((b) => b.type === "diagram"));
+  const diagrams = hasDiagram
+    ? `<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.esm.min.mjs";
+mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: "neutral", fontFamily: "inherit" });
+await mermaid.run({ querySelector: ".ra-diagram .mermaid" });
+</script>
+`
+    : "";
   return `<!doctype html>
 <html lang="${esc(lang)}">
 <head>
@@ -101,7 +120,7 @@ async function renderHtml(spec: ReportSpec, mode: LayoutMode): Promise<string> {
 </head>
 <body class="ra-body ra-body--${mode}">
 ${body}
-</body>
+${diagrams}</body>
 </html>
 `;
 }
@@ -117,6 +136,7 @@ async function main(argv: string[]): Promise<number> {
       title: { type: "string" },
       locale: { type: "string" },
       currency: { type: "string" },
+      shape: { type: "string" },
       width: { type: "string" },
       help: { type: "boolean", short: "h" },
     },
@@ -172,6 +192,7 @@ async function main(argv: string[]): Promise<number> {
         ...(values.title ? { title: values.title } : {}),
         ...(values.locale ? { locale: values.locale } : {}),
         ...(values.currency ? { currency: values.currency } : {}),
+        ...(values.shape ? { archetype: parseShape(values.shape) } : {}),
       });
       await emit(draft, values.out);
       return 0;

@@ -15,6 +15,7 @@
     "@report-anything/core": "workspace:*",
     "@report-anything/react": "workspace:*",
     "ai": "^7.0.138",
+    "mermaid": "^12.2.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "zod": "^4.6.7"

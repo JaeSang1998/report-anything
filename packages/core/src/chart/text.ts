@@ -35,6 +35,9 @@ const KIND_NAMES: Record<ChartKind, string> = {
   pie: "Pie chart",
   donut: "Donut chart",
   heatmap: "Heatmap",
+  waterfall: "Waterfall chart",
+  funnel: "Funnel chart",
+  dumbbell: "Dumbbell chart",
 };
 
 export interface Summary {

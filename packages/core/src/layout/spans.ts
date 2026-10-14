@@ -73,6 +73,8 @@ function autoGroup(blocks: readonly Block[], i: number, ctx: DataContext): Array
     if (b.type === "chart" && !isWideChart(b, ctx)) return [[a, 6], [b, 6]];
     if (isShortNarrative(b)) return isRound(a) ? [[a, 6], [b, 6]] : [[a, 8], [b, 4]];
   }
+  // A diagram with a short note beside it reads like a chart with its explanation.
+  if (a?.type === "diagram" && b && isShortNarrative(b)) return [[a, 8], [b, 4]];
   // Two small non-chart blocks (comparison, short list/callout/text) read well side by side.
   if (a && b && a.type !== "chart" && b.type !== "chart" && (isCompact(a) || isShortNarrative(a)) && (isCompact(b) || isShortNarrative(b))) {
     return [[a, 6], [b, 6]];
@@ -96,15 +98,19 @@ function isRound(block: BlockOf<"chart">): boolean {
   return block.chart.kind === "pie" || block.chart.kind === "donut";
 }
 
-/** Bars with many categories need the full width (vertical > 24 ≈ 28px per bar at 8 columns; horizontal > 12 rows). */
+/**
+ * Bars with many categories need the full width (vertical > 24 ≈ 28px per bar at 8 columns; horizontal > 12 rows).
+ * Waterfalls read like vertical bars; funnels and dumbbells like horizontal ones (one row per category).
+ */
 function isWideChart(block: BlockOf<"chart">, ctx: DataContext): boolean {
   const c = block.chart;
-  if (c.kind !== "bar") return false;
+  if (c.kind !== "bar" && c.kind !== "waterfall" && c.kind !== "funnel" && c.kind !== "dumbbell") return false;
   const rows = ctx.datasets.get(c.data)?.rows;
   if (!rows) return false;
   let categories = new Set(rows.map((r) => r[c.x] ?? null)).size;
   if (c.limit !== undefined) categories = Math.min(categories, c.limit + (c.others ? 1 : 0));
-  return categories > (c.horizontal ? 12 : 24);
+  const rowsPerCategory = c.kind === "funnel" || c.kind === "dumbbell" || (c.kind === "bar" && c.horizontal);
+  return categories > (rowsPerCategory ? 12 : 24);
 }
 
 function isShortNarrative(block: Block): boolean {
@@ -132,6 +138,7 @@ function isCompact(block: Block): boolean {
 function minWidth(block: Block): number {
   switch (block.type) {
     case "chart":
+    case "diagram":
       return METRICS.minWidth.chart;
     case "table":
       return METRICS.minWidth.table;

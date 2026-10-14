@@ -340,6 +340,10 @@ describe("buildChart geometry", () => {
     { kind: "pie", data: "sales", x: "region", y: "revenue", labels: true },
     { kind: "donut", data: "sales", x: "region", y: "revenue" },
     { kind: "heatmap", data: "sales", x: "month", y: "region", value: "revenue" },
+    { kind: "waterfall", data: "sales", x: "month", y: "growth", base: "first" },
+    { kind: "waterfall", data: "sales", x: "region", y: "growth", total: "Net", xLabel: "Region", yLabel: "Growth" },
+    { kind: "funnel", data: "sales", x: "region", y: "revenue" },
+    { kind: "dumbbell", data: "sales", x: "region", y: ["cost", "revenue"], xLabel: "Region", yLabel: "USD" },
   ];
   it.each([
     [640, 320],
@@ -360,5 +364,178 @@ describe("axis tick labels", () => {
     const m = buildChart({ kind: "line", data: "d", x: "m", y: "rate", yFormat: "percent" }, ctxOf({ d: { rows } }), SIZE);
     const labels = m.axes.find((a) => a.position === "left")!.ticks.map((t) => t.label);
     expect(new Set(labels).size).toBe(labels.length);
+  });
+});
+
+describe("waterfall, funnel and dumbbell", () => {
+  const lines = (m: ChartModel) => m.marks.filter((k): k is Extract<Mark, { type: "line" }> => k.type === "line");
+  const circles = (m: ChartModel) => m.marks.filter((k): k is Extract<Mark, { type: "circle" }> => k.type === "circle");
+  const texts = (m: ChartModel, role?: string) => m.marks.filter((k): k is Extract<Mark, { type: "text" }> => k.type === "text" && (role === undefined || k.role === role));
+  /** Pixel position of a value on the axis at `position`, interpolated from its ticks. */
+  const pixel = (m: ChartModel, position: "left" | "bottom", v: number) => {
+    const [a, b] = m.axes.find((x) => x.position === position)!.ticks as [{ value: number; offset: number }, { value: number; offset: number }];
+    return a.offset + ((v - a.value) * (b.offset - a.offset)) / (b.value - a.value);
+  };
+
+  const bridge = [
+    { step: "FY2025", v: 4_100_000 },
+    { step: "New", v: 1_250_000 },
+    { step: "Churn", v: -820_000 },
+    { step: "Churn", v: -30_000 },
+    { step: "Price", v: 310_000 },
+  ];
+  const bridgeCtx = ctxOf({
+    b: {
+      rows: bridge,
+      fields: [
+        { name: "step", type: "string", label: "Step" },
+        { name: "v", type: "number", label: "Revenue", format: "currency" },
+      ],
+    },
+  });
+
+  it("waterfall: start/total bars rise from the baseline, changes float between running totals", () => {
+    const m = buildChart({ kind: "waterfall", data: "b", x: "step", y: "v", base: "first" }, bridgeCtx, SIZE);
+    const bars = rects(m);
+    // Duplicate x values are summed; base "first" appends a total bar by default.
+    expect(bars.map((r) => r.datum.x)).toEqual(["FY2025", "New", "Churn", "Price", "Total"]);
+    const levels: Array<[number, number]> = [
+      [0, 4_100_000],
+      [4_100_000, 5_350_000],
+      [4_500_000, 5_350_000],
+      [4_500_000, 4_810_000],
+      [0, 4_810_000],
+    ];
+    bars.forEach((r, i) => {
+      const [lo, hi] = levels[i]!;
+      expect(close(r.y, pixel(m, "left", hi), 0.5), `${r.key} top`).toBe(true);
+      expect(close(r.y + r.height, pixel(m, "left", lo), 0.5), `${r.key} bottom`).toBe(true);
+    });
+    expect(bars.map((r) => r.fill)).toEqual([0, "positive", "negative", "positive", 0]);
+    expect(bars[2]!.datum.label).toBe("Churn: −$850,000.00 (running total $4,500,000.00)");
+    expect(bars[4]!.datum.label).toBe("Total: $4,810,000.00");
+    // One connector per gap, level with the end of the bar on its left.
+    const links = lines(m);
+    expect(links).toHaveLength(4);
+    const ends = [4_100_000, 5_350_000, 4_500_000, 4_810_000];
+    links.forEach((l, i) => {
+      expect(close(l.y1, pixel(m, "left", ends[i]!), 0.5)).toBe(true);
+      expect(l.x1).toBeCloseTo(bars[i]!.x + bars[i]!.width);
+      expect(l.x2).toBeCloseTo(bars[i + 1]!.x);
+    });
+    // Signed change labels by default; levels unsigned.
+    expect(texts(m, "value-label").map((t) => t.text)).toEqual(["$4.1M", "+$1.3M", "−$850.0K", "+$310.0K", "$4.8M"]);
+    expect(m.description).toMatch(/^Waterfall chart of Revenue by Step .*Starts at \$4,100,000\.00 and ends at \$4,810,000\.00 \(\+17\.3%\)\.$/);
+  });
+
+  it("waterfall: base zero treats every row as a change; total label is configurable and localized", () => {
+    const plain = buildChart({ kind: "waterfall", data: "b", x: "step", y: "v", labels: false }, bridgeCtx, SIZE);
+    expect(rects(plain).map((r) => r.fill)).toEqual(["positive", "positive", "negative", "positive"]);
+    expect(texts(plain, "value-label")).toEqual([]);
+    const named = buildChart({ kind: "waterfall", data: "b", x: "step", y: "v", total: "FY2026" }, bridgeCtx, SIZE);
+    expect(rects(named).at(-1)!.datum.x).toBe("FY2026");
+    const ko = buildChart({ kind: "waterfall", data: "b", x: "step", y: "v", base: "first" }, { ...bridgeCtx, locale: "ko-KR" }, SIZE);
+    expect(rects(ko).at(-1)!.datum.x).toBe("합계");
+    const none = buildChart({ kind: "waterfall", data: "b", x: "step", y: "v", base: "first", total: false }, bridgeCtx, SIZE);
+    expect(rects(none)).toHaveLength(4);
+  });
+
+  it("waterfall: a negative running total goes below the baseline", () => {
+    const c = ctxOf({ d: { rows: [{ s: "A", v: 100 }, { s: "B", v: -300 }] } });
+    const m = buildChart({ kind: "waterfall", data: "d", x: "s", y: "v", total: true }, c, SIZE);
+    const [, down, total] = rects(m);
+    const zero = pixel(m, "left", 0);
+    expect(close(down!.y, pixel(m, "left", 100), 0.5)).toBe(true);
+    expect(close(down!.y + down!.height, pixel(m, "left", -200), 0.5)).toBe(true);
+    expect(close(total!.y, zero, 0.5)).toBe(true);
+    expect(total!.y + total!.height).toBeGreaterThan(zero);
+    expect(texts(m, "value-label").at(-1)!.text).toBe("−200");
+  });
+
+  const funnelCtx = ctxOf({
+    f: {
+      rows: [
+        { stage: "Visit", n: 10_000 },
+        { stage: "Signup", n: 3_000 },
+        { stage: "Trial", n: 1_260 },
+        { stage: "Paid", n: 120 },
+      ],
+    },
+  });
+
+  it("funnel: centered bars in data order, shrinking with the value, with % of previous notes", () => {
+    const m = buildChart({ kind: "funnel", data: "f", x: "stage", y: "n" }, funnelCtx, SIZE);
+    const bars = rects(m);
+    expect(bars.map((r) => r.datum.x)).toEqual(["Visit", "Signup", "Trial", "Paid"]);
+    for (let i = 1; i < bars.length; i++) {
+      expect(bars[i]!.width).toBeLessThan(bars[i - 1]!.width);
+      expect(bars[i]!.y).toBeGreaterThan(bars[i - 1]!.y);
+      expect(bars[i]!.x + bars[i]!.width / 2).toBeCloseTo(bars[0]!.x + bars[0]!.width / 2);
+    }
+    expect(bars[2]!.width / bars[0]!.width).toBeCloseTo(0.126);
+    expect(texts(m, "annotation").filter((t) => t.key.startsWith("note:")).map((t) => t.text)).toEqual(["30% of previous", "42% of previous", "9.5% of previous"]);
+    expect(texts(m, "value-label").map((t) => t.text)).toEqual(["10K", "3,000", "1,260", "120"]);
+    expect(texts(m, "annotation").filter((t) => t.key.startsWith("stage:")).every((t) => t.anchor === "end" && t.x < bars[0]!.x)).toBe(true);
+    expect(bars[0]!.datum.label).toBe("Visit: 10,000");
+    expect(bars[2]!.datum.label).toBe("Trial: 1,260 (42% of previous, 13% of first)");
+    expect(m.description).toMatch(/ Overall conversion from Visit to Paid: 1\.2%\.$/);
+  });
+
+  const pairs = ctxOf({
+    p: {
+      rows: [
+        { region: "Japan", a: 600, b: 540 },
+        { region: "Korea", a: 400, b: 700 },
+        { region: "US", a: 1000, b: 1400 },
+        { region: "Chile", a: 300, b: 300 },
+      ],
+      fields: [
+        { name: "region", type: "string", label: "Region" },
+        { name: "a", type: "number", label: "H1 2025", format: "currency:USD:0" },
+        { name: "b", type: "number", label: "H1 2026", format: "currency:USD:0" },
+      ],
+    },
+  });
+
+  it("dumbbell: two dots per row joined by a line, sorted by `to` desc, with signed change labels", () => {
+    const m = buildChart({ kind: "dumbbell", data: "p", x: "region", y: ["a", "b"] }, pairs, SIZE);
+    expect(m.axes.find((a) => a.position === "left")!.ticks.map((t) => t.label)).toEqual(["US", "Korea", "Japan", "Chile"]);
+    const dots = circles(m);
+    expect(dots).toHaveLength(8);
+    const us = dots.filter((d) => d.datum.x === "US");
+    expect(us.map((d) => d.fill)).toEqual(["muted", 0]);
+    expect(us[0]!.cy).toBe(us[1]!.cy);
+    expect(close(us[0]!.cx, pixel(m, "bottom", 1000), 0.5) && close(us[1]!.cx, pixel(m, "bottom", 1400), 0.5)).toBe(true);
+    expect(us[0]!.datum.label).toBe("US: $1,000 → $1,400 (+40%)");
+    const link = lines(m).find((l) => l.key === "link:US")!;
+    expect([link.x1, link.x2]).toEqual([us[0]!.cx, us[1]!.cx]);
+    const labels = texts(m, "value-label");
+    expect(labels.map((t) => [t.text, t.fill])).toEqual([
+      ["+40%", "positive"],
+      ["+75%", "positive"],
+      ["−10%", "negative"],
+      ["0.0%", "muted"],
+    ]);
+    expect(labels.every((t) => t.x > Math.max(...dots.map((d) => d.cx + d.r)))).toBe(true);
+    expect(m.legend.map((l) => [l.label, l.color, l.shape])).toEqual([
+      ["H1 2025", "muted", "circle"],
+      ["H1 2026", 0, "circle"],
+    ]);
+    const byName = buildChart({ kind: "dumbbell", data: "p", x: "region", y: ["a", "b"], sort: "x" }, pairs, SIZE);
+    expect(byName.axes.find((a) => a.position === "left")!.ticks.map((t) => t.label)).toEqual(["Chile", "Japan", "Korea", "US"]);
+  });
+
+  it("returns empty models with a warning when nothing is plottable", () => {
+    const c = ctxOf({ d: { rows: [{ s: "A", v: null, w: null }] } });
+    for (const spec of [
+      { kind: "waterfall", data: "d", x: "s", y: "v" },
+      { kind: "funnel", data: "d", x: "s", y: "v" },
+      { kind: "dumbbell", data: "d", x: "s", y: ["v", "w"] },
+      { kind: "dumbbell", data: "d", x: "s", y: "v" },
+    ] as ChartSpec[]) {
+      const m = buildChart(spec, c, SIZE);
+      expect(m.empty, spec.kind).toBe(true);
+      expect(m.warnings).toHaveLength(1);
+    }
   });
 });

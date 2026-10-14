@@ -166,6 +166,9 @@ export function estimateBlockHeight(block: Block, width: number, ctx: DataContex
     }
     case "chart":
       return chrome + chartPlotHeight(block) + (chartHasLegend(block) ? METRICS.chart.legendBand : 0);
+    case "diagram":
+      // Diagrams are fitted into the same height presets as charts.
+      return chrome + METRICS.chart.plot[block.height ?? "md"];
     case "text":
       return chrome + markdownHeight(block.content, width);
     case "callout":

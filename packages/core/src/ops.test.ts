@@ -83,6 +83,28 @@ describe("validateReport", () => {
     const r = validateReport({ ...base, sections: [{ id: "a", blocks: [{ id: "p", type: "chart", chart: { kind: "pie", data: "sales", x: "month", y: ["revenue", "revenue"] } }] }] });
     expect(r.issues.some((i) => i.code === "chart_encoding")).toBe(true);
   });
+
+  const chartIssues = (chart: object) =>
+    validateReport({ ...base, sections: [{ id: "a", blocks: [{ id: "c", type: "chart", chart: { data: "sales", x: "month", ...chart } }] }] }).issues.map((i) => `${i.severity}:${i.code}:${i.path}`);
+
+  it.each([
+    [{ kind: "waterfall", y: ["revenue", "revenue"] }, "error:chart_encoding:sections[0].blocks[0].chart.y"],
+    [{ kind: "funnel", y: ["revenue", "revenue"] }, "error:chart_encoding:sections[0].blocks[0].chart.y"],
+    [{ kind: "dumbbell", y: "revenue" }, "error:chart_encoding:sections[0].blocks[0].chart.y"],
+    [{ kind: "dumbbell", y: ["revenue", "revenue", "revenue"] }, "error:chart_encoding:sections[0].blocks[0].chart.y"],
+    [{ kind: "waterfall", y: "revenue", series: "month" }, "error:chart_encoding:sections[0].blocks[0].chart.series"],
+    [{ kind: "dumbbell", y: ["revenue", "revenue"], series: "month" }, "error:chart_encoding:sections[0].blocks[0].chart.series"],
+    [{ kind: "bar", y: "revenue", base: "first" }, "warning:ignored_option:sections[0].blocks[0].chart.base"],
+    [{ kind: "funnel", y: "revenue", total: "End" }, "warning:ignored_option:sections[0].blocks[0].chart.total"],
+  ])("checks waterfall/funnel/dumbbell encodings: %j", (chart, issue) => {
+    expect(chartIssues(chart)).toEqual([issue]);
+  });
+
+  it("accepts well-formed waterfall, funnel and dumbbell charts", () => {
+    expect(chartIssues({ kind: "waterfall", y: "revenue", base: "first", total: "End" })).toEqual([]);
+    expect(chartIssues({ kind: "funnel", y: "revenue" })).toEqual([]);
+    expect(chartIssues({ kind: "dumbbell", y: ["revenue", "revenue"] })).toEqual([]);
+  });
 });
 
 describe("createReportSession", () => {

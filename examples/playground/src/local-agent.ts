@@ -8,8 +8,8 @@ import type {
 } from "@ai-sdk/provider";
 import { simulateReadableStream } from "ai";
 import { z } from "zod";
-import { autoReport, humanize, ReportSpec } from "@report-anything/core";
-import type { Block, Dataset, FieldDef, ReportSession } from "@report-anything/core";
+import { autoReport, humanize, MERMAID_DIAGRAMS, mermaidKind, ReportSpec } from "@report-anything/core";
+import type { Archetype, Block, Dataset, FieldDef, ReportSession } from "@report-anything/core";
 
 /**
  * Keyless report agent. It speaks the AI SDK language-model protocol, so the playground runs the exact same
@@ -96,6 +96,24 @@ function withLabels(dataset: Dataset, labels: readonly FieldDef[]): Dataset {
   return { ...dataset, fields: merged };
 }
 
+/** The question decides the report's structure: first matching intent wins, otherwise a general overview. */
+const INTENTS: Array<[Archetype, RegExp]> = [
+  ["bridge", /(why|what changed|what drove|drivers?|bridge|waterfall|contribut|explain the (change|drop|increase)|원인|왜|변화 요인|기여)/i],
+  ["compare", /(compare|comparison|versus|\bvs\.?\b|against|year[- ]over[- ]year|\byoy\b|비교|대비)/i],
+  ["trend", /(trend|over time|trajector|month by month|week by week|추이|트렌드|흐름)/i],
+  ["brief", /(brief|one[- ]page|1[- ]page|tl;?dr|at a glance|한 ?페이지|요약본|브리프)/i],
+  ["breakdown", /(break(ing)? (it )?down|breakdown|by (region|category|channel|plan|priority|country|segment)|rank|top \d+|where is the|share of|순위|비중|분해|상위)/i],
+];
+
+const ARCHETYPE_NAMES: Record<Archetype, [ko: string, en: string]> = {
+  overview: ["개요", "an overview"],
+  brief: ["한 페이지 브리프", "a one-page brief"],
+  trend: ["추이 분석", "a trend analysis"],
+  compare: ["기간 비교", "a period comparison"],
+  breakdown: ["구성 분석", "a breakdown"],
+  bridge: ["변화 요인(브리지)", "a what-changed bridge"],
+};
+
 function buildPlan(text: string, lang: Lang, session: ReportSession): Plan {
   const { spec, context } = session.getSnapshot();
   const raw = rawDatasets(spec);
@@ -111,9 +129,11 @@ function buildPlan(text: string, lang: Lang, session: ReportSession): Plan {
   const input = source.rows ?? source.json ?? source.csv;
   const resolved = context.datasets.get(sourceId);
   const title = source.description ?? t(lang, `${sourceId} 데이터 리포트`, `${humanize(sourceId)} report`);
+  const archetype: Archetype = INTENTS.find(([, re]) => re.test(text))?.[0] ?? "overview";
   const draft = ReportSpec.parse(
-    autoReport(input, { title, ...(lang === "ko" ? { locale: "ko-KR", currency: spec.meta?.currency ?? "KRW" } : { locale: "en-US" }) }),
+    autoReport(input, { title, archetype, ...(lang === "ko" ? { locale: "ko-KR", currency: spec.meta?.currency ?? "KRW" } : { locale: "en-US" }) }),
   );
+  const [nameKo, nameEn] = ARCHETYPE_NAMES[archetype];
 
   // The draft's primary table is the attached data itself: alias it instead of copying rows.
   const labels = source.fields ?? [];
@@ -160,11 +180,13 @@ function buildPlan(text: string, lang: Lang, session: ReportSession): Plan {
     done: (r) =>
       t(
         lang,
-        `초안을 만들었습니다: 섹션 ${draft.sections.length}개, 차트 ${charts}개, A4 ${r?.pages ?? "?"}쪽${errorsNote(r, lang)}. 차트 종류 변경, 차트를 표로, 블록 삭제, 제목 변경은 이 로컬 에이전트로도 할 수 있어요.`,
-        `Drafted ${draft.sections.length} sections with ${charts} charts, ${r?.pages ?? "?"} A4 pages${errorsNote(r, lang)}. This local agent can also change chart types, turn a chart into a table, remove blocks and rename the report.`,
+        `**${nameKo}** 구성으로 만들었습니다: 섹션 ${draft.sections.length}개, 차트 ${charts}개, A4 ${r?.pages ?? "?"}쪽${errorsNote(r, lang)}. 다른 구성이 필요하면 “한 페이지 브리프로”, “추이로”, “비교로”, “왜 바뀌었는지”, “구성별로”라고 요청하세요.`,
+        `Built ${nameEn}: ${plural(draft.sections.length, "section")}, ${plural(charts, "chart")}, ${plural(r?.pages ?? 0, "A4 page")}${errorsNote(r, lang)}. Ask for another shape any time — “as a one-page brief”, “show the trend”, “compare periods”, “why did it change”, “break it down”.`,
       ),
   };
 }
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 function errorsNote(r: ApplyResultLike | undefined, lang: Lang): string {
   const errors = (r?.issues ?? []).filter((i) => i.severity === "error").length + (r?.rejected?.length ?? 0);
@@ -243,19 +265,51 @@ function editPlan(text: string, lang: Lang, session: ReportSession): Plan | unde
   return undefined;
 }
 
-const BUILD_WORDS = /(리포트|보고서|분석|만들|작성|초안|다시|report|build|draft|analy[sz]e|create|make)/i;
+const MERMAID_FENCE = /```mermaid\s*\n([\s\S]*?)```/;
+
+/** Mermaid pasted into the chat (fenced, or a message that starts with a diagram keyword) becomes a diagram block. */
+function diagramPlan(text: string, lang: Lang, session: ReportSession): Plan | undefined {
+  const fenced = MERMAID_FENCE.exec(text);
+  const kind = mermaidKind(fenced ? fenced[1]! : text);
+  if (!fenced && !(MERMAID_DIAGRAMS as readonly string[]).includes(kind ?? "")) return undefined;
+  const source = (fenced ? fenced[1]! : text).trim();
+  const note = (fenced ? text.replace(MERMAID_FENCE, "") : "").trim();
+  const { spec } = session.getSnapshot();
+  const taken = new Set(spec.sections.flatMap((s) => [s.id, ...s.blocks.map((b) => b.id)]));
+  let id = "diagram";
+  for (let n = 2; taken.has(id); n++) id = `diagram_${n}`;
+  const last = spec.sections[spec.sections.length - 1];
+  // In an existing report the note titles the diagram; in a new one it already titles the report.
+  const block = { id, type: "diagram", source, ...(note && last ? { title: note.split("\n")[0]!.slice(0, 80) } : {}) };
+  const batch: Op[] = last
+    ? [{ op: "addBlock", section: last.id, block }]
+    : [
+        { op: "setReport", patch: { title: note ? note.split("\n")[0]!.slice(0, 80) : t(lang, "다이어그램", "Diagram") } },
+        { op: "addSection", section: { id: "diagrams", blocks: [block] } },
+      ];
+  return {
+    intro: "",
+    batches: [batch],
+    done: (r) =>
+      t(lang, `${kind ?? "Mermaid"} 다이어그램을 리포트에 넣었습니다`, `Added the ${kind ?? "Mermaid"} diagram to the report`) + ` (revision ${r?.revision ?? "?"}${errorsNote(r, lang)}).`,
+  };
+}
+
+const BUILD_WORDS = /(리포트|보고서|분석|만들|작성|초안|다시|report|build|draft|analy[sz]e|create|make|instead|as an?\b)/i;
 
 function plan(text: string, session: ReportSession): Plan {
   const lang: Lang = /[가-힣]/.test(text) ? "ko" : "en";
   const hasReport = session.getSnapshot().spec.sections.length > 0;
+  const diagram = diagramPlan(text, lang, session);
+  if (diagram) return diagram;
   const edit = hasReport ? editPlan(text, lang, session) : undefined;
   if (edit) return edit;
-  if (!hasReport || BUILD_WORDS.test(text)) return buildPlan(text, lang, session);
+  if (!hasReport || BUILD_WORDS.test(text) || INTENTS.some(([, re]) => re.test(text))) return buildPlan(text, lang, session);
   return {
     intro: t(
       lang,
       "API 키 없이 동작하는 로컬 에이전트라서 정해진 요청만 처리해요: 리포트 만들기/다시 만들기, “두 번째 차트를 표로 바꿔줘”, “첫 번째 차트를 선 차트로”, “마지막 차트 삭제”, “가로 막대로”, “누적으로”, 제목을 \"…\"로 바꾸기. 자유로운 요청은 .env.local에 API 키를 넣으면 LLM 에이전트가 처리합니다.",
-      'This keyless local agent handles a fixed set of requests: build or rebuild the report, "turn the second chart into a table", "make the first chart a line chart", "remove the last chart", "horizontal", "stacked", and title "…". Put an API key in .env.local for free-form requests.',
+      'This keyless local agent handles a fixed set of requests: build the report in one of six shapes (overview, one-page brief, trend, comparison, breakdown, what-changed bridge), "turn the second chart into a table", "make the first chart a line chart", "remove the last chart", "horizontal", "stacked", title "…", and pasting a ```mermaid diagram```. Put an API key in .env.local for free-form requests.',
     ),
     batches: [],
     done: () => "",

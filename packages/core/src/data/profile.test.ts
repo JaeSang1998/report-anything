@@ -36,7 +36,9 @@ describe("profileDataset", () => {
   });
 
   it("computes stats, top values and suggested formats", () => {
-    expect(role("revenue")).toMatchObject({ count: 24, nulls: 0, distinct: 24, min: 100, max: 330, suggestedFormat: "currency" });
+    // Whole-number amounts drop the cents; small fractional prices keep them.
+    expect(role("revenue")).toMatchObject({ count: 24, nulls: 0, distinct: 24, min: 100, max: 330, suggestedFormat: "currency:0" });
+    expect(profileDataset(ds([{ price: 9.99 }, { price: 19.5 }])).fields[0]!.suggestedFormat).toBe("currency");
     expect(role("margin_rate").suggestedFormat).toBe("percent");
     expect(role("units").suggestedFormat).toBeUndefined();
     expect(role("region").top).toHaveLength(4);
@@ -44,7 +46,7 @@ describe("profileDataset", () => {
     expect(role("month")).toMatchObject({ min: "2026-01-01", max: "2026-06-01" });
     // Ratio-like name but values outside [-1.5, 1.5] → no percent.
     expect(profileDataset(ds([{ growth: 12.5 }, { growth: 3 }])).fields[0]!.suggestedFormat).toBeUndefined();
-    expect(profileDataset(ds([{ 매출액: 10 }])).fields[0]!.suggestedFormat).toBe("currency");
+    expect(profileDataset(ds([{ 매출액: 10 }])).fields[0]!.suggestedFormat).toBe("currency:0");
   });
 });
 
@@ -76,7 +78,7 @@ describe("measure semantics", () => {
     const rows = [{ customers: 10, mrr: 500, gmv: 900 }];
     const p = profileDataset(ds(rows));
     expect(rankMeasures(p.fields).map((f) => f.name)).toEqual(["mrr", "gmv", "customers"]);
-    expect(p.fields.find((f) => f.name === "mrr")!.suggestedFormat).toBe("currency");
+    expect(p.fields.find((f) => f.name === "mrr")!.suggestedFormat).toBe("currency:0");
     expect(fieldLabel("mrr")).toBe("MRR");
     expect(fieldLabel("new_mrr")).toBe("New MRR");
     expect(fieldLabel("customer.id")).toBe("Customer ID");

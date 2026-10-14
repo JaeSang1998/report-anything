@@ -4363,6 +4363,18 @@
           "maxRows": 10
         },
         {
+          "id": "flow",
+          "type": "diagram",
+          "title": "Proposed escalation path",
+          "source": "flowchart LR\n  A[New ticket] --> B{Priority}\n  B -- P1 --> C[Page on-call]\n  B -- P2 / P3 --> D[Category queue]\n  B -- P4 --> E[Backlog]\n  D --> F{Integration?}\n  F -- yes --> G[Eng escalation]\n  F -- no --> H[Resolve]\n  C --> H\n  G --> H\n  H --> I[CSAT survey]",
+          "height": "sm"
+        },
+        {
+          "id": "flow_note",
+          "type": "text",
+          "content": "Integration tickets get an engineering owner on day one instead of waiting in the bug queue. P1s skip triage entirely."
+        },
+        {
           "id": "next",
           "type": "list",
           "title": "Q4 plan",

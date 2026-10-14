@@ -62,6 +62,7 @@ Common: `id`, `type`, `title`, `caption` (footnote/source), `sourceRefs`, `span`
 | `callout` | `content`, `tone: neutral|info|positive|warning|critical`, `variant: insight|recommendation|note|risk` |
 | `list` | `style: bullet|numbered|check`, `items: [{ text, detail, tag, tone }]` |
 | `comparison` | `entities[2..4]`, `metrics: [{ label, values (one per entity), format, goodWhen }]`, `showDelta` |
+| `diagram` | `source` (Mermaid: `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `erDiagram`, `gantt`, `timeline`, `mindmap`, …), `height: sm|md|lg` — for processes and structures, never for data (use charts, which bind to datasets) |
 
 ## Charts
 
@@ -74,8 +75,26 @@ Common: `id`, `type`, `title`, `caption` (footnote/source), `sourceRefs`, `span`
 | `scatter` | `x`, `y` numbers; `value` = bubble size; `series` for color |
 | `pie` / `donut` | `x` category, single `y`; small slices merge into Other |
 | `heatmap` | `x`, `y` categories, `value` measure |
+| `waterfall` | `x` step label (data order; duplicate steps summed), single signed `y`; `base: "zero"` (default, every row is a change) or `"first"` (first row is the starting level); `total: true|false|"label"` appends an ending total bar (default true with `base: "first"`; label defaults to the locale's "Total"); signed value labels shown unless `labels: false` |
+| `funnel` | `x` stage (data order), single `y`; centered bars with value and "% of previous"; description states overall first→last conversion |
+| `dumbbell` | `x` category, `y: [from, to]` exactly two fields; one row per category, rows sorted by `to` desc unless `sort`; `limit` keeps the top N by `to`; signed change label per row |
+
+`waterfall`, `funnel` and `dumbbell` take no `series` or `secondary`; `base`/`total` apply to `waterfall` only.
 
 Also: `secondary: { y, format, label }` (right-axis lines), `reference: [{ value, label, axis }]`, `xFormat`, `yFormat`, `xLabel`, `yLabel`, `legend`.
+
+## Diagrams
+
+```json
+{ "id": "escalation", "type": "diagram", "title": "Escalation path", "height": "sm",
+  "source": "flowchart LR\n  A[New ticket] --> B{Priority}\n  B -- P1 --> C[Page on-call]\n  B -- P2/P3 --> D[Category queue]" }
+```
+
+Validation checks the first keyword is a Mermaid diagram type; the browser renders it (the React adapter loads `mermaid` on demand; static HTML from `render` loads it from a CDN).
+
+## Report shapes (`auto --shape`)
+
+`overview` (default: KPIs, a few charts, detail) · `brief` (one page: KPIs, one chart, one insight) · `trend` (moving average, period growth, best/worst periods) · `compare` (latest vs previous window: comparison, dumbbell, biggest movers) · `breakdown` (ranking, shares, mix, ranked table) · `bridge` (what changed: waterfall by contributor, top movers). Use one as a starting draft, then rewrite around your questions.
 
 ## Layout
 
