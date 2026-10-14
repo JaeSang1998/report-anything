@@ -1,0 +1,31 @@
+{
+  "name": "@report-anything/core",
+  "version": "0.1.0",
+  "description": "Headless report engine: ReportSpec IR, data transforms, chart scene graphs, layout + pagination, ops.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "d3-scale": "^4.0.2",
+    "d3-shape": "^3.2.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/d3-scale": "^4.0.9",
+    "@types/d3-shape": "^3.2.0"
+  }
+}

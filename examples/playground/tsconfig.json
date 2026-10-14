@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": false,
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "paths": {
+      "@report-anything/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@report-anything/react": [
+        "../../packages/react/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "server",
+    "vite.config.ts"
+  ]
+}

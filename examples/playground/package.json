@@ -1,0 +1,27 @@
+{
+  "name": "playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.79",
+    "@ai-sdk/openai": "^4.0.92",
+    "@ai-sdk/provider": "^4.0.27",
+    "@ai-sdk/react": "^4.0.141",
+    "@report-anything/core": "workspace:*",
+    "@report-anything/react": "workspace:*",
+    "ai": "^7.0.138",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.4"
+  }
+}

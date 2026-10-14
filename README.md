@@ -1,0 +1,253 @@
+<div align="center">
+
+# report-anything
+
+**Agents write the report. The engine lays it out.**
+
+A headless report engine for AI agents: describe *what* to show as JSON, get a validated, paginated,<br/>data-bound report for the web and for print — streamed live into the conversation.
+
+[![Live playground](https://img.shields.io/badge/playground-live-161616?style=flat-square)](https://jaesang1998.github.io/report-anything/)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/JaeSang1998/report-anything/pages.yml?branch=main&style=flat-square&label=pages)](https://github.com/JaeSang1998/report-anything/actions/workflows/pages.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-161616?style=flat-square)](LICENSE)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-161616?style=flat-square)
+
+[**Open the playground →**](https://jaesang1998.github.io/report-anything/)<br/>
+<sub>No API key needed. Pick a sample, ask for a report, watch it build.</sub>
+
+<br/>
+
+<img src="docs/screenshots/playground-report.png" alt="A report written into the chat by the agent" width="900" />
+
+</div>
+
+<br/>
+
+## Why
+
+Asking an LLM for "a report" usually gets you one of two things: a wall of markdown, or a pile of generated React that is different every time and quietly invents numbers.
+
+report-anything splits the job the way a newsroom does:
+
+| | Decides | Lives in |
+| --- | --- | --- |
+| **Agent** | *What* to show: datasets, sections, KPIs, chart encodings, narrative | a `ReportSpec` JSON (or a stream of edit ops) |
+| **Engine** | *How* it fits: aggregation, grid spans, heights, page breaks, formatting | `@report-anything/core` — no DOM, no React |
+| **Renderer** | Pixels | `@report-anything/react`, SVG, static HTML |
+
+The agent never writes coordinates, CSS, or a single number. It writes intent; the engine guarantees the rest.
+
+## What you get
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Numbers that can't be hallucinated**<br/>
+KPIs, comparisons and prose placeholders are *bound* to data — `{ data, field, agg, where }` or `{{sum(sales.revenue) | currency:KRW}}` — and computed by the engine.
+
+</td>
+<td width="50%" valign="top">
+
+**Any data in**<br/>
+Flat rows, CSV, or nested API JSON (`{ meta, data: { orders: [...] } }` is found and flattened). A transform pipeline — filter, derive, aggregate, window, pivot, lookup — runs in the data layer.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+**A layout engine, not a widget grid**<br/>
+Content-aware 12-column spans, min-width rules, height estimation and A4/Letter pagination with keep-with-next headers and tables that split across pages with repeated headers.
+
+</td>
+<td valign="top">
+
+**Built for agents to iterate**<br/>
+Id-addressed, transactional ops (`updateBlock`, `replaceBlock`, `moveBlock`, …) stream in as JSONL. Every issue comes back with a path and a fix: *"field 'revenu' is not in dataset 'monthly' — did you mean 'revenue'?"*
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+**Headless first**<br/>
+Charts are renderer-agnostic scene graphs; tables, KPIs and comparisons are view models. Use the React adapter, the SVG serializer, or draw your own.
+
+</td>
+<td valign="top">
+
+**A document, not a dashboard**<br/>
+The default theme has no cards, tiles or pills — whitespace, type and table rules carry the structure. Web and print come from the same spec.
+
+</td>
+</tr>
+</table>
+
+## The playground
+
+The report is written **into the conversation**. While the agent streams its ops, the report builds up inside its reply; every later edit produces a new version, and earlier versions stay in the thread.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/playground-streaming.png" alt="Report building while the agent streams ops" /></td>
+<td width="50%"><img src="docs/screenshots/playground-edit.png" alt="An edit turn: the earlier version is kept, the new one is live" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Building live — ops apply while the model is still writing them</sub></td>
+<td align="center"><sub>"두 번째 차트를 표로 바꿔줘" — earlier versions stay in the thread</sub></td>
+</tr>
+</table>
+
+- **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) and handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename.
+- **Locally with a key**, the same UI talks to Claude or GPT through the AI SDK. The system prompt *is* the [agent skill](skills/report-anything/SKILL.md); the browser owns the report session and executes the agent's tools, so the model always sees the real validation and layout result.
+
+```sh
+pnpm install && pnpm dev                  # http://localhost:5173 — local agent, no key
+echo "ANTHROPIC_API_KEY=sk-..." > examples/playground/.env.local   # or OPENAI_API_KEY
+pnpm dev                                  # same UI, LLM agent
+```
+
+## Thirty seconds of ReportSpec
+
+```jsonc
+{
+  "title": "Q2 sales",
+  "meta": { "locale": "en-US", "currency": "USD" },
+  "datasets": {
+    "sales": { "csv": "month,region,revenue\n2026-04,EU,120\n2026-04,US,200\n…" },
+    "monthly": {
+      "from": "sales",
+      "transform": [
+        { "op": "aggregate", "groupBy": ["month"], "measures": [{ "field": "revenue", "agg": "sum", "as": "revenue" }] },
+        { "op": "window", "fn": "pctChange", "field": "revenue", "as": "growth", "sortBy": "month" }
+      ]
+    }
+  },
+  "sections": [{
+    "id": "summary",
+    "title": "Summary",
+    "blocks": [
+      { "id": "kpis", "type": "kpi", "items": [{ "label": "June revenue", "value": { "data": "monthly", "field": "revenue", "agg": "last" }, "format": "currency" }] },
+      { "id": "trend", "type": "chart", "title": "Revenue by month",
+        "chart": { "kind": "bar", "data": "monthly", "x": "month", "y": "revenue", "secondary": { "y": "growth", "format": "percent" } } },
+      { "id": "why", "type": "callout", "variant": "insight", "content": "June closed at {{last(monthly.revenue) | currency}}." }
+    ]
+  }]
+}
+```
+
+No spans, no heights, no page breaks — the engine pairs the chart and the callout 8/4 on the web, re-flows them for A4, and formats every number from the data. A full hand-written example lives in [`examples/specs/sales-h1.json`](examples/specs/sales-h1.json):
+
+<table>
+<tr>
+<td width="58%"><img src="docs/screenshots/report-web.png" alt="Web rendering of the H1 sales report" /></td>
+<td width="42%"><img src="docs/screenshots/report-print-1.png" alt="A4 page 1" /><br/><img src="docs/screenshots/report-print-2.png" alt="A4 page 2" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Web</sub></td>
+<td align="center"><sub>Print (A4, paginated by the engine)</sub></td>
+</tr>
+</table>
+
+## How it works
+
+```mermaid
+flowchart LR
+  A[Agent] -- ReportSpec / JSONL ops --> S[Session<br/>validate · analyze]
+  S --> D[Data layer<br/>normalize · transforms · measures · templates]
+  D --> C[Chart engine<br/>scene graph]
+  D --> L[Layout engine<br/>spans · heights · pages]
+  C --> R[React adapter]
+  L --> R
+  C --> V[SVG serializer]
+  R --> H[Web / print HTML]
+  S -- issues with hints --> A
+```
+
+- **Template-constrained layout.** Section patterns (`auto`, `main-side`, `split`, `thirds`, …) plus content heuristics and minimum pixel widths produce 12-column rows. Print and web differ because widths differ.
+- **One source of metrics.** `METRICS` drives both the height estimator and the CSS variables; in print mode the React adapter measures real DOM heights and feeds them back to the paginator until they agree.
+- **Transactional edits.** Ops either all apply or none do; semantic problems (an unknown field, a broken template) are accepted and reported per block, so a half-streamed report still renders everything that is valid.
+
+## Packages
+
+| Package | |
+| --- | --- |
+| [`@report-anything/core`](packages/core) | ReportSpec schema (Zod → JSON Schema), data normalization, transforms, safe expressions, measures and templates, chart scene graphs, layout + pagination, ops, sessions, JSONL streaming, `autoReport`. |
+| [`@report-anything/react`](packages/react) | `<Report spec \| session mode="web" \| "print">`, per-block renderer overrides, `ChartView`, hooks, `styles.css`. |
+| [`@report-anything/cli`](packages/cli) | `schema · validate · inspect · profile · auto · apply · render · chart` |
+| [`skills/report-anything`](skills/report-anything) | Agent skill: workflow, editorial rules, spec cheat sheet. Drop it into Claude Code / Codex. |
+| [`examples/playground`](examples/playground) | The chat playground (Vite + AI SDK). |
+
+## Use it
+
+**React**
+
+```tsx
+import { Report, useReportSession } from "@report-anything/react";
+import "@report-anything/react/styles.css";
+
+<Report spec={agentJson} mode="print" />;
+
+// Streaming / incremental edits: apply ops as they arrive.
+const session = useReportSession();
+session.apply({ op: "addBlock", section: "summary", block: { id: "k", type: "kpi", items: [/* … */] } });
+<Report session={session} />;
+
+// Server-driven UI escape hatch: replace any block body, keep the layout.
+<Report spec={spec} components={{ chart: MyEChartsBlock }} />;
+```
+
+**Headless**
+
+```ts
+import { createReportSession, layoutReport, buildChart, chartToSvg } from "@report-anything/core";
+
+const session = createReportSession(spec);
+session.apply(ops);                     // transactional; issues reported, not thrown
+session.inspect({ mode: "print" });     // token-cheap outline for the agent
+const { spec: s, context } = session.getSnapshot();
+const plan = layoutReport(s, context, { mode: "print" });
+```
+
+**CLI** (from the repo: `node packages/cli/dist/bin.js …`)
+
+```sh
+report-anything profile orders.json                  # field roles, stats, chart suggestions
+report-anything auto orders.json --title Orders -o spec.json
+report-anything validate spec.json                   # schema + data checks, did-you-mean hints
+report-anything inspect spec.json --mode print       # spans, heights, pages, layout diagnostics
+report-anything apply spec.json edits.jsonl -o spec.json
+report-anything render spec.json --mode print -o report.html
+report-anything chart spec.json trend -o trend.svg
+```
+
+## Customizing
+
+| Level | How |
+| --- | --- |
+| Colors & palette | `--ra-*` CSS variables, or `spec.theme` (`palette`, `accent`, `density`) |
+| Sizes | `METRICS` in core — they also drive the layout estimator, so change them there |
+| One block type | `<Report components={{ chart: MyChart }} />` |
+| Everything | Build on the headless models: `buildChart`, `buildTableModel`, `buildKpiModels`, `layoutReport` |
+
+## Develop
+
+```sh
+pnpm install
+pnpm build        # core → react → cli (tsc -b)
+pnpm test         # vitest
+pnpm typecheck
+pnpm dev          # playground
+```
+
+## Roadmap
+
+- **Code authoring** — a typed TS/TSX builder that compiles to the same ReportSpec, for people who would rather write code than JSON.
+- **PDF** via Playwright, with hydrated HTML so print pagination uses measured heights.
+- **More renderers** from the same IR: PPTX / DOCX, Typst.
+- **MCP server** exposing session `apply` / `inspect` / `render`.
+- **shadcn-style distribution** — copy-in block components that follow your app's theme.
+
+## License
+
+[Apache-2.0](LICENSE)

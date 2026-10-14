@@ -1,0 +1,2589 @@
+{
+  "title": "2026 상반기 매출 분석",
+  "subtitle": "지역·채널별 성과와 하반기 실행 과제",
+  "summary": "상반기 매출은 **{{sum(h1_2026.revenue) | currency:KRW}}**로 전년 동기 대비 성장했습니다. 온라인 채널이 성장을 주도했고, 매장 채널은 마진 방어가 과제입니다.",
+  "meta": {
+    "author": "Revenue Analytics",
+    "date": "2026-07-03",
+    "audience": "executive",
+    "locale": "ko-KR",
+    "currency": "KRW"
+  },
+  "page": {
+    "size": "A4",
+    "targetPages": 4
+  },
+  "datasets": {
+    "sales": {
+      "rows": [
+        {
+          "period": "2025-01-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1178771697,
+          "cost": 644847061,
+          "orders": 18135
+        },
+        {
+          "period": "2025-01-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 968745253,
+          "cost": 579120118,
+          "orders": 14904
+        },
+        {
+          "period": "2025-01-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 558165579,
+          "cost": 324882012,
+          "orders": 233
+        },
+        {
+          "period": "2025-01-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 886255970,
+          "cost": 486977095,
+          "orders": 13635
+        },
+        {
+          "period": "2025-01-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 740511529,
+          "cost": 488419739,
+          "orders": 11392
+        },
+        {
+          "period": "2025-01-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 442602801,
+          "cost": 274402290,
+          "orders": 184
+        },
+        {
+          "period": "2025-01-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 566854184,
+          "cost": 345166863,
+          "orders": 8721
+        },
+        {
+          "period": "2025-01-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 432180637,
+          "cost": 253802406,
+          "orders": 6649
+        },
+        {
+          "period": "2025-01-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 236093875,
+          "cost": 154879249,
+          "orders": 98
+        },
+        {
+          "period": "2025-01-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 388701945,
+          "cost": 237558115,
+          "orders": 5980
+        },
+        {
+          "period": "2025-01-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 278384021,
+          "cost": 165482966,
+          "orders": 4283
+        },
+        {
+          "period": "2025-01-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 167016427,
+          "cost": 100329664,
+          "orders": 70
+        },
+        {
+          "period": "2025-01-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 300024866,
+          "cost": 181731085,
+          "orders": 4616
+        },
+        {
+          "period": "2025-01-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 197384462,
+          "cost": 127579758,
+          "orders": 3037
+        },
+        {
+          "period": "2025-01-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 126358503,
+          "cost": 73901578,
+          "orders": 53
+        },
+        {
+          "period": "2025-02-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1203278508,
+          "cost": 701491037,
+          "orders": 18512
+        },
+        {
+          "period": "2025-02-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1071805028,
+          "cost": 694129413,
+          "orders": 16489
+        },
+        {
+          "period": "2025-02-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 625100423,
+          "cost": 381599208,
+          "orders": 260
+        },
+        {
+          "period": "2025-02-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 977259235,
+          "cost": 582164831,
+          "orders": 15035
+        },
+        {
+          "period": "2025-02-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 756857625,
+          "cost": 482488748,
+          "orders": 11644
+        },
+        {
+          "period": "2025-02-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 478419639,
+          "cost": 294697038,
+          "orders": 199
+        },
+        {
+          "period": "2025-02-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 543715083,
+          "cost": 301939954,
+          "orders": 8365
+        },
+        {
+          "period": "2025-02-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 442165087,
+          "cost": 260948187,
+          "orders": 6803
+        },
+        {
+          "period": "2025-02-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 282533122,
+          "cost": 177288867,
+          "orders": 118
+        },
+        {
+          "period": "2025-02-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 407735917,
+          "cost": 232879556,
+          "orders": 6273
+        },
+        {
+          "period": "2025-02-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 273952450,
+          "cost": 164854930,
+          "orders": 4215
+        },
+        {
+          "period": "2025-02-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 157515898,
+          "cost": 94862020,
+          "orders": 66
+        },
+        {
+          "period": "2025-02-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 285813785,
+          "cost": 174526268,
+          "orders": 4397
+        },
+        {
+          "period": "2025-02-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 243805760,
+          "cost": 145165823,
+          "orders": 3751
+        },
+        {
+          "period": "2025-02-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 144015769,
+          "cost": 90238241,
+          "orders": 60
+        },
+        {
+          "period": "2025-03-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1343653221,
+          "cost": 759360506,
+          "orders": 20672
+        },
+        {
+          "period": "2025-03-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 955677521,
+          "cost": 629215800,
+          "orders": 14703
+        },
+        {
+          "period": "2025-03-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 570138196,
+          "cost": 372711366,
+          "orders": 238
+        },
+        {
+          "period": "2025-03-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1064525710,
+          "cost": 611715327,
+          "orders": 16377
+        },
+        {
+          "period": "2025-03-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 776790810,
+          "cost": 469595809,
+          "orders": 11951
+        },
+        {
+          "period": "2025-03-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 413163825,
+          "cost": 256466767,
+          "orders": 172
+        },
+        {
+          "period": "2025-03-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 570101705,
+          "cost": 318961859,
+          "orders": 8771
+        },
+        {
+          "period": "2025-03-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 468302771,
+          "cost": 297759057,
+          "orders": 7205
+        },
+        {
+          "period": "2025-03-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 274738127,
+          "cost": 163956554,
+          "orders": 114
+        },
+        {
+          "period": "2025-03-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 379388182,
+          "cost": 225941844,
+          "orders": 5837
+        },
+        {
+          "period": "2025-03-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 320959802,
+          "cost": 207133577,
+          "orders": 4938
+        },
+        {
+          "period": "2025-03-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 185968519,
+          "cost": 120351042,
+          "orders": 77
+        },
+        {
+          "period": "2025-03-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 302599845,
+          "cost": 167111542,
+          "orders": 4655
+        },
+        {
+          "period": "2025-03-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 212231991,
+          "cost": 132259804,
+          "orders": 3265
+        },
+        {
+          "period": "2025-03-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 141800397,
+          "cost": 93450099,
+          "orders": 59
+        },
+        {
+          "period": "2025-04-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1386986623,
+          "cost": 831863231,
+          "orders": 21338
+        },
+        {
+          "period": "2025-04-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1014942105,
+          "cost": 592364027,
+          "orders": 15614
+        },
+        {
+          "period": "2025-04-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 565362730,
+          "cost": 365257110,
+          "orders": 236
+        },
+        {
+          "period": "2025-04-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1114120069,
+          "cost": 672901959,
+          "orders": 17140
+        },
+        {
+          "period": "2025-04-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 694118050,
+          "cost": 424055875,
+          "orders": 10679
+        },
+        {
+          "period": "2025-04-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 426686771,
+          "cost": 264200662,
+          "orders": 178
+        },
+        {
+          "period": "2025-04-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 668371768,
+          "cost": 409779702,
+          "orders": 10283
+        },
+        {
+          "period": "2025-04-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 429796368,
+          "cost": 260148125,
+          "orders": 6612
+        },
+        {
+          "period": "2025-04-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 276128176,
+          "cost": 165988274,
+          "orders": 115
+        },
+        {
+          "period": "2025-04-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 398887391,
+          "cost": 215795833,
+          "orders": 6137
+        },
+        {
+          "period": "2025-04-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 306153171,
+          "cost": 186549691,
+          "orders": 4710
+        },
+        {
+          "period": "2025-04-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 177498318,
+          "cost": 106567537,
+          "orders": 74
+        },
+        {
+          "period": "2025-04-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 318701326,
+          "cost": 189964598,
+          "orders": 4903
+        },
+        {
+          "period": "2025-04-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 231147833,
+          "cost": 145226629,
+          "orders": 3556
+        },
+        {
+          "period": "2025-04-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 129879845,
+          "cost": 79276914,
+          "orders": 54
+        },
+        {
+          "period": "2025-05-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1366333338,
+          "cost": 840130294,
+          "orders": 21021
+        },
+        {
+          "period": "2025-05-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 946886311,
+          "cost": 618947591,
+          "orders": 14567
+        },
+        {
+          "period": "2025-05-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 653857091,
+          "cost": 409124032,
+          "orders": 272
+        },
+        {
+          "period": "2025-05-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1088424646,
+          "cost": 589957383,
+          "orders": 16745
+        },
+        {
+          "period": "2025-05-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 686720702,
+          "cost": 428022258,
+          "orders": 10565
+        },
+        {
+          "period": "2025-05-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 433434726,
+          "cost": 284411049,
+          "orders": 181
+        },
+        {
+          "period": "2025-05-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 676599082,
+          "cost": 403665423,
+          "orders": 10409
+        },
+        {
+          "period": "2025-05-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 472443305,
+          "cost": 285688697,
+          "orders": 7268
+        },
+        {
+          "period": "2025-05-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 270025628,
+          "cost": 171421719,
+          "orders": 113
+        },
+        {
+          "period": "2025-05-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 365134379,
+          "cost": 207082577,
+          "orders": 5617
+        },
+        {
+          "period": "2025-05-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 286489887,
+          "cost": 183728174,
+          "orders": 4408
+        },
+        {
+          "period": "2025-05-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 189668048,
+          "cost": 110588356,
+          "orders": 79
+        },
+        {
+          "period": "2025-05-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 313343923,
+          "cost": 176807053,
+          "orders": 4821
+        },
+        {
+          "period": "2025-05-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 228622649,
+          "cost": 144817858,
+          "orders": 3517
+        },
+        {
+          "period": "2025-05-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 132446395,
+          "cost": 79518528,
+          "orders": 55
+        },
+        {
+          "period": "2025-06-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1405001937,
+          "cost": 815583705,
+          "orders": 21615
+        },
+        {
+          "period": "2025-06-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 865138411,
+          "cost": 560226748,
+          "orders": 13310
+        },
+        {
+          "period": "2025-06-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 598893566,
+          "cost": 390675487,
+          "orders": 250
+        },
+        {
+          "period": "2025-06-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1018124144,
+          "cost": 593519477,
+          "orders": 15663
+        },
+        {
+          "period": "2025-06-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 757416921,
+          "cost": 498853079,
+          "orders": 11653
+        },
+        {
+          "period": "2025-06-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 423404753,
+          "cost": 272159583,
+          "orders": 176
+        },
+        {
+          "period": "2025-06-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 544727950,
+          "cost": 317842421,
+          "orders": 8380
+        },
+        {
+          "period": "2025-06-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 433824401,
+          "cost": 260278174,
+          "orders": 6674
+        },
+        {
+          "period": "2025-06-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 266979269,
+          "cost": 155362028,
+          "orders": 111
+        },
+        {
+          "period": "2025-06-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 422943744,
+          "cost": 243550302,
+          "orders": 6507
+        },
+        {
+          "period": "2025-06-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 267477988,
+          "cost": 167447500,
+          "orders": 4115
+        },
+        {
+          "period": "2025-06-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 167702509,
+          "cost": 97678375,
+          "orders": 70
+        },
+        {
+          "period": "2025-06-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 293469054,
+          "cost": 172315213,
+          "orders": 4515
+        },
+        {
+          "period": "2025-06-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 193749052,
+          "cost": 114552591,
+          "orders": 2981
+        },
+        {
+          "period": "2025-06-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 117225691,
+          "cost": 70395461,
+          "orders": 49
+        },
+        {
+          "period": "2025-07-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1241299105,
+          "cost": 725968464,
+          "orders": 19097
+        },
+        {
+          "period": "2025-07-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 894235390,
+          "cost": 588393243,
+          "orders": 13757
+        },
+        {
+          "period": "2025-07-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 562493683,
+          "cost": 353183857,
+          "orders": 234
+        },
+        {
+          "period": "2025-07-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 911288387,
+          "cost": 543158649,
+          "orders": 14020
+        },
+        {
+          "period": "2025-07-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 626145018,
+          "cost": 409023213,
+          "orders": 9633
+        },
+        {
+          "period": "2025-07-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 423031804,
+          "cost": 264144800,
+          "orders": 176
+        },
+        {
+          "period": "2025-07-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 594703990,
+          "cost": 356751241,
+          "orders": 9149
+        },
+        {
+          "period": "2025-07-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 410291713,
+          "cost": 247077437,
+          "orders": 6312
+        },
+        {
+          "period": "2025-07-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 224776417,
+          "cost": 134567495,
+          "orders": 94
+        },
+        {
+          "period": "2025-07-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 345161059,
+          "cost": 195841123,
+          "orders": 5310
+        },
+        {
+          "period": "2025-07-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 258922552,
+          "cost": 166297985,
+          "orders": 3983
+        },
+        {
+          "period": "2025-07-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 161728511,
+          "cost": 104506388,
+          "orders": 67
+        },
+        {
+          "period": "2025-07-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 276375078,
+          "cost": 164556054,
+          "orders": 4252
+        },
+        {
+          "period": "2025-07-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 198564975,
+          "cost": 120794153,
+          "orders": 3055
+        },
+        {
+          "period": "2025-07-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 126497695,
+          "cost": 78663059,
+          "orders": 53
+        },
+        {
+          "period": "2025-08-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1332928140,
+          "cost": 792768668,
+          "orders": 20507
+        },
+        {
+          "period": "2025-08-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 834579325,
+          "cost": 537654710,
+          "orders": 12840
+        },
+        {
+          "period": "2025-08-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 572840271,
+          "cost": 368700214,
+          "orders": 239
+        },
+        {
+          "period": "2025-08-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 985998540,
+          "cost": 545213644,
+          "orders": 15169
+        },
+        {
+          "period": "2025-08-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 642523810,
+          "cost": 399209352,
+          "orders": 9885
+        },
+        {
+          "period": "2025-08-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 393798775,
+          "cost": 228670803,
+          "orders": 164
+        },
+        {
+          "period": "2025-08-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 556753549,
+          "cost": 302983730,
+          "orders": 8565
+        },
+        {
+          "period": "2025-08-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 414032785,
+          "cost": 247675799,
+          "orders": 6370
+        },
+        {
+          "period": "2025-08-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 227834303,
+          "cost": 149894139,
+          "orders": 95
+        },
+        {
+          "period": "2025-08-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 378982906,
+          "cost": 222999284,
+          "orders": 5831
+        },
+        {
+          "period": "2025-08-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 233288781,
+          "cost": 144633683,
+          "orders": 3589
+        },
+        {
+          "period": "2025-08-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 153698838,
+          "cost": 100566822,
+          "orders": 64
+        },
+        {
+          "period": "2025-08-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 261883241,
+          "cost": 144633065,
+          "orders": 4029
+        },
+        {
+          "period": "2025-08-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 206564642,
+          "cost": 135799414,
+          "orders": 3178
+        },
+        {
+          "period": "2025-08-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 122787922,
+          "cost": 72384635,
+          "orders": 51
+        },
+        {
+          "period": "2025-09-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1206199098,
+          "cost": 727170644,
+          "orders": 18557
+        },
+        {
+          "period": "2025-09-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 932169672,
+          "cost": 605809539,
+          "orders": 14341
+        },
+        {
+          "period": "2025-09-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 558056438,
+          "cost": 327753051,
+          "orders": 233
+        },
+        {
+          "period": "2025-09-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 955202210,
+          "cost": 586913889,
+          "orders": 14695
+        },
+        {
+          "period": "2025-09-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 642170145,
+          "cost": 402054090,
+          "orders": 9880
+        },
+        {
+          "period": "2025-09-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 405545584,
+          "cost": 259936109,
+          "orders": 169
+        },
+        {
+          "period": "2025-09-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 596577239,
+          "cost": 343408981,
+          "orders": 9178
+        },
+        {
+          "period": "2025-09-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 407665139,
+          "cost": 244213315,
+          "orders": 6272
+        },
+        {
+          "period": "2025-09-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 231459732,
+          "cost": 145275649,
+          "orders": 96
+        },
+        {
+          "period": "2025-09-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 349693241,
+          "cost": 193192039,
+          "orders": 5380
+        },
+        {
+          "period": "2025-09-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 246936703,
+          "cost": 145967581,
+          "orders": 3799
+        },
+        {
+          "period": "2025-09-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 159292694,
+          "cost": 101120881,
+          "orders": 66
+        },
+        {
+          "period": "2025-09-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 268210171,
+          "cost": 149775444,
+          "orders": 4126
+        },
+        {
+          "period": "2025-09-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 177133095,
+          "cost": 114290103,
+          "orders": 2725
+        },
+        {
+          "period": "2025-09-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 126854941,
+          "cost": 77631006,
+          "orders": 53
+        },
+        {
+          "period": "2025-10-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1313879285,
+          "cost": 722472344,
+          "orders": 20214
+        },
+        {
+          "period": "2025-10-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 823025616,
+          "cost": 532729820,
+          "orders": 12662
+        },
+        {
+          "period": "2025-10-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 510212728,
+          "cost": 314233368,
+          "orders": 213
+        },
+        {
+          "period": "2025-10-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 979452486,
+          "cost": 557467395,
+          "orders": 15068
+        },
+        {
+          "period": "2025-10-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 673818388,
+          "cost": 406749848,
+          "orders": 10366
+        },
+        {
+          "period": "2025-10-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 366439089,
+          "cost": 240699799,
+          "orders": 153
+        },
+        {
+          "period": "2025-10-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 622912651,
+          "cost": 338855662,
+          "orders": 9583
+        },
+        {
+          "period": "2025-10-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 425971944,
+          "cost": 253329745,
+          "orders": 6553
+        },
+        {
+          "period": "2025-10-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 229097410,
+          "cost": 138900109,
+          "orders": 95
+        },
+        {
+          "period": "2025-10-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 417054578,
+          "cost": 252052024,
+          "orders": 6416
+        },
+        {
+          "period": "2025-10-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 256202683,
+          "cost": 149610537,
+          "orders": 3942
+        },
+        {
+          "period": "2025-10-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 163694095,
+          "cost": 100662223,
+          "orders": 68
+        },
+        {
+          "period": "2025-10-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 319183375,
+          "cost": 173403335,
+          "orders": 4911
+        },
+        {
+          "period": "2025-10-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 206248245,
+          "cost": 121133446,
+          "orders": 3173
+        },
+        {
+          "period": "2025-10-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 124761240,
+          "cost": 75126849,
+          "orders": 52
+        },
+        {
+          "period": "2025-11-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1360790224,
+          "cost": 828434894,
+          "orders": 20935
+        },
+        {
+          "period": "2025-11-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 984741502,
+          "cost": 575954311,
+          "orders": 15150
+        },
+        {
+          "period": "2025-11-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 605030001,
+          "cost": 359620280,
+          "orders": 252
+        },
+        {
+          "period": "2025-11-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 978561509,
+          "cost": 586122212,
+          "orders": 15055
+        },
+        {
+          "period": "2025-11-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 640154881,
+          "cost": 391181408,
+          "orders": 9849
+        },
+        {
+          "period": "2025-11-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 450139520,
+          "cost": 288434200,
+          "orders": 188
+        },
+        {
+          "period": "2025-11-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 628157710,
+          "cost": 365029563,
+          "orders": 9664
+        },
+        {
+          "period": "2025-11-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 439248126,
+          "cost": 261656980,
+          "orders": 6758
+        },
+        {
+          "period": "2025-11-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 230533188,
+          "cost": 143109072,
+          "orders": 96
+        },
+        {
+          "period": "2025-11-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 426342247,
+          "cost": 264110032,
+          "orders": 6559
+        },
+        {
+          "period": "2025-11-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 259191071,
+          "cost": 158296597,
+          "orders": 3988
+        },
+        {
+          "period": "2025-11-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 176662306,
+          "cost": 110719808,
+          "orders": 74
+        },
+        {
+          "period": "2025-11-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 303193369,
+          "cost": 186258406,
+          "orders": 4665
+        },
+        {
+          "period": "2025-11-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 229530834,
+          "cost": 145289362,
+          "orders": 3531
+        },
+        {
+          "period": "2025-11-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 130075342,
+          "cost": 85842568,
+          "orders": 54
+        },
+        {
+          "period": "2025-12-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1508091221,
+          "cost": 839281413,
+          "orders": 23201
+        },
+        {
+          "period": "2025-12-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1073520069,
+          "cost": 669740472,
+          "orders": 16516
+        },
+        {
+          "period": "2025-12-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 561142230,
+          "cost": 328943322,
+          "orders": 234
+        },
+        {
+          "period": "2025-12-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1170736782,
+          "cost": 713780492,
+          "orders": 18011
+        },
+        {
+          "period": "2025-12-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 757006904,
+          "cost": 485688788,
+          "orders": 11646
+        },
+        {
+          "period": "2025-12-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 437092745,
+          "cost": 279998508,
+          "orders": 182
+        },
+        {
+          "period": "2025-12-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 640016382,
+          "cost": 352996432,
+          "orders": 9846
+        },
+        {
+          "period": "2025-12-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 441635840,
+          "cost": 274218562,
+          "orders": 6794
+        },
+        {
+          "period": "2025-12-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 259323552,
+          "cost": 154973940,
+          "orders": 108
+        },
+        {
+          "period": "2025-12-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 408211423,
+          "cost": 221632843,
+          "orders": 6280
+        },
+        {
+          "period": "2025-12-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 309810304,
+          "cost": 188496806,
+          "orders": 4766
+        },
+        {
+          "period": "2025-12-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 175593948,
+          "cost": 108061463,
+          "orders": 73
+        },
+        {
+          "period": "2025-12-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 368627720,
+          "cost": 210630110,
+          "orders": 5671
+        },
+        {
+          "period": "2025-12-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 228393953,
+          "cost": 148440182,
+          "orders": 3514
+        },
+        {
+          "period": "2025-12-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 129343426,
+          "cost": 81205099,
+          "orders": 54
+        },
+        {
+          "period": "2026-01-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1571411518,
+          "cost": 913790950,
+          "orders": 24176
+        },
+        {
+          "period": "2026-01-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1026886153,
+          "cost": 634555957,
+          "orders": 15798
+        },
+        {
+          "period": "2026-01-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 624215885,
+          "cost": 411641769,
+          "orders": 260
+        },
+        {
+          "period": "2026-01-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1197503230,
+          "cost": 720645484,
+          "orders": 18423
+        },
+        {
+          "period": "2026-01-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 866284042,
+          "cost": 541385694,
+          "orders": 13327
+        },
+        {
+          "period": "2026-01-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 503679623,
+          "cost": 303462603,
+          "orders": 210
+        },
+        {
+          "period": "2026-01-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 733338786,
+          "cost": 448451757,
+          "orders": 11282
+        },
+        {
+          "period": "2026-01-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 493474108,
+          "cost": 295088034,
+          "orders": 7592
+        },
+        {
+          "period": "2026-01-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 293748191,
+          "cost": 177601459,
+          "orders": 122
+        },
+        {
+          "period": "2026-01-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 533681207,
+          "cost": 302872458,
+          "orders": 8210
+        },
+        {
+          "period": "2026-01-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 291671471,
+          "cost": 185665710,
+          "orders": 4487
+        },
+        {
+          "period": "2026-01-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 200414746,
+          "cost": 132113416,
+          "orders": 84
+        },
+        {
+          "period": "2026-01-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 379015990,
+          "cost": 224859315,
+          "orders": 5831
+        },
+        {
+          "period": "2026-01-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 226780981,
+          "cost": 146222653,
+          "orders": 3489
+        },
+        {
+          "period": "2026-01-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 142671334,
+          "cost": 86842576,
+          "orders": 59
+        },
+        {
+          "period": "2026-02-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1934447376,
+          "cost": 1175995080,
+          "orders": 29761
+        },
+        {
+          "period": "2026-02-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1190427637,
+          "cost": 718384697,
+          "orders": 18314
+        },
+        {
+          "period": "2026-02-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 704435751,
+          "cost": 417266757,
+          "orders": 294
+        },
+        {
+          "period": "2026-02-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1205753649,
+          "cost": 655952427,
+          "orders": 18550
+        },
+        {
+          "period": "2026-02-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 869136396,
+          "cost": 517856523,
+          "orders": 13371
+        },
+        {
+          "period": "2026-02-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 527486608,
+          "cost": 326093456,
+          "orders": 220
+        },
+        {
+          "period": "2026-02-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 821329793,
+          "cost": 490033991,
+          "orders": 12636
+        },
+        {
+          "period": "2026-02-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 471719301,
+          "cost": 275439229,
+          "orders": 7257
+        },
+        {
+          "period": "2026-02-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 309711147,
+          "cost": 197698569,
+          "orders": 129
+        },
+        {
+          "period": "2026-02-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 555561237,
+          "cost": 314868806,
+          "orders": 8547
+        },
+        {
+          "period": "2026-02-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 324047399,
+          "cost": 213692367,
+          "orders": 4985
+        },
+        {
+          "period": "2026-02-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 190529955,
+          "cost": 122558274,
+          "orders": 79
+        },
+        {
+          "period": "2026-02-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 376012977,
+          "cost": 230914842,
+          "orders": 5785
+        },
+        {
+          "period": "2026-02-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 245064928,
+          "cost": 148380332,
+          "orders": 3770
+        },
+        {
+          "period": "2026-02-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 146621968,
+          "cost": 95301645,
+          "orders": 61
+        },
+        {
+          "period": "2026-03-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1967398536,
+          "cost": 1109167878,
+          "orders": 30268
+        },
+        {
+          "period": "2026-03-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1214693308,
+          "cost": 740542169,
+          "orders": 18688
+        },
+        {
+          "period": "2026-03-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 645527204,
+          "cost": 376680874,
+          "orders": 269
+        },
+        {
+          "period": "2026-03-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1446078597,
+          "cost": 841439932,
+          "orders": 22247
+        },
+        {
+          "period": "2026-03-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 842960505,
+          "cost": 549865596,
+          "orders": 12969
+        },
+        {
+          "period": "2026-03-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 499294675,
+          "cost": 323921925,
+          "orders": 208
+        },
+        {
+          "period": "2026-03-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 765778399,
+          "cost": 439330384,
+          "orders": 11781
+        },
+        {
+          "period": "2026-03-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 522212046,
+          "cost": 310842694,
+          "orders": 8034
+        },
+        {
+          "period": "2026-03-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 339009605,
+          "cost": 204776991,
+          "orders": 141
+        },
+        {
+          "period": "2026-03-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 590904523,
+          "cost": 335101203,
+          "orders": 9091
+        },
+        {
+          "period": "2026-03-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 346825169,
+          "cost": 204004815,
+          "orders": 5336
+        },
+        {
+          "period": "2026-03-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 186346969,
+          "cost": 119949339,
+          "orders": 78
+        },
+        {
+          "period": "2026-03-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 382767247,
+          "cost": 233822121,
+          "orders": 5889
+        },
+        {
+          "period": "2026-03-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 273350923,
+          "cost": 172684750,
+          "orders": 4205
+        },
+        {
+          "period": "2026-03-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 154173827,
+          "cost": 92412514,
+          "orders": 64
+        },
+        {
+          "period": "2026-04-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1706018028,
+          "cost": 966215742,
+          "orders": 26246
+        },
+        {
+          "period": "2026-04-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1237572063,
+          "cost": 760620050,
+          "orders": 19040
+        },
+        {
+          "period": "2026-04-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 656725341,
+          "cost": 384607416,
+          "orders": 274
+        },
+        {
+          "period": "2026-04-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1368182828,
+          "cost": 801255266,
+          "orders": 21049
+        },
+        {
+          "period": "2026-04-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 819924110,
+          "cost": 479619303,
+          "orders": 12614
+        },
+        {
+          "period": "2026-04-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 545281711,
+          "cost": 319149794,
+          "orders": 227
+        },
+        {
+          "period": "2026-04-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 911586365,
+          "cost": 544463224,
+          "orders": 14024
+        },
+        {
+          "period": "2026-04-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 561300996,
+          "cost": 360341350,
+          "orders": 8635
+        },
+        {
+          "period": "2026-04-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 297086308,
+          "cost": 185911947,
+          "orders": 124
+        },
+        {
+          "period": "2026-04-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 500772256,
+          "cost": 292695881,
+          "orders": 7704
+        },
+        {
+          "period": "2026-04-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 347740599,
+          "cost": 220826617,
+          "orders": 5350
+        },
+        {
+          "period": "2026-04-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 201556015,
+          "cost": 120133395,
+          "orders": 84
+        },
+        {
+          "period": "2026-04-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 425476498,
+          "cost": 249656758,
+          "orders": 6546
+        },
+        {
+          "period": "2026-04-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 281558863,
+          "cost": 184009823,
+          "orders": 4332
+        },
+        {
+          "period": "2026-04-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 150447564,
+          "cost": 88293300,
+          "orders": 63
+        },
+        {
+          "period": "2026-05-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1828172017,
+          "cost": 1112821645,
+          "orders": 28126
+        },
+        {
+          "period": "2026-05-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1224046588,
+          "cost": 770532710,
+          "orders": 18831
+        },
+        {
+          "period": "2026-05-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 695775729,
+          "cost": 422239839,
+          "orders": 290
+        },
+        {
+          "period": "2026-05-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1398656951,
+          "cost": 845868352,
+          "orders": 21518
+        },
+        {
+          "period": "2026-05-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 866980829,
+          "cost": 554870829,
+          "orders": 13338
+        },
+        {
+          "period": "2026-05-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 477189022,
+          "cost": 294061097,
+          "orders": 199
+        },
+        {
+          "period": "2026-05-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 848189207,
+          "cost": 483659904,
+          "orders": 13049
+        },
+        {
+          "period": "2026-05-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 490275346,
+          "cost": 291371293,
+          "orders": 7543
+        },
+        {
+          "period": "2026-05-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 325001937,
+          "cost": 201430576,
+          "orders": 135
+        },
+        {
+          "period": "2026-05-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 513633598,
+          "cost": 293788966,
+          "orders": 7902
+        },
+        {
+          "period": "2026-05-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 318634583,
+          "cost": 198839572,
+          "orders": 4902
+        },
+        {
+          "period": "2026-05-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 215279019,
+          "cost": 131134131,
+          "orders": 90
+        },
+        {
+          "period": "2026-05-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 408986576,
+          "cost": 230487704,
+          "orders": 6292
+        },
+        {
+          "period": "2026-05-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 259016621,
+          "cost": 158382434,
+          "orders": 3985
+        },
+        {
+          "period": "2026-05-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 151655236,
+          "cost": 89720826,
+          "orders": 63
+        },
+        {
+          "period": "2026-06-01",
+          "region": "서울",
+          "channel": "온라인",
+          "revenue": 1669070705,
+          "cost": 985741101,
+          "orders": 25678
+        },
+        {
+          "period": "2026-06-01",
+          "region": "서울",
+          "channel": "매장",
+          "revenue": 1190791061,
+          "cost": 706465327,
+          "orders": 18320
+        },
+        {
+          "period": "2026-06-01",
+          "region": "서울",
+          "channel": "B2B",
+          "revenue": 674761900,
+          "cost": 439435016,
+          "orders": 281
+        },
+        {
+          "period": "2026-06-01",
+          "region": "경기",
+          "channel": "온라인",
+          "revenue": 1304251621,
+          "cost": 746636606,
+          "orders": 20065
+        },
+        {
+          "period": "2026-06-01",
+          "region": "경기",
+          "channel": "매장",
+          "revenue": 799148054,
+          "cost": 489209179,
+          "orders": 12295
+        },
+        {
+          "period": "2026-06-01",
+          "region": "경기",
+          "channel": "B2B",
+          "revenue": 493154538,
+          "cost": 307277818,
+          "orders": 205
+        },
+        {
+          "period": "2026-06-01",
+          "region": "부산",
+          "channel": "온라인",
+          "revenue": 744651725,
+          "cost": 436832310,
+          "orders": 11456
+        },
+        {
+          "period": "2026-06-01",
+          "region": "부산",
+          "channel": "매장",
+          "revenue": 521366934,
+          "cost": 302699540,
+          "orders": 8021
+        },
+        {
+          "period": "2026-06-01",
+          "region": "부산",
+          "channel": "B2B",
+          "revenue": 297364118,
+          "cost": 175160063,
+          "orders": 124
+        },
+        {
+          "period": "2026-06-01",
+          "region": "대구",
+          "channel": "온라인",
+          "revenue": 533665635,
+          "cost": 293593067,
+          "orders": 8210
+        },
+        {
+          "period": "2026-06-01",
+          "region": "대구",
+          "channel": "매장",
+          "revenue": 325152339,
+          "cost": 212586189,
+          "orders": 5002
+        },
+        {
+          "period": "2026-06-01",
+          "region": "대구",
+          "channel": "B2B",
+          "revenue": 178311032,
+          "cost": 115498429,
+          "orders": 74
+        },
+        {
+          "period": "2026-06-01",
+          "region": "광주",
+          "channel": "온라인",
+          "revenue": 371851746,
+          "cost": 227818658,
+          "orders": 5721
+        },
+        {
+          "period": "2026-06-01",
+          "region": "광주",
+          "channel": "매장",
+          "revenue": 227651820,
+          "cost": 134399138,
+          "orders": 3502
+        },
+        {
+          "period": "2026-06-01",
+          "region": "광주",
+          "channel": "B2B",
+          "revenue": 150968868,
+          "cost": 93123611,
+          "orders": 63
+        }
+      ],
+      "source": "warehouse.sales_monthly",
+      "description": "월×지역×채널 매출"
+    },
+    "h1_2026": {
+      "from": "sales",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "year(period) == 2026"
+        }
+      ]
+    },
+    "h1_2025": {
+      "from": "sales",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "year(period) == 2025 and month(period) <= 6"
+        }
+      ]
+    },
+    "monthly": {
+      "from": "sales",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "period"
+          ],
+          "measures": [
+            {
+              "field": "revenue",
+              "agg": "sum",
+              "as": "revenue"
+            },
+            {
+              "field": "cost",
+              "agg": "sum",
+              "as": "cost"
+            },
+            {
+              "field": "orders",
+              "agg": "sum",
+              "as": "orders"
+            }
+          ]
+        },
+        {
+          "op": "derive",
+          "as": "margin",
+          "expr": "(revenue - cost) / revenue"
+        },
+        {
+          "op": "window",
+          "fn": "pctChange",
+          "field": "revenue",
+          "as": "growth",
+          "sortBy": "period"
+        }
+      ],
+      "fields": [
+        {
+          "name": "period",
+          "label": "월",
+          "format": "date:month"
+        },
+        {
+          "name": "revenue",
+          "label": "매출",
+          "format": "currency:KRW"
+        },
+        {
+          "name": "margin",
+          "label": "마진율",
+          "format": "percent"
+        },
+        {
+          "name": "growth",
+          "label": "전월 대비",
+          "format": "percent"
+        }
+      ]
+    },
+    "by_region": {
+      "from": "h1_2026",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "region"
+          ],
+          "measures": [
+            {
+              "field": "revenue",
+              "agg": "sum",
+              "as": "revenue"
+            },
+            {
+              "field": "cost",
+              "agg": "sum",
+              "as": "cost"
+            },
+            {
+              "field": "orders",
+              "agg": "sum",
+              "as": "orders"
+            }
+          ]
+        },
+        {
+          "op": "derive",
+          "as": "margin",
+          "expr": "(revenue - cost) / revenue"
+        },
+        {
+          "op": "window",
+          "fn": "share",
+          "field": "revenue",
+          "as": "share"
+        },
+        {
+          "op": "sort",
+          "by": "-revenue"
+        }
+      ],
+      "fields": [
+        {
+          "name": "region",
+          "label": "지역"
+        },
+        {
+          "name": "revenue",
+          "label": "매출",
+          "format": "currency:KRW"
+        },
+        {
+          "name": "cost",
+          "label": "원가",
+          "format": "currency:KRW"
+        },
+        {
+          "name": "orders",
+          "label": "주문 수",
+          "format": "integer"
+        },
+        {
+          "name": "margin",
+          "label": "마진율",
+          "format": "percent"
+        },
+        {
+          "name": "share",
+          "label": "비중",
+          "format": "percent"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "id": "summary",
+      "title": "핵심 요약",
+      "role": "summary",
+      "blocks": [
+        {
+          "id": "kpis",
+          "type": "kpi",
+          "items": [
+            {
+              "label": "상반기 매출",
+              "value": {
+                "data": "h1_2026",
+                "field": "revenue"
+              },
+              "compareTo": {
+                "data": "h1_2025",
+                "field": "revenue"
+              },
+              "format": "currency:KRW",
+              "deltaLabel": "전년 동기"
+            },
+            {
+              "label": "주문 수",
+              "value": {
+                "data": "h1_2026",
+                "field": "orders"
+              },
+              "compareTo": {
+                "data": "h1_2025",
+                "field": "orders"
+              },
+              "format": "compact",
+              "deltaLabel": "전년 동기"
+            },
+            {
+              "label": "평균 마진율",
+              "value": {
+                "data": "monthly",
+                "field": "margin",
+                "agg": "avg",
+                "where": "year(period) == 2026"
+              },
+              "compareTo": {
+                "data": "monthly",
+                "field": "margin",
+                "agg": "avg",
+                "where": "year(period) == 2025 and month(period) <= 6"
+              },
+              "format": "percent:1",
+              "deltaLabel": "전년 동기"
+            },
+            {
+              "label": "최대 지역",
+              "value": {
+                "data": "by_region",
+                "field": "region",
+                "agg": "first"
+              },
+              "description": "{{first(by_region.share) | percent}} 비중"
+            }
+          ]
+        },
+        {
+          "id": "headline",
+          "type": "callout",
+          "tone": "positive",
+          "variant": "insight",
+          "title": "온라인이 성장을 견인",
+          "content": "온라인 채널 매출이 상반기 **{{sum(h1_2026.revenue) | currency:KRW}}** 중 가장 빠르게 성장했습니다. 6월 매출은 {{last(monthly.revenue) | currency:KRW}}입니다."
+        }
+      ]
+    },
+    {
+      "id": "trend",
+      "title": "월별 추이",
+      "description": "막대는 월 매출, 선은 전월 대비 성장률입니다.",
+      "blocks": [
+        {
+          "id": "revenue_trend",
+          "type": "chart",
+          "title": "월 매출과 성장률",
+          "chart": {
+            "kind": "bar",
+            "data": "monthly",
+            "x": "period",
+            "y": "revenue",
+            "secondary": {
+              "y": "growth",
+              "format": "percent",
+              "label": "성장률"
+            },
+            "yFormat": "currency:KRW"
+          },
+          "caption": "출처: warehouse.sales_monthly",
+          "sourceRefs": [
+            "sales"
+          ]
+        },
+        {
+          "id": "trend_notes",
+          "type": "text",
+          "title": "해석",
+          "content": "- 1월 비수기 이후 3월부터 회복세\n- 마진율은 {{avg(monthly.margin) | percent}} 수준에서 안정\n- 6월 주문 {{last(monthly.orders) | compact}}건"
+        }
+      ]
+    },
+    {
+      "id": "regional",
+      "title": "지역·채널 분석",
+      "blocks": [
+        {
+          "id": "region_bar",
+          "type": "chart",
+          "title": "지역별 매출",
+          "chart": {
+            "kind": "bar",
+            "data": "by_region",
+            "x": "region",
+            "y": "revenue",
+            "horizontal": true,
+            "labels": true,
+            "yFormat": "currency:KRW"
+          }
+        },
+        {
+          "id": "channel_stack",
+          "type": "chart",
+          "title": "지역별 채널 구성",
+          "chart": {
+            "kind": "bar",
+            "data": "h1_2026",
+            "x": "region",
+            "y": "revenue",
+            "series": "channel",
+            "stack": "percent"
+          }
+        },
+        {
+          "id": "region_table",
+          "type": "table",
+          "title": "지역별 상세",
+          "data": "by_region",
+          "columns": [
+            {
+              "field": "region"
+            },
+            {
+              "field": "revenue"
+            },
+            {
+              "field": "orders"
+            },
+            {
+              "field": "margin"
+            },
+            {
+              "field": "share"
+            }
+          ],
+          "totals": [
+            "revenue",
+            "orders"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "title": "전년 대비",
+      "blocks": [
+        {
+          "id": "yoy",
+          "type": "comparison",
+          "title": "상반기 비교",
+          "entities": [
+            "2025 H1",
+            "2026 H1"
+          ],
+          "metrics": [
+            {
+              "label": "매출",
+              "values": [
+                {
+                  "data": "h1_2025",
+                  "field": "revenue"
+                },
+                {
+                  "data": "h1_2026",
+                  "field": "revenue"
+                }
+              ],
+              "format": "currency:KRW"
+            },
+            {
+              "label": "주문 수",
+              "values": [
+                {
+                  "data": "h1_2025",
+                  "field": "orders"
+                },
+                {
+                  "data": "h1_2026",
+                  "field": "orders"
+                }
+              ],
+              "format": "integer"
+            },
+            {
+              "label": "원가",
+              "values": [
+                {
+                  "data": "h1_2025",
+                  "field": "cost"
+                },
+                {
+                  "data": "h1_2026",
+                  "field": "cost"
+                }
+              ],
+              "format": "currency:KRW",
+              "goodWhen": "down"
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "type": "list",
+          "title": "하반기 실행 과제",
+          "style": "check",
+          "items": [
+            {
+              "text": "온라인 전환율 개선 실험 3건 착수",
+              "tag": "마케팅",
+              "detail": "랜딩·결제 단계 A/B 테스트"
+            },
+            {
+              "text": "매장 채널 원가 구조 재협상",
+              "tag": "구매",
+              "tone": "warning"
+            },
+            {
+              "text": "B2B 대형 고객 갱신 조기 확보",
+              "tag": "영업"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

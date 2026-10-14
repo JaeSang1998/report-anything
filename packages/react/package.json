@@ -1,0 +1,36 @@
+{
+  "name": "@report-anything/react",
+  "version": "0.1.0",
+  "description": "React adapter for @report-anything/core.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsc -b && cp src/styles.css dist/styles.css"
+  },
+  "dependencies": {
+    "@report-anything/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}
