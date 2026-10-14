@@ -5,7 +5,7 @@ description: Turn data (JSON, CSV, API payloads, query results) into a validated
 
 # report-anything
 
-You write **what** to show as a `ReportSpec` JSON: datasets, sections, blocks. The engine decides **how**: it computes every number from the data, picks grid spans, estimates heights, paginates, and renders. You never write HTML, CSS, coordinates or page breaks.
+You write **what** to show as a `ReportSpec` JSON: datasets, sections, blocks. The engine decides **how**: it computes every number from the data, composes each section (feature, sidebar, hero, grid, pairs), estimates heights, paginates, and renders. You never write HTML, CSS, coordinates or page breaks.
 
 CLI: `report-anything <command>` (in this repo: `node packages/cli/dist/bin.js <command>`; build first with `pnpm build`). Every command prints JSON; issues carry `path`, `message` and an actionable `hint`.
 
@@ -17,9 +17,9 @@ CLI: `report-anything <command>` (in this repo: `node packages/cli/dist/bin.js <
    - Put raw data in one dataset; derive every aggregate with `from` + `transform` (`aggregate`, `filter`, `window`, `timeUnit`, `top`, `fold`, `pivot`, `lookup`, `derive`). Compute in the data layer, not in your head.
    - Numbers in prose and KPIs are **bound**, never typed: KPI `value`/`compareTo` are Measures `{ "data", "field", "agg", "where" }`; text uses `{{sum(sales.revenue) | currency:KRW}}`. A literal number in a spec is a hallucination risk.
    - Give fields `label` and `format` in `datasets.<id>.fields` once; charts, tables and templates reuse them.
-   - Leave `span` unset; choose a section `layout` only when the auto layout is wrong for the content.
+   - Steer the layout with `importance` (`lead` for the block that carries a section, `supporting` for notes and callouts) and reading order, not `span`. Open with a `stat` when one number is the story. Choose a section `layout` (`feature`, `sidebar`, `grid`, …) only when the auto composition is wrong for the content.
 4. **Validate until clean.** `report-anything validate spec.json`. Fix every error using its `hint` (did-you-mean field names, wrong encodings). Done when `"ok": true` with zero errors.
-5. **Inspect the layout.** `report-anything inspect spec.json --mode print` shows each block's span, estimated height, page and layout diagnostics (`block_too_tall`, `page_target_exceeded`). Fix by cutting blocks, `height: "sm"`, `maxRows`, or `limit` — not by adding `span`s. Done when diagnostics are empty or each remaining one is a deliberate choice.
+5. **Inspect the layout.** `report-anything inspect spec.json --mode print` shows each section's compositions, each block's placement, estimated height, page and layout diagnostics (`block_too_tall`, `page_target_exceeded`). Fix by cutting blocks, `height: "sm"`, `maxRows`, `limit` or `importance` — not by adding `span`s. Done when diagnostics are empty or each remaining one is a deliberate choice.
 6. **Render.** `report-anything render spec.json -o report.html` (`--mode print` for paginated sheets; print to PDF from the browser). Single chart preview: `report-anything chart spec.json <blockId> -o chart.svg`.
 7. **Revise with ops, not rewrites.** For "make the second chart a table" or "shorten the conclusion", write JSONL ops and run `report-anything apply spec.json ops.jsonl -o spec.json`. Ops are id-addressed and transactional: `setReport`, `setDataset`, `removeDataset`, `addSection`, `updateSection`, `removeSection`, `moveSection`, `addBlock`, `updateBlock` (deep merge, `null` deletes), `replaceBlock`, `removeBlock`, `moveBlock`. Re-run step 4.
 

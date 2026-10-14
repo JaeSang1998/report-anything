@@ -8,6 +8,7 @@ import { renderTemplate } from "./data/template.js";
 import { closest } from "./data/values.js";
 import { zodIssues } from "./issues.js";
 import { mermaidKind } from "./diagram.js";
+import { FACET_KINDS } from "./chart/facet.js";
 
 export interface Analysis {
   context: DataContext;
@@ -88,6 +89,11 @@ function checkBlock(block: Block, c: BlockChecker): void {
     case "callout":
       c.template(block.content, ".content");
       return;
+    case "stat":
+      c.value(block.value, ".value");
+      c.value(block.compareTo, ".compareTo");
+      c.template(block.description, ".description");
+      return;
     case "kpi":
       block.items.forEach((item, i) => {
         c.value(item.value, `.items[${i}].value`);
@@ -129,6 +135,7 @@ function checkBlock(block: Block, c: BlockChecker): void {
         c.field(ds, ch.series, ".chart.series");
         c.field(ds, ch.value, ".chart.value");
         secondary.forEach((y) => c.field(ds, y, ".chart.secondary.y"));
+        c.field(ds, ch.facet, ".chart.facet");
       }
       const radial = ch.kind === "pie" || ch.kind === "donut";
       if (radial && (ys.length > 1 || ch.series)) {
@@ -161,10 +168,19 @@ function checkBlock(block: Block, c: BlockChecker): void {
         if (ch.base !== undefined) c.warn("ignored_option", ".chart.base", "base applies only to waterfall charts");
         if (ch.total !== undefined) c.warn("ignored_option", ".chart.total", "total applies only to waterfall charts");
       }
+      if (ch.facet !== undefined && !FACET_KINDS[ch.kind]) {
+        c.warn("ignored_option", ".chart.facet", `facet has no effect on ${ch.kind} charts; one chart is drawn`, "small multiples work with bar, line, area and scatter charts");
+      } else if (ch.facet !== undefined && secondary.length && ch.kind !== "scatter") {
+        c.warn("ignored_option", ".chart.secondary", "faceted charts do not draw a secondary axis");
+      }
       if (ds && ds.rows.length === 0) c.warn("empty_data", ".chart.data", `dataset '${ds.id}' has no rows; the chart will be empty`);
       return;
     }
     case "list":
+      block.items.forEach((item, i) => {
+        c.template(item.text, `.items[${i}].text`);
+        c.template(item.detail, `.items[${i}].detail`);
+      });
       return;
     case "diagram": {
       // Full Mermaid parsing needs a browser; catch the common mistake (no/unknown diagram type) here.

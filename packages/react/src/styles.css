@@ -142,11 +142,24 @@
 }
 
 /* ─── Grid & blocks ──────────────────────────────────────────────────────── */
-.ra-row {
+/* A band is one composition (pair, feature, sidebar, grid…). Placements set grid-column / grid-row inline;
+ * blocks spanning several row tracks sit beside a stack. Items keep their own height (align start): the engine
+ * levels columns by sizing elastic bodies, never by stretching boxes. */
+.ra-band {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--ra-m-grid-gap);
+  gap: var(--ra-m-grid-gap);
   align-items: start;
+}
+/* Hero: one figure or lead chart owning the band. Display treatment must not change heights the engine solved,
+ * so the value grows into its line box rather than past it. */
+.ra-band--hero .ra-stat__value {
+  font-size: var(--ra-m-stat-value-line);
+  letter-spacing: -0.03em;
+}
+.ra-band--hero .ra-stat__label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 .ra-block {
   min-width: 0;
@@ -311,11 +324,11 @@
 }
 .ra-chart__legend {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 16px;
+  /* Wraps in narrow cells instead of clipping series names; print re-measures the real height. */
+  flex-wrap: wrap;
+  gap: 4px 16px;
   align-items: flex-end;
-  height: var(--ra-m-chart-legend-band);
-  overflow: hidden;
+  min-height: var(--ra-m-chart-legend-band);
   font-size: 12px;
   line-height: 16px;
 }
@@ -529,4 +542,46 @@
   color: var(--ra-secondary);
   white-space: pre;
   overflow: hidden;
+}
+
+/* ─── Stat (one figure in display type) ──────────────────────────────────── */
+.ra-stat__label {
+  font-size: var(--ra-m-stat-label-font-size);
+  line-height: var(--ra-m-stat-label-line);
+  color: var(--ra-secondary);
+}
+.ra-stat__value {
+  font-size: var(--ra-m-stat-value-font-size);
+  line-height: var(--ra-m-stat-value-line);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.ra-stat__delta {
+  font-size: var(--ra-m-stat-delta-font-size);
+  line-height: var(--ra-m-stat-delta-line);
+}
+.ra-stat__description {
+  margin-top: var(--ra-m-stat-gap);
+  font-size: var(--ra-m-stat-description-font-size);
+  line-height: var(--ra-m-stat-description-line);
+}
+
+/* ─── Facet grid (small multiples) ───────────────────────────────────────── */
+/* Track widths come from the panel models (edge panels are wider by their axis labels). */
+.ra-facet__grid {
+  display: grid;
+  gap: var(--ra-m-chart-facet-gap);
+  align-items: start;
+}
+.ra-facet__label {
+  box-sizing: border-box;
+  height: var(--ra-m-chart-facet-label);
+  line-height: var(--ra-m-chart-facet-label);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ra-fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

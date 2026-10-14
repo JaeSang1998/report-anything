@@ -51,12 +51,13 @@ Aggregations (`agg`): `sum avg min max count countDistinct median first last`.
 
 ## Blocks
 
-Common: `id`, `type`, `title`, `caption` (footnote/source), `sourceRefs`, `span` (avoid).
+Common: `id`, `type`, `title`, `caption` (footnote/source), `sourceRefs`, `importance: lead|normal|supporting` (steers the layout; see below), `span` (avoid).
 
 | type | fields |
 | --- | --- |
 | `text` | `content` (markdown: paragraphs, `- ` bullets, `1. `, `**bold**`, `*italic*`, `` `code` ``, templates) |
 | `kpi` | `items[1..8]`: `label`, `value`, `format`, `compareTo` or `delta` (ratio), `deltaLabel`, `goodWhen: up|down`, `description`, `sparkline: { data, x, y }` |
+| `stat` | one figure in display type: `label`, `value`, `format`, `compareTo`/`delta`, `deltaLabel`, `goodWhen`, `description` (markdown, templates) — the number a reader must remember; usually `importance: "lead"` |
 | `chart` | `chart` (below), `height: sm|md|lg` |
 | `table` | `data`, `columns: [{ field, label, format, align, emphasis: bar|heat|delta }]`, `sortBy`, `maxRows`, `totals: true | [fields]`, `density`, `paginate` |
 | `callout` | `content`, `tone: neutral|info|positive|warning|critical`, `variant: insight|recommendation|note|risk` |
@@ -83,6 +84,8 @@ Common: `id`, `type`, `title`, `caption` (footnote/source), `sourceRefs`, `span`
 
 Also: `secondary: { y, format, label }` (right-axis lines), `reference: [{ value, label, axis }]`, `xFormat`, `yFormat`, `xLabel`, `yLabel`, `legend`.
 
+Small multiples: `facet: "region"` draws one mini chart per value of that field (bar, line, area, scatter; other kinds ignore it with a warning). Panels share categories, the value axis (and scatter x/size scales) so heights compare directly; only the left column shows value ticks and only the bottom panels show x ticks, with one legend for the grid. Panels are ordered by total, largest first; `facetLimit` (2–24, default 12) caps them and the rest are dropped with a warning — filter or aggregate first if the tail matters. No `secondary` axis on faceted charts. Use a facet instead of `series` when 4+ series would tangle in one plot.
+
 ## Diagrams
 
 ```json
@@ -98,7 +101,12 @@ Validation checks the first keyword is a Mermaid diagram type; the browser rende
 
 ## Layout
 
-Section `layout`: `auto` (default; content-driven) · `stack` 12 · `main-side` 8/4 · `side-main` 4/8 · `split` 6/6 · `thirds` 4/4/4 · `quarters` 3/3/3/3. Minimum widths (chart 300px, table 320px, text 220px) widen spans on narrow pages, so print and web layouts differ by design.
+The engine composes each section from bands on a 12-column grid and picks the cheapest sequence of compositions in reading order: `hero` (a stat or lead chart), `feature-left/right` (lead block over two rows beside two stacked blocks), `sidebar-left/right` (first block — text, callout, list or stat — as a narrow aside beside 2–4 stacked blocks), `pair` (6/6, 7/5, 5/7, 8/4, 4/8), `trio`, `quad`, `grid` (2×2 / 2×3 compact tiles), `full`. Chart and diagram heights are elastic so side-by-side columns end level.
+
+Steer it with meaning, not coordinates:
+- `importance: "lead"` on the one or two blocks that carry the section (they get feature/hero slots); `"supporting"` on notes and callouts (they become asides or stack beside a chart). Order blocks as they should be read: a lead chart followed by two short companions forms a feature; a callout followed by charts forms a sidebar.
+- Section `layout` restricts the candidates: `auto` (default, recommended) · `feature` · `sidebar` · `grid` · `stack` (one per row) · `main-side` 8/4 · `side-main` 4/8 · `split` 6/6 · `thirds` 4/4/4 · `quarters` 3/3/3/3.
+- KPI strips, wide tables and many-category bar charts always take the full width; minimum widths (chart 300px, table 320px, diagram 300px, stat 260px, text 220px) apply at the real page width, so print and web compositions differ by design. `inspect` lists each section's compositions under `outline[].bands`.
 
 ## Ops (JSONL, one per line; these apply cleanly to the example below)
 

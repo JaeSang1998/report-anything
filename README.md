@@ -56,8 +56,8 @@ Flat rows, CSV, or nested API JSON (`{ meta, data: { orders: [...] } }` is found
 <tr>
 <td valign="top">
 
-**A layout engine, not a widget grid**<br/>
-Content-aware 12-column spans, min-width rules, height estimation and A4/Letter pagination with keep-with-next headers and tables that split across pages with repeated headers.
+**A layout engine, not a row packer**<br/>
+A solver composes each section from 2D compositions — feature, sidebar, hero, grid, pairs — with row-spanning placements, elastic chart heights levelled across columns, and A4/Letter pagination with keep-with-next headers and split tables.
 
 </td>
 <td valign="top">
@@ -96,6 +96,34 @@ A `diagram` block takes Mermaid source — flowcharts, sequences, state machines
 </td>
 </tr>
 </table>
+
+## Compositions, not rows
+
+The layout engine treats each section as a sequence of **bands** on a 12-column grid. Blocks can span rows, so a lead chart can sit beside a stack of smaller blocks, and a short note can run alongside several charts as an aside. For every section a dynamic program tries the candidate compositions in reading order and keeps the cheapest:
+
+| Composition | Shape | Chosen when |
+| --- | --- | --- |
+| `hero` | one block, display type | a `stat` or a lead chart opens the story |
+| `feature-left` / `feature-right` | lead block over two rows + a stack of two | a chart/diagram/table with two smaller companions |
+| `sidebar-left` / `sidebar-right` | a narrow aside running beside 2–4 stacked blocks | narrative or a stat that explains several views |
+| `pair` | 6/6, 7/5, 5/7, 8/4, 4/8 | two blocks of comparable or complementary weight |
+| `trio` · `quad` · `grid` | 4/4/4 · 3/3/3/3 · 2×2 / 2×3 equal tiles | compact peers (stats, short lists, small charts) |
+| `full` · `stack` | 12 | KPI strips, wide tables, many-category charts, narrow print |
+
+Costs it minimises: whitespace left after **levelling** (charts and diagrams have an elastic height range, so columns end level), `importance` mismatches (lead blocks get the largest area, supporting blocks become asides), poor pairings (chart + its note is good, two long texts side by side is not), monotony (repeating the same composition), and print fit. The agent states *importance* and, if it wants, a section `layout` hint; it never states coordinates.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/example-saas-board.png" alt="feature-right then pair" /></td>
+<td width="50%"><img src="docs/screenshots/shape-breakdown.png" alt="feature-right and sidebar" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Hero stat, then a lead area chart beside a stacked note and chart (<code>feature-right</code>)</sub></td>
+<td align="center"><sub>Ranking as the lead with its note and donut stacked; a note as an aside to the mix chart (<code>sidebar-left</code>)</sub></td>
+</tr>
+</table>
+
+Small multiples are part of the vocabulary too: `chart.facet` draws one mini chart per category with shared axes, sized by the same solver.
 
 ## One dataset, six shapes
 
@@ -232,7 +260,7 @@ flowchart LR
   S -- issues with hints --> A
 ```
 
-- **Template-constrained layout.** Section patterns (`auto`, `main-side`, `split`, `thirds`, …) plus content heuristics and minimum pixel widths produce 12-column rows. Print and web differ because widths differ.
+- **Compositions, solved.** A dynamic program walks each section's blocks in reading order and chooses compositions (feature, sidebar, hero, grid, pair, trio, quad, full) that minimise a cost: whitespace left after levelling elastic heights, importance mismatches, poor pairings, monotony, and print fit. Agents steer with `importance` and optional section `layout`; geometry stays the engine's job. Print and web differ because widths differ.
 - **One source of metrics.** `METRICS` drives both the height estimator and the CSS variables; in print mode the React adapter measures real DOM heights and feeds them back to the paginator until they agree.
 - **Transactional edits.** Ops either all apply or none do; semantic problems (an unknown field, a broken template) are accepted and reported per block, so a half-streamed report still renders everything that is valid.
 

@@ -2378,22 +2378,26 @@
       "title": "Summary",
       "blocks": [
         {
+          "id": "h1_revenue",
+          "type": "stat",
+          "importance": "lead",
+          "label": "H1 revenue",
+          "value": {
+            "data": "h1_2026",
+            "field": "revenue"
+          },
+          "compareTo": {
+            "data": "h1_2025",
+            "field": "revenue"
+          },
+          "format": "currency:0",
+          "deltaLabel": "vs H1 2025",
+          "description": "Best half on record: every region grew, and online added more than retail and partner combined."
+        },
+        {
           "id": "kpis",
           "type": "kpi",
           "items": [
-            {
-              "label": "H1 revenue",
-              "value": {
-                "data": "h1_2026",
-                "field": "revenue"
-              },
-              "compareTo": {
-                "data": "h1_2025",
-                "field": "revenue"
-              },
-              "format": "currency:0",
-              "deltaLabel": "vs H1 2025"
-            },
             {
               "label": "Orders",
               "value": {
@@ -2465,13 +2469,28 @@
               "label": "MoM growth"
             }
           },
-          "caption": "Source: warehouse.sales_monthly"
+          "caption": "Source: warehouse.sales_monthly",
+          "importance": "lead"
         },
         {
           "id": "trend_notes",
           "type": "text",
           "title": "Reading the trend",
-          "content": "- January dip is seasonal; recovery from March\n- Gross margin held near {{avg(monthly.margin) | percent}}\n- June orders: {{last(monthly.orders) | compact}}"
+          "content": "- January dip is seasonal; recovery from March\n- Gross margin held near {{avg(monthly.margin) | percent}}\n- June orders: {{last(monthly.orders) | compact}}",
+          "importance": "supporting"
+        },
+        {
+          "id": "region_multiples",
+          "type": "chart",
+          "title": "Monthly revenue by region",
+          "chart": {
+            "kind": "line",
+            "data": "sales",
+            "x": "month",
+            "y": "revenue",
+            "facet": "region",
+            "yFormat": "currency:0"
+          }
         }
       ]
     },
@@ -2479,6 +2498,14 @@
       "id": "regions",
       "title": "Regions and channels",
       "blocks": [
+        {
+          "id": "regions_note",
+          "type": "callout",
+          "variant": "insight",
+          "tone": "info",
+          "title": "Where growth came from",
+          "content": "North America is still **{{first(by_region.share) | percent}}** of revenue, but Asia Pacific grew fastest. Online is the largest channel in every region; partner has the thinnest margin at {{last(channel_margin.margin) | percent}}."
+        },
         {
           "id": "region_bar",
           "type": "chart",
@@ -2532,7 +2559,8 @@
             "orders"
           ]
         }
-      ]
+      ],
+      "layout": "sidebar"
     },
     {
       "id": "next",
@@ -2607,7 +2635,7 @@
               "text": "Renegotiate partner commission tiers",
               "tag": "Partnerships",
               "tone": "warning",
-              "detail": "Partner margin is {{first(channel_margin.margin) | percent}} at best"
+              "detail": "Partner margin is the lowest at {{last(channel_margin.margin) | percent}}"
             },
             {
               "text": "Lock in renewals with the top 20 retail accounts",

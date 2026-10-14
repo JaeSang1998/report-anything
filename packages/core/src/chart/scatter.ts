@@ -1,6 +1,6 @@
 import type { ChartSpec, Scalar } from "../spec.js";
 import type { FormatContext } from "../data/types.js";
-import type { ChartSource, RawCategory, XType } from "./prepare.js";
+import type { ChartSource, FacetSplit, RawCategory, XType } from "./prepare.js";
 import type { Scene, SceneOptions } from "./axes.js";
 import type { ColorRef, LegendItem, Mark, Tick } from "./types.js";
 import { scaleLinear, scaleSqrt, scaleUtc } from "d3-scale";
@@ -15,7 +15,7 @@ const R_DEFAULT = 4;
 const R_MIN = 3;
 const R_MAX = 18;
 
-interface Point {
+export interface Point {
   x: Scalar;
   /** Position: epoch ms / number, or category index. */
   px: number;
@@ -23,6 +23,8 @@ interface Point {
   size: number | null;
   series: number;
   xLabel: string;
+  /** Facet panel index (0 without a facet). */
+  panel: number;
 }
 
 export interface ScatterData {
@@ -36,10 +38,15 @@ export interface ScatterData {
   yFormat?: string;
   sizeLabel?: string;
   sizeFormat?: string;
+  /** Small multiples: draw only this panel's points (scales still span every point). */
+  panel?: number;
 }
 
-/** Scatter never aggregates: one point per row with numeric y (one series per y field and/or `series` value). */
-export function prepareScatter(spec: ChartSpec, source: ChartSource, ctx: FormatContext): ScatterData {
+/**
+ * Scatter never aggregates: one point per row with numeric y (one series per y field and/or `series` value).
+ * `facet` tags each point with its small-multiple panel.
+ */
+export function prepareScatter(spec: ChartSpec, source: ChartSource, ctx: FormatContext, facet?: FacetSplit): ScatterData {
   const { ds } = source;
   const xInfo = source.field(spec.x);
   const xType = detectXType(ds.rows, xInfo);
@@ -75,7 +82,7 @@ export function prepareScatter(spec: ChartSpec, source: ChartSource, ctx: Format
     ys.forEach((yField, j) => {
       const y = toNumber(row[yField]);
       if (y === null || px === null) return;
-      points.push({ x: c.value, px, y, size: spec.value ? toNumber(row[spec.value]) : null, series: g * ys.length + j, xLabel: "" });
+      points.push({ x: c.value, px, y, size: spec.value ? toNumber(row[spec.value]) : null, series: g * ys.length + j, xLabel: "", panel: facet ? facet.of(row) : 0 });
     });
   }
   const labeled = labelCategories(cats, "category", xFormat, ctx);
@@ -99,7 +106,14 @@ export function prepareScatter(spec: ChartSpec, source: ChartSource, ctx: Format
 
 export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions, ctx: FormatContext): Scene {
   const { width: W, height: H, fontSize: fs } = o;
+  // Scales span every point so small-multiple panels share x, y and bubble size; only the panel's points are drawn.
   const { points, xType } = data;
+  const drawn = points.flatMap((p, i) => (data.panel === undefined || p.panel === data.panel ? [{ p, i }] : []));
+  const showLeft = o.tickLabels?.left ?? true;
+  const showBottom = o.tickLabels?.bottom ?? true;
+  const xTitle = showBottom ? spec.xLabel : undefined;
+  const yTitle = showLeft ? spec.yLabel : undefined;
+  const m = o.margins;
   const showLegend = spec.legend ?? data.series.length >= 2;
   const legend: LegendItem[] = showLegend ? data.series.map((s) => ({ key: s.key, label: s.label, color: s.color, shape: "circle" })) : [];
   const sizes = points.flatMap((p) => (p.size === null ? [] : [Math.max(0, p.size)]));
@@ -108,14 +122,14 @@ export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions
 
   const refs = spec.reference ?? [];
   const [lo, hi] = valueExtent([...points.map((p) => p.y), ...refs.filter((r) => r.axis === "y").map((r) => r.value)], false);
-  const top = (o.legendBand && legend.length > 0 ? LEGEND_BAND : 0) + PAD + (spec.labels ? fs + 4 : 0);
+  const top = m?.top ?? (o.legendBand && legend.length > 0 ? LEGEND_BAND : 0) + PAD + (spec.labels ? fs + 4 : 0);
   const titleBand = fs + 6;
-  const flatLabels = fs + TICK_GAP + 2;
-  const bottom = flatLabels + (spec.xLabel ? titleBand : 0) + PAD;
-  const count = verticalTickCount(H - top - bottom);
+  const flatLabels = showBottom ? fs + TICK_GAP + 2 : 0;
+  const bottom = flatLabels + (xTitle ? titleBand : 0) + PAD;
+  const count = verticalTickCount(H - top - (m?.bottom ?? bottom));
   const ys = niceScale(lo, hi, count);
   const yTicks = ticksOf(ys, count, data.yFormat, ctx);
-  const left = PAD + (spec.yLabel ? titleBand : 0) + maxTextWidth(yTicks.map((t) => t.label), fs) + TICK_GAP;
+  const left = m?.left ?? (showLeft ? PAD + (yTitle ? titleBand : 0) + maxTextWidth(yTicks.map((t) => t.label), fs) + TICK_GAP : PAD);
   const pxs = points.map((p) => p.px);
   const xs0 = Math.min(...pxs);
   const xs1 = Math.max(...pxs);
@@ -124,7 +138,7 @@ export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions
   let bottomTicks: Array<{ value: Scalar; label: string; pos: number }>;
   let labelAngle: number | undefined;
   let labelHeight = flatLabels;
-  let plotW = Math.max(1, W - left - PAD);
+  let plotW = Math.max(1, W - left - (m?.right ?? PAD));
   let xDomain: [number, number];
   if (xType === "category") {
     xDomain = [-0.5, data.categories.length - 0.5];
@@ -149,9 +163,10 @@ export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions
     xDomain = lin.domain() as [number, number];
     bottomTicks = lin.ticks(xCount).map((v) => ({ value: v, label: formatValue(v, spec.xFormat, ctx), pos: v }));
   }
-  const right = Math.max(PAD, PAD + estimateTextWidth(bottomTicks[bottomTicks.length - 1]?.label ?? "", fs) / 2 - rMax);
+  const lastTick = showBottom ? (bottomTicks[bottomTicks.length - 1]?.label ?? "") : "";
+  const right = m?.right ?? Math.max(PAD, PAD + estimateTextWidth(lastTick, fs) / 2 - rMax);
   plotW = Math.max(1, W - left - right);
-  const plotH = Math.max(1, H - top - (bottom - flatLabels + labelHeight));
+  const plotH = Math.max(1, H - top - (m?.bottom ?? (showBottom ? bottom - flatLabels + labelHeight : bottom)));
   const plot = { x: left, y: top, width: plotW, height: plotH };
   const inset = Math.min(rMax, plotW / 4, plotH / 4);
   const xs = scaleLinear().domain(xDomain).range([left + inset, left + plotW - inset]);
@@ -161,23 +176,23 @@ export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions
   const axes: Scene["axes"] = [
     {
       position: "bottom",
-      ticks: xTicks,
+      ticks: showBottom ? xTicks : [],
       line: { x1: left, y1: top + plotH, x2: left + plotW, y2: top + plotH },
-      ...(labelAngle !== undefined ? { labelAngle } : {}),
-      ...(spec.xLabel ? { title: spec.xLabel } : {}),
+      ...(labelAngle !== undefined && showBottom ? { labelAngle } : {}),
+      ...(xTitle ? { title: xTitle } : {}),
     },
     {
       position: "left",
-      ticks: yTicks.map((t) => ({ value: t.value, label: t.label, offset: ys(t.value) })),
+      ticks: showLeft ? yTicks.map((t) => ({ value: t.value, label: t.label, offset: ys(t.value) })) : [],
       line: { x1: left, y1: top, x2: left, y2: top + plotH },
-      ...(spec.yLabel ? { title: spec.yLabel } : {}),
+      ...(yTitle ? { title: yTitle } : {}),
     },
   ];
   const grid = yTicks.map((t) => ({ x1: left, y1: ys(t.value), x2: left + plotW, y2: ys(t.value) }));
 
   const marks: Mark[] = [];
   const labels: Mark[] = [];
-  const ordered = points.map((p, i) => ({ p, i, r: rScale && p.size !== null ? rScale(Math.max(0, p.size)) : R_DEFAULT })).sort((a, b) => b.r - a.r);
+  const ordered = drawn.map(({ p, i }) => ({ p, i, r: rScale && p.size !== null ? rScale(Math.max(0, p.size)) : R_DEFAULT })).sort((a, b) => b.r - a.r);
   for (const { p, i, r } of ordered) {
     const s = data.series[p.series]!;
     const size = p.size !== null && data.sizeLabel ? ` · ${data.sizeLabel}: ${formatValue(p.size, data.sizeFormat, ctx)}` : "";
@@ -212,8 +227,8 @@ export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions
   }
   marks.push(...labels);
 
-  const yVals = points.map((p) => p.y);
-  const maxP = points.reduce((a, b) => (b.y > a.y ? b : a), points[0]!);
+  const yVals = drawn.map(({ p }) => p.y);
+  const maxP = drawn.reduce<Point | undefined>((a, { p }) => (a === undefined || p.y > a.y ? p : a), undefined);
   return {
     plot,
     axes,
@@ -225,11 +240,15 @@ export function buildScatter(spec: ChartSpec, data: ScatterData, o: SceneOptions
       kind: "scatter",
       measure: data.measure,
       by: data.xLabel,
-      points: points.length,
+      points: drawn.length,
       series: data.series.length,
-      min: formatCompact(Math.min(...yVals), data.yFormat, ctx),
-      max: formatCompact(Math.max(...yVals), data.yFormat, ctx),
-      peak: `${maxP.xLabel} (${formatCompact(maxP.y, data.yFormat, ctx)})`,
+      ...(maxP
+        ? {
+            min: formatCompact(Math.min(...yVals), data.yFormat, ctx),
+            max: formatCompact(maxP.y, data.yFormat, ctx),
+            peak: `${maxP.xLabel} (${formatCompact(maxP.y, data.yFormat, ctx)})`,
+          }
+        : {}),
     }),
   };
 }

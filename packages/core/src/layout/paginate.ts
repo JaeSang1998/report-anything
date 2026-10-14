@@ -5,11 +5,11 @@ import type { Page, PageItem } from "./types.js";
 /** Minimum body rows per table slice (unless the table itself is smaller). */
 export const MIN_TABLE_SLICE = 3;
 
-export interface PaginationRow {
+export interface PaginationBand {
   height: number;
-  /** Set when the row is a single full-width table that may split across pages. */
+  /** Set when the band is a single full-width table that may split across pages. */
   table?: TableMetrics & { blockId: string };
-  /** Tallest cell of the row, reported when the row overflows a page. */
+  /** Tallest block of the band, reported when the band overflows a page. */
   tallest: { path: string; hint: string };
 }
 
@@ -17,7 +17,7 @@ export interface PaginationSection {
   id: string;
   headerHeight: number;
   breakBefore: boolean;
-  rows: PaginationRow[];
+  bands: PaginationBand[];
 }
 
 export interface PaginationInput {
@@ -25,14 +25,14 @@ export interface PaginationInput {
   sections: readonly PaginationSection[];
   /** Usable page height; `Infinity` produces a single page (web mode). */
   contentHeight: number;
-  /** Vertical gap between rows of a section. */
+  /** Vertical gap between bands of a section. */
   gap: number;
   /** Vertical gap between consecutive sections on one page. */
   sectionGap: number;
 }
 
 /**
- * Greedy page filling with keep-with-next headers, atomic rows and full-width table splitting.
+ * Greedy page filling with keep-with-next headers, atomic bands and full-width table splitting.
  * Never emits empty pages.
  */
 export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue[] } {
@@ -42,7 +42,7 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
   let items: PageItem[] = [];
   let used = 0;
   /** What sits last on the current page: drives the spacing before the next item. */
-  let last: { kind: "none" | "report" | "header" | "row"; section?: string } = { kind: "none" };
+  let last: { kind: "none" | "report" | "header" | "band"; section?: string } = { kind: "none" };
 
   const newPage = (): void => {
     if (items.length === 0) return;
@@ -51,15 +51,15 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
     used = 0;
     last = { kind: "none" };
   };
-  const spacingBefore = (kind: "header" | "row", section: string): number => {
+  const spacingBefore = (kind: "header" | "band", section: string): number => {
     if (last.kind === "none" || last.kind === "report" || last.kind === "header") return 0;
-    return kind === "row" && last.section === section ? input.gap : input.sectionGap;
+    return kind === "band" && last.section === section ? input.gap : input.sectionGap;
   };
   /** `item.spacingBefore` is the exact space accounted above it; renderers apply it verbatim. */
   const place = (item: PageItem, height: number, section?: string): void => {
     items.push(item);
     used += item.spacingBefore + height;
-    last = { kind: item.kind === "section-header" ? "header" : item.kind === "report-header" ? "report" : "row", section };
+    last = { kind: item.kind === "section-header" ? "header" : item.kind === "report-header" ? "report" : "band", section };
   };
   /** The page may break here unless this section's header was just placed (keep-with-next). */
   const mayBreak = (section: string): boolean => items.length > 0 && !(last.kind === "header" && last.section === section);
@@ -69,7 +69,7 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
 
   for (const s of input.sections) {
     if (s.breakBefore) newPage();
-    const first = s.rows[0];
+    const first = s.bands[0];
 
     if (s.headerHeight > 0) {
       let firstNeed = first?.height ?? 0;
@@ -85,13 +85,13 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
       place({ kind: "section-header", sectionId: s.id, spacingBefore: spacing }, s.headerHeight, s.id);
     }
 
-    s.rows.forEach((r, rowIndex) => {
-      const freshAvailable = H - (rowIndex === 0 ? s.headerHeight : 0);
+    s.bands.forEach((r, bandIndex) => {
+      const freshAvailable = H - (bandIndex === 0 ? s.headerHeight : 0);
       const t = r.table;
       if (t && r.height > freshAvailable) {
         let from = 0;
         while (from < t.rows) {
-          const spacing = spacingBefore("row", s.id);
+          const spacing = spacingBefore("band", s.id);
           const available = H - used - spacing;
           const remaining = t.rows - from;
           let k: number;
@@ -115,7 +115,7 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
           const item: PageItem = {
             kind: "table-slice",
             sectionId: s.id,
-            row: rowIndex,
+            band: bandIndex,
             blockId: t.blockId,
             from,
             to,
@@ -127,12 +127,12 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
         }
         return;
       }
-      let spacing = spacingBefore("row", s.id);
+      let spacing = spacingBefore("band", s.id);
       if (used + spacing + r.height > H && mayBreak(s.id)) {
         newPage();
-        spacing = spacingBefore("row", s.id);
+        spacing = spacingBefore("band", s.id);
       }
-      place({ kind: "row", sectionId: s.id, row: rowIndex, spacingBefore: spacing }, r.height, s.id);
+      place({ kind: "band", sectionId: s.id, band: bandIndex, spacingBefore: spacing }, r.height, s.id);
       if (used > H) {
         issues.push({
           severity: "warning",

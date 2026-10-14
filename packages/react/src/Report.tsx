@@ -1,7 +1,7 @@
 import { Component, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { ComponentType, ReactNode, RefObject } from "react";
 import { createReportSession, layoutReport, METRICS, SpecError, uiStrings } from "@report-anything/core";
-import type { Block, Cell, Issue, LayoutMode, LayoutPlan, PageItem, ReportSession, ReportSnapshot, ReportSpec, Section } from "@report-anything/core";
+import type { Block, Issue, LayoutMode, LayoutPlan, PageItem, Placement, ReportSession, ReportSnapshot, ReportSpec, Section } from "@report-anything/core";
 import { DEFAULT_BLOCKS } from "./blocks.js";
 import type { BlockComponents, BlockProps, TableSlice } from "./blocks.js";
 import { Markdown } from "./Markdown.js";
@@ -120,7 +120,8 @@ function ReportCanvas({ snapshot, mode, components, className }: { snapshot: Rep
     };
     for (const el of root.querySelectorAll<HTMLElement>("[data-ra-measure]")) {
       const [kind, id] = (el.dataset.raMeasure ?? "").split(":");
-      const h = el.getBoundingClientRect().height;
+      // Elastic blocks report their chrome only: the engine solves their body (`plotHeight`).
+      const h = Math.max(0, el.getBoundingClientRect().height - Number(el.dataset.raPlot ?? 0));
       if (kind === "block" && id) put(next.blocks, id, h);
       else if (kind === "section" && id) put(next.headers, id, h);
       else if (kind === "report" && Math.abs((next.report ?? -1) - h) > 0.5) {
@@ -244,19 +245,19 @@ function PageItemView({ env, item }: { env: RenderEnv; item: PageItem }) {
         </div>
       ) : null;
     }
-    case "row":
+    case "band":
       return (
         <div className="ra-page-item" style={style}>
-          <RowView env={env} sectionId={item.sectionId} row={item.row} />
+          <BandView env={env} sectionId={item.sectionId} band={item.band} />
         </div>
       );
     case "table-slice": {
-      const cell = env.plan.sections.find((s) => s.id === item.sectionId)?.rows[item.row]?.cells.find((c) => c.blockId === item.blockId);
-      if (!cell) return null;
+      const placement = env.plan.sections.find((s) => s.id === item.sectionId)?.bands[item.band]?.placements.find((p) => p.blockId === item.blockId);
+      if (!placement) return null;
       return (
         <div className="ra-page-item" style={style}>
-          <div className="ra-row">
-            <CellView env={env} cell={cell} slice={{ from: item.from, to: item.to, continued: item.continued }} />
+          <div className="ra-band ra-band--full">
+            <CellView env={env} placement={placement} slice={{ from: item.from, to: item.to, continued: item.continued }} />
           </div>
         </div>
       );
@@ -264,20 +265,21 @@ function PageItemView({ env, item }: { env: RenderEnv; item: PageItem }) {
   }
 }
 
-function RowView({ env, sectionId, row }: { env: RenderEnv; sectionId: string; row: number }) {
-  const layout = env.plan.sections.find((s) => s.id === sectionId)?.rows[row];
+/** A 12-column grid region; each placement sets its own column and row lines, so blocks can span row tracks. */
+function BandView({ env, sectionId, band }: { env: RenderEnv; sectionId: string; band: number }) {
+  const layout = env.plan.sections.find((s) => s.id === sectionId)?.bands[band];
   if (!layout) return null;
   return (
-    <div className="ra-row">
-      {layout.cells.map((cell) => (
-        <CellView key={cell.blockId} env={env} cell={cell} />
+    <div className={`ra-band ra-band--${layout.composition}`} style={{ gridTemplateRows: `repeat(${layout.rows}, auto)` }}>
+      {layout.placements.map((placement) => (
+        <CellView key={placement.blockId} env={env} placement={placement} />
       ))}
     </div>
   );
 }
 
-function CellView({ env, cell, slice }: { env: RenderEnv; cell: Cell; slice?: TableSlice }) {
-  const block = env.index.blocks.get(cell.blockId);
+function CellView({ env, placement, slice }: { env: RenderEnv; placement: Placement; slice?: TableSlice }) {
+  const block = env.index.blocks.get(placement.blockId);
   if (!block) return null;
   const strings = uiStrings(env.snapshot.context.locale);
   let lastSlice = true;
@@ -294,9 +296,10 @@ function CellView({ env, cell, slice }: { env: RenderEnv; cell: Cell; slice?: Ta
   return (
     <article
       className={`ra-block ra-block--${block.type}`}
-      style={{ gridColumn: `${cell.start} / span ${cell.span}` }}
+      style={{ gridColumn: `${placement.col} / span ${placement.span}`, gridRow: `${placement.row} / span ${placement.rowSpan}` }}
       data-block-id={block.id}
       data-ra-measure={slice ? undefined : `block:${block.id}`}
+      data-ra-plot={placement.plotHeight}
     >
       {block.title || variant ? (
         <h3 className="ra-block__title">
@@ -309,7 +312,15 @@ function CellView({ env, cell, slice }: { env: RenderEnv; cell: Cell; slice?: Ta
         <BlockIssues issues={issues ?? []} />
       ) : (
         <BlockBoundary blockId={block.id}>
-          <Body block={block} context={env.snapshot.context} cell={cell} mode={env.mode} paletteSize={env.paletteSize} {...(slice ? { slice } : {})} />
+          <Body
+            block={block}
+            context={env.snapshot.context}
+            cell={placement}
+            mode={env.mode}
+            paletteSize={env.paletteSize}
+            {...(slice ? { slice } : {})}
+            {...(placement.plotHeight !== undefined ? { plotHeight: placement.plotHeight } : {})}
+          />
         </BlockBoundary>
       )}
       {block.caption && lastSlice ? <p className="ra-block__caption">{block.caption}</p> : null}

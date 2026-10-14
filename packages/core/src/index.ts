@@ -23,12 +23,14 @@ export type { Archetype, AutoReportOptions } from "./auto.js";
 export type * from "./chart/types.js";
 export { buildChart, DEFAULT_PALETTE } from "./chart/build.js";
 export { chartToSvg } from "./chart/svg.js";
+export { buildFacetCharts, FACET_KINDS } from "./chart/facet.js";
+export type { FacetCharts, FacetOptions, FacetPanel } from "./chart/facet.js";
 
 // Layout
 export type * from "./layout/types.js";
 export { METRICS } from "./layout/metrics.js";
 export { pageGeometry } from "./layout/geometry.js";
-export { chartPlotHeight, estimateBlockHeight } from "./layout/estimate.js";
+export { chartPlotHeight, estimateBlockHeight, facetGrid } from "./layout/estimate.js";
 export { layoutReport } from "./layout/engine.js";
 export { estimateTextWidth } from "./text.js";
 export { mermaidKind } from "./diagram.js";
@@ -38,7 +40,7 @@ export type { UiStrings } from "./i18n.js";
 // Headless view models (adapters only map these to elements)
 export { parseMarkdown, parseInline } from "./view/markdown.js";
 export type { Inline, MdBlock } from "./view/markdown.js";
-export { buildTableModel, buildKpiModels, buildComparisonModel, sparklinePath } from "./view/models.js";
+export { buildTableModel, buildKpiModels, buildStatModel, buildComparisonModel, sparklinePath } from "./view/models.js";
 export type { TableModel, TableCell, TableColumnModel, CellEmphasis, KpiModel, ComparisonModel, Sentiment } from "./view/models.js";
 
 // Editing, validation, sessions

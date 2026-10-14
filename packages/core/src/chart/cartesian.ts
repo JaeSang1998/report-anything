@@ -2,7 +2,7 @@ import type { ScaleLinear } from "d3-scale";
 import type { ChartSpec } from "../spec.js";
 import type { FormatContext } from "../data/types.js";
 import type { Category, Prepared, SeriesData } from "./prepare.js";
-import type { Scene, SceneOptions } from "./axes.js";
+import type { BottomPlan, Scene, SceneOptions } from "./axes.js";
 import type { Axis, GridLine, LegendItem, Mark, Tick } from "./types.js";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { area, curveLinear, curveMonotoneX, curveStep, line } from "d3-shape";
@@ -11,12 +11,13 @@ import { LEGEND_BAND, PAD, TICK_GAP, maxTextWidth, niceScale, planBottomLabels, 
 import { MAX_LABEL_CHARS, describe, fitText, truncate } from "./text.js";
 import { estimateTextWidth } from "../text.js";
 
-/** Lines get point markers up to this many points per series. */
+/** Lines get point markers up to this many points per series, when neighbours are at least MIN_MARKER_SPACING px apart. */
 const MAX_MARKED_POINTS = 24;
+const MIN_MARKER_SPACING = 16;
 
 const CURVES = { linear: curveLinear, monotone: curveMonotoneX, step: curveStep } as const;
 
-interface Span {
+export interface Span {
   lo: number;
   hi: number;
   /** Raw (un-normalized) value. */
@@ -54,6 +55,19 @@ function computeSpans(series: readonly SeriesData[], n: number, stack: ChartSpec
   return spans;
 }
 
+/** Value spans per series and the raw value-axis extent (bars/areas include zero; reference lines extend it). */
+export function valueSpans(spec: ChartSpec, prep: Prepared): { spans: (Span | null)[][]; extent: [number, number] } {
+  const zeroBased = spec.kind === "bar" || spec.kind === "area";
+  const stack = zeroBased ? spec.stack : undefined;
+  const spans = computeSpans(prep.series, prep.categories.length, stack, spec.kind === "area");
+  const values: number[] = [];
+  for (const row of spans) for (const sp of row) if (sp) values.push(...(zeroBased ? [sp.lo, sp.hi] : [sp.v]));
+  for (const r of spec.reference ?? []) if (r.axis === "y") values.push(r.value);
+  return { spans, extent: valueExtent(values, zeroBased) };
+}
+
+const NO_BOTTOM_LABELS: BottomPlan = { labels: [], shown: [], height: 0, overhangLeft: 0, overhangRight: 0 };
+
 /** Bar, line and area charts (with optional secondary right-axis lines). */
 export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions, ctx: FormatContext): Scene {
   const { width: W, height: H, fontSize: fs } = o;
@@ -78,17 +92,17 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
       ]
     : [];
 
-  const spans = computeSpans(series, n, stack, kind === "area");
-  const extentValues: number[] = [];
-  for (const row of spans) for (const sp of row) if (sp) extentValues.push(...(stack || isBar || kind === "area" ? [sp.lo, sp.hi] : [sp.v]));
+  const { spans, extent } = valueSpans(spec, prep);
   const refs = spec.reference ?? [];
-  for (const r of refs) if (r.axis === "y") extentValues.push(r.value);
-  const [lo, hi] = valueExtent(extentValues, isBar || kind === "area");
+  const valueScale = (count: number) => (o.domain ? scaleLinear().domain(o.domain) : niceScale(extent[0], extent[1], count));
+  const showLeft = o.tickLabels?.left ?? true;
+  const showBottom = o.tickLabels?.bottom ?? true;
+  const m = o.margins;
 
-  const top = (o.legendBand && legend.length > 0 ? LEGEND_BAND : 0) + PAD + (spec.labels && !horizontal ? fs + 4 : 0);
+  const top = m?.top ?? (o.legendBand && legend.length > 0 ? LEGEND_BAND : 0) + PAD + (spec.labels && !horizontal ? fs + 4 : 0);
   const titleBand = fs + 6;
-  const catTitle = spec.xLabel;
-  const valueTitle = spec.yLabel;
+  const catTitle = (horizontal ? showLeft : showBottom) ? spec.xLabel : undefined;
+  const valueTitle = (horizontal ? showBottom : showLeft) ? spec.yLabel : undefined;
 
   const marks: Mark[] = [];
   const axes: Axis[] = [];
@@ -100,17 +114,20 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
   if (horizontal) {
     // ── horizontal bars: categories on the left, values along the bottom ──
     const maxCatW = W * 0.4;
-    const catLabels = cats.map((c) => fitText(truncate(c.label, MAX_LABEL_CHARS + 8), maxCatW, fs));
-    const left = PAD + (catTitle ? titleBand : 0) + maxTextWidth(catLabels, fs) + TICK_GAP;
-    const valueLabelW = spec.labels ? maxTextWidth(series.flatMap((s) => s.values.map((v) => (v === null ? "" : formatCompact(v, axisFormat, ctx)))), fs) + 6 : 0;
+    const catLabels = showLeft ? cats.map((c) => fitText(truncate(c.label, MAX_LABEL_CHARS + 8), maxCatW, fs)) : [];
     let count = 5;
-    let ticks = ticksOf(niceScale(lo, hi, count), count, axisFormat, ctx);
-    const right0 = Math.max(PAD + maxTextWidth(ticks.slice(-1).map((t) => t.label), fs) / 2, PAD + valueLabelW);
+    let ticks = ticksOf(valueScale(count), count, axisFormat, ctx);
+    // Without category labels (inner small-multiple panels) the first value tick still needs half its width.
+    const firstTickW = showBottom ? maxTextWidth(ticks.slice(0, 1).map((t) => t.label), fs) / 2 : 0;
+    const left = m?.left ?? (showLeft ? PAD + (catTitle ? titleBand : 0) + maxTextWidth(catLabels, fs) + TICK_GAP : PAD + firstTickW);
+    const valueLabelW = spec.labels ? maxTextWidth(series.flatMap((s) => s.values.map((v) => (v === null ? "" : formatCompact(v, axisFormat, ctx)))), fs) + 6 : 0;
+    const lastTickW = showBottom ? maxTextWidth(ticks.slice(-1).map((t) => t.label), fs) / 2 : 0;
+    const right0 = m?.right ?? Math.max(PAD + lastTickW, PAD + valueLabelW);
     const plotW = Math.max(1, W - left - right0);
     count = Math.max(2, Math.min(6, Math.floor(plotW / (maxTextWidth(ticks.map((t) => t.label), fs) + 24))));
-    const xs = niceScale(lo, hi, count).range([left, left + plotW]);
+    const xs = valueScale(count).range([left, left + plotW]);
     ticks = ticksOf(xs, count, axisFormat, ctx);
-    const bottom = fs + TICK_GAP + 2 + (valueTitle ? titleBand : 0) + PAD;
+    const bottom = m?.bottom ?? (showBottom ? fs + TICK_GAP + 2 : 0) + (valueTitle ? titleBand : 0) + PAD;
     const plotH = Math.max(1, H - top - bottom);
     const band = scaleBand<number>()
       .domain(cats.map((_, i) => i))
@@ -120,13 +137,13 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
     const plot = { x: left, y: top, width: plotW, height: plotH };
     axes.push({
       position: "left",
-      ticks: cats.map((c, i) => ({ value: c.value, label: catLabels[i] ?? "", offset: (band(i) ?? 0) + band.bandwidth() / 2 })),
+      ticks: showLeft ? cats.map((c, i) => ({ value: c.value, label: catLabels[i] ?? "", offset: (band(i) ?? 0) + band.bandwidth() / 2 })) : [],
       line: { x1: left, y1: top, x2: left, y2: top + plotH },
       ...(catTitle ? { title: catTitle } : {}),
     });
     axes.push({
       position: "bottom",
-      ticks: ticks.map((t) => ({ value: t.value, label: t.label, offset: xs(t.value) })),
+      ticks: showBottom ? ticks.map((t) => ({ value: t.value, label: t.label, offset: xs(t.value) })) : [],
       line: { x1: left, y1: top + plotH, x2: left + plotW, y2: top + plotH },
       ...(valueTitle ? { title: valueTitle } : {}),
     });
@@ -181,11 +198,11 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
   }
 
   // ── vertical: categories / time along the bottom, values left (+ secondary right) ──
-  const bottomEstimate = fs + TICK_GAP + 2 + (catTitle ? titleBand : 0) + PAD;
+  const bottomEstimate = m?.bottom ?? (showBottom ? fs + TICK_GAP + 2 : 0) + (catTitle ? titleBand : 0) + PAD;
   const count = verticalTickCount(H - top - bottomEstimate);
-  const ys = niceScale(lo, hi, count);
+  const ys = valueScale(count);
   const yTicks = ticksOf(ys, count, axisFormat, ctx);
-  let left = PAD + (valueTitle ? titleBand : 0) + maxTextWidth(yTicks.map((t) => t.label), fs) + TICK_GAP;
+  let left = showLeft ? PAD + (valueTitle ? titleBand : 0) + maxTextWidth(yTicks.map((t) => t.label), fs) + TICK_GAP : PAD;
   let ys2: ScaleLinear<number, number> | undefined;
   let y2Ticks: Array<{ value: number; label: string }> = [];
   let right = PAD + 4;
@@ -203,26 +220,28 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
   const maxPos = Math.max(...positions);
   const stepFor = (plotW: number) => (continuous ? plotW / Math.max(1, n - 1) : plotW / Math.max(1, n));
   const numericTicks = continuous && prep.xType === "number";
-  let plotW = Math.max(1, W - left - right);
+  let plotW = Math.max(1, W - (m?.left ?? left) - (m?.right ?? right));
   const xFormat = spec.xFormat;
-  let plan = planBottomLabels(
-    cats.map((c) => c.label),
-    stepFor(plotW),
-    prep.xType !== "category",
-    fs,
-    H * 0.35,
-  );
-  if (numericTicks) {
+  let plan = showBottom
+    ? planBottomLabels(
+        cats.map((c) => c.label),
+        stepFor(plotW),
+        prep.xType !== "category",
+        fs,
+        H * 0.35,
+      )
+    : NO_BOTTOM_LABELS;
+  if (numericTicks && showBottom) {
     const sample = scaleLinear().domain([minPos, maxPos]).nice().ticks(6).map((v) => formatValue(v, xFormat, ctx));
     const xCount = Math.max(2, Math.min(8, Math.floor(plotW / (maxTextWidth(sample, fs) + 20))));
     const labels = scaleLinear().domain([minPos, maxPos]).ticks(xCount).map((v) => formatValue(v, xFormat, ctx));
     plan = { labels, shown: labels.map((_, i) => i), height: fs + TICK_GAP + 2, overhangLeft: estimateTextWidth(labels[0] ?? "", fs) / 2, overhangRight: estimateTextWidth(labels[labels.length - 1] ?? "", fs) / 2 };
   }
   const anchorInset = continuous ? 0 : stepFor(plotW) / 2;
-  left = Math.max(left, PAD + plan.overhangLeft - anchorInset);
-  right = Math.max(right, PAD + plan.overhangRight - anchorInset);
+  left = m?.left ?? Math.max(left, PAD + plan.overhangLeft - anchorInset);
+  right = m?.right ?? Math.max(right, PAD + plan.overhangRight - anchorInset);
   plotW = Math.max(1, W - left - right);
-  const bottom = plan.height + (catTitle ? titleBand : 0) + PAD;
+  const bottom = m?.bottom ?? plan.height + (catTitle ? titleBand : 0) + PAD;
   const plotH = Math.max(1, H - top - bottom);
   const plot = { x: left, y: top, width: plotW, height: plotH };
   ys.range([top + plotH, top]);
@@ -237,7 +256,7 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
   const xOf = (i: number) => (continuous ? xScale(positions[i]!) : (band(i) ?? 0) + band.bandwidth() / 2);
 
   let bottomTicks: Tick[];
-  if (numericTicks) {
+  if (numericTicks && showBottom) {
     bottomTicks = xScale.ticks(plan.labels.length).map((v) => ({ value: v, label: formatValue(v, xFormat, ctx), offset: xScale(v) }));
   } else {
     bottomTicks = toTicks(
@@ -255,7 +274,7 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
   });
   axes.push({
     position: "left",
-    ticks: yTicks.map((t) => ({ value: t.value, label: t.label, offset: ys(t.value) })),
+    ticks: showLeft ? yTicks.map((t) => ({ value: t.value, label: t.label, offset: ys(t.value) })) : [],
     line: { x1: left, y1: top, x2: left, y2: top + plotH },
     ...(valueTitle ? { title: valueTitle } : {}),
   });
@@ -285,7 +304,7 @@ export function buildCartesian(spec: ChartSpec, prep: Prepared, o: SceneOptions,
     const d = lineGen(pts);
     if (d) lineMarks.push({ type: "path", key: `line:${s.key}`, series: s.key, d, variant: "line", stroke: s.color });
     const count = pts.filter((p) => p !== null).length;
-    if (count > MAX_MARKED_POINTS) return;
+    if (count > MAX_MARKED_POINTS || stepFor(plotW) < MIN_MARKER_SPACING) return;
     pts.forEach((p, i) => {
       const v = raw[i];
       const cat = cats[i]!;

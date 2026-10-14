@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DataContext } from "../data/types.js";
 import { Block } from "../spec.js";
-import { chartPlotHeight, estimateBlockHeight, estimateReportHeader, estimateSectionHeader, markdownHeight, wrapLines } from "./estimate.js";
+import { blockBox, chartPlotHeight, estimateBlockHeight, facetGrid, estimateReportHeader, estimateSectionHeader, markdownHeight, wrapLines } from "./estimate.js";
 import { cellBox, pageGeometry } from "./geometry.js";
 import { METRICS } from "./metrics.js";
 
@@ -176,5 +176,52 @@ describe("headers", () => {
     expect(estimateReportHeader({ title: "Q3", subtitle: "Board pack", summary: "Strong quarter.", meta: { author: "Ops" } }, 698)).toBe(
       R.titleLine + R.subtitleGap + R.subtitleLine + R.metaGap + R.metaLine + R.summaryGap + R.summaryLine + R.marginBottom,
     );
+  });
+});
+
+describe("stat block", () => {
+  const S = METRICS.stat;
+  it("label + value, plus delta when there is a baseline, plus gap + description", () => {
+    expect(estimateBlockHeight(block({ id: "s", type: "stat", label: "ARR", value: 1 }), 400, ctx)).toBe(S.label.line + S.value.line);
+    expect(estimateBlockHeight(block({ id: "s", type: "stat", label: "ARR", value: 1, compareTo: 2 }), 400, ctx)).toBe(S.label.line + S.value.line + S.delta.line);
+    expect(estimateBlockHeight(block({ id: "s", type: "stat", label: "ARR", value: 1, delta: 0.1, description: "Up." }), 400, ctx)).toBe(
+      S.label.line + S.value.line + S.delta.line + S.gap + S.description.line,
+    );
+    // The description wraps at the cell width.
+    const long = block({ id: "s", type: "stat", label: "ARR", value: 1, description: "Enterprise renewals carried the quarter. ".repeat(6) });
+    expect(estimateBlockHeight(long, 300, ctx)).toBeGreaterThan(estimateBlockHeight(long, 900, ctx));
+    expect(blockBox(long, 300, ctx)).toMatchObject({ body: 0, min: 0, max: 0 });
+  });
+});
+
+describe("facetGrid", () => {
+  const G = METRICS.chart.facetGap;
+  const facet = (extra: object = {}) =>
+    block({ id: "c", type: "chart", chart: { kind: "bar", data: "t", x: "value", y: "value", facet: "name", ...extra } }) as Extract<Block, { type: "chart" }>;
+
+  it("panels = distinct facet values capped by facetLimit (default 12)", () => {
+    expect(facetGrid(facet(), 1040, ctx).panels).toBe(12);
+    expect(facetGrid(facet({ facetLimit: 5 }), 1040, ctx).panels).toBe(5);
+  });
+
+  it("columns = floor((width + gap) / (220 + gap)) within [1, 4] and ≤ panels; rows = ceil(panels / columns)", () => {
+    expect(facetGrid(facet(), 1040, ctx)).toMatchObject({ columns: 4, rows: 3, panelHeight: METRICS.chart.facetPlot });
+    expect(facetGrid(facet(), 3 * 220 + 2 * G, ctx)).toMatchObject({ columns: 3, rows: 4 });
+    expect(facetGrid(facet(), 3 * 220 + 2 * G - 1, ctx)).toMatchObject({ columns: 2, rows: 6 });
+    expect(facetGrid(facet(), 100, ctx)).toMatchObject({ columns: 1, rows: 12 });
+    expect(facetGrid(facet({ facetLimit: 2 }), 1040, ctx)).toMatchObject({ columns: 2, rows: 1 });
+  });
+
+  it("derives the panel height from an assigned plotHeight", () => {
+    expect(facetGrid(facet(), 1040, ctx, 3 * 180 + 2 * G).panelHeight).toBe(180);
+  });
+
+  it("estimates facet bodies from the grid and keeps them elastic in panel height", () => {
+    const box = blockBox(facet(), 1040, ctx);
+    expect(box).toEqual({ chrome: 0, body: 3 * METRICS.chart.facetPlot + 2 * G, min: 3 * 120 + 2 * G, max: 3 * 200 + 2 * G });
+    expect(estimateBlockHeight(facet(), 1040, ctx)).toBe(box.body);
+    // Kinds without small multiples ignore facet.
+    const pie = block({ id: "p", type: "chart", chart: { kind: "pie", data: "t", x: "name", y: "value", facet: "name" } });
+    expect(blockBox(pie, 1040, ctx).body).toBe(METRICS.chart.plot.md);
   });
 });

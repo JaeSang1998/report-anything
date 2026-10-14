@@ -1,6 +1,6 @@
 import type { Block, Issue, ReportSpec } from "./spec.js";
 import type { DataContext } from "./data/types.js";
-import type { LayoutMode, LayoutPlan } from "./layout/types.js";
+import type { Composition, LayoutMode, LayoutPlan } from "./layout/types.js";
 import { layoutReport } from "./layout/engine.js";
 import { mermaidKind } from "./diagram.js";
 
@@ -14,6 +14,8 @@ export interface Inspection {
   outline: Array<{
     section: string;
     title?: string;
+    /** Band compositions in order, e.g. ["hero", "feature-right", "full"]. */
+    bands: Composition[];
     blocks: Array<{ id: string; type: Block["type"]; summary: string; span?: number; height?: number; page?: number }>;
   }>;
   issues: Issue[];
@@ -30,6 +32,8 @@ function blockSummary(block: Block): string {
       return `${block.data}${block.columns ? ` cols=${block.columns.map((c) => c.field).join(",")}` : ""}${block.maxRows ? ` max=${block.maxRows}` : ""}`;
     case "kpi":
       return block.items.map((i) => i.label).join(" | ");
+    case "stat":
+      return `stat: ${block.label}`;
     case "comparison":
       return `${block.entities.join(" vs ")}: ${block.metrics.length} metrics`;
     case "list":
@@ -48,9 +52,9 @@ function pageOfBlocks(plan: LayoutPlan): Map<string, number> {
   const out = new Map<string, number>();
   for (const page of plan.pages) {
     for (const item of page.items) {
-      if (item.kind === "row") {
-        const row = plan.sections.find((s) => s.id === item.sectionId)?.rows[item.row];
-        for (const cell of row?.cells ?? []) if (!out.has(cell.blockId)) out.set(cell.blockId, page.index + 1);
+      if (item.kind === "band") {
+        const band = plan.sections.find((s) => s.id === item.sectionId)?.bands[item.band];
+        for (const p of band?.placements ?? []) if (!out.has(p.blockId)) out.set(p.blockId, page.index + 1);
       } else if (item.kind === "table-slice" && !out.has(item.blockId)) {
         out.set(item.blockId, page.index + 1);
       }
@@ -66,7 +70,7 @@ export function inspectReport(
   const { spec, context } = snapshot;
   const mode = opts.mode ?? "print";
   const plan = layoutReport(spec, context, { mode });
-  const cells = new Map(plan.sections.flatMap((s) => s.rows.flatMap((r) => r.cells.map((c) => [c.blockId, c] as const))));
+  const placements = new Map(plan.sections.flatMap((s) => s.bands.flatMap((b) => b.placements.map((p) => [p.blockId, p] as const))));
   const pages = pageOfBlocks(plan);
   const issues = [...snapshot.issues, ...plan.diagnostics];
   return {
@@ -75,11 +79,12 @@ export function inspectReport(
     mode,
     pages: plan.pages.length,
     datasets: [...context.datasets.values()].map((d) => ({ id: d.id, rows: d.rows.length, fields: d.fields.map((f) => `${f.name}:${f.type}`) })),
-    outline: spec.sections.map((s) => ({
+    outline: spec.sections.map((s, si) => ({
       section: s.id,
       ...(s.title ? { title: s.title } : {}),
+      bands: plan.sections[si]?.bands.map((b) => b.composition) ?? [],
       blocks: s.blocks.map((b) => {
-        const cell = cells.get(b.id);
+        const cell = placements.get(b.id);
         const page = pages.get(b.id);
         return {
           id: b.id,

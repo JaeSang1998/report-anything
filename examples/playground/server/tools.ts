@@ -11,13 +11,13 @@ import type { Inspection, Issue } from "@report-anything/core";
 export const reportTools = {
   apply_ops: tool({
     description:
-      "Edit the report with id-addressed ops (setReport, setDataset, removeDataset, addSection, updateSection, removeSection, moveSection, addBlock, updateBlock, replaceBlock, removeBlock, moveBlock). Ops apply in order as they stream; a failing op is skipped and reported. Returns applied/rejected ops, validation errors and the resulting outline with spans and pages.",
+      "Edit the report with id-addressed ops (setReport, setDataset, removeDataset, addSection, updateSection, removeSection, moveSection, addBlock, updateBlock, replaceBlock, removeBlock, moveBlock). Ops apply in order as they stream; a failing op is skipped and reported. Returns applied/rejected ops, validation errors and the resulting outline with section compositions, placements and pages.",
     inputSchema: z.object({
       ops: z.array(z.record(z.string(), z.unknown())).min(1).describe("Ops in the ReportSpec op format from the reference."),
     }),
   }),
   inspect_report: tool({
-    description: "Read the current report outline (blocks, spans, estimated heights, pages), datasets and every validation/layout issue.",
+    description: "Read the current report outline (section compositions, block placements, estimated heights, pages), datasets and every validation/layout issue.",
     inputSchema: z.object({ mode: z.enum(["web", "print"]).describe("print reports page assignment and page diagnostics.") }),
   }),
   profile_dataset: tool({

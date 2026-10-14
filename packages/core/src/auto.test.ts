@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { autoReport } from "./auto.js";
 import type { Archetype, AutoReportOptions } from "./auto.js";
 import { buildChart } from "./chart/build.js";
+import { buildFacetCharts } from "./chart/facet.js";
 import { chartToSvg } from "./chart/svg.js";
 import { evaluateMeasure } from "./data/measure.js";
 import { isStockMeasure } from "./data/profile.js";
@@ -10,6 +11,7 @@ import { renderTemplate } from "./data/template.js";
 import type { DataContext } from "./data/types.js";
 import { toNumber } from "./data/values.js";
 import { inspectReport } from "./inspect.js";
+import { METRICS } from "./layout/metrics.js";
 import { ReportSpec } from "./spec.js";
 import type { Block, ChartSpec, Measure, Row } from "./spec.js";
 import { validateReport } from "./validate.js";
@@ -36,7 +38,13 @@ function checkDraft(input: unknown, opts?: AutoReportOptions) {
   for (const id of ids) expect(id).toMatch(/^[a-z][a-z0-9_]*$/);
   expect(new Set(ids).size).toBe(ids.length);
   const values = blocks.flatMap((b) =>
-    b.type === "kpi" ? b.items.flatMap((k) => [k.value, ...(k.compareTo === undefined ? [] : [k.compareTo])]) : b.type === "comparison" ? b.metrics.flatMap((m) => m.values) : [],
+    b.type === "kpi"
+      ? b.items.flatMap((k) => [k.value, ...(k.compareTo === undefined ? [] : [k.compareTo])])
+      : b.type === "stat"
+        ? [b.value, ...(b.compareTo === undefined ? [] : [b.compareTo])]
+        : b.type === "comparison"
+          ? b.metrics.flatMap((m) => m.values)
+          : [],
   );
   for (const v of values) expect(isMeasure(v)).toBe(true);
   // Aggregation sanity: rates are never summed; level metrics are never summed across periods.
@@ -58,6 +66,12 @@ function checkDraft(input: unknown, opts?: AutoReportOptions) {
   const charts: ChartSpec[] = blocks.flatMap((b) => (b.type === "chart" ? [b.chart] : []));
   // Every chart renders with data and without engine complaints (wrong encodings, ignored options).
   for (const c of charts) {
+    if (c.facet !== undefined) {
+      const facets = buildFacetCharts(c, context, { width: 640, panelHeight: METRICS.chart.facetPlot, columns: 3 });
+      expect(facets.panels.length, `facet ${c.data}`).toBeGreaterThan(1);
+      expect(facets.warnings, `facet ${c.data}`).toEqual([]);
+      continue;
+    }
     const model = buildChart(c, context, { width: 640, height: 320 });
     expect(model.empty, `${c.kind} ${c.data}`).toBe(false);
     expect(model.warnings, `${c.kind} ${c.data}`).toEqual([]);
@@ -70,8 +84,8 @@ function checkDraft(input: unknown, opts?: AutoReportOptions) {
 function check(input: unknown, opts?: AutoReportOptions) {
   const { spec, context, blocks, charts } = checkDraft(input, opts);
   expect(charts.length).toBeLessThanOrEqual(3);
-  // One chart per dimension: no two charts share an x field.
-  expect(new Set(charts.map((c) => c.x)).size).toBe(charts.length);
+  // One chart per dimension: no two charts share an x field (small multiples count for their facet dimension).
+  expect(new Set(charts.map((c) => c.facet ?? c.x)).size).toBe(charts.length);
   for (const c of charts) {
     // Measures sharing an axis stay within 10× of each other.
     if (Array.isArray(c.y)) {
@@ -87,9 +101,10 @@ function check(input: unknown, opts?: AutoReportOptions) {
     expect(next?.type).toBe("text");
     if (next?.type === "text") expect(next.content).not.toContain(b.title ?? "\u0000");
   });
-  const kpiItems = blocks.flatMap((b) => (b.type === "kpi" ? b.items : []));
+  // The headline stat (when present) and the KPI strip are one set of figures, headline first.
+  const kpiItems = blocks.flatMap((b) => (b.type === "stat" ? [b] : b.type === "kpi" ? b.items : []));
   expect(kpiItems.length).toBeLessThanOrEqual(3);
-  for (const k of kpiItems) expect(k.sparkline).toBeUndefined();
+  for (const k of kpiItems) expect("sparkline" in k ? k.sparkline : undefined).toBeUndefined();
   const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
   expect(table.maxRows).toBe(20);
   for (const col of table.columns ?? []) expect(col.emphasis).toBeUndefined();
@@ -301,31 +316,45 @@ describe("autoReport archetypes", () => {
     });
   }
 
-  it("brief: ≤ 3 KPIs, one chart and one bound insight callout on a single printed page", () => {
+  it("brief: a lead headline stat, ≤ 3 figures, one chart and one bound insight callout on a single printed page", () => {
     for (const sample of Object.values(SAMPLES)) {
       const { spec, context, blocks } = checkDraft(sample(), { archetype: "brief" });
       expect(spec.page?.targetPages).toBe(1);
-      expect(blocks.map((b) => b.type)).toEqual(["kpi", "chart", "callout"]);
-      expect((blocks[0] as Extract<Block, { type: "kpi" }>).items.length).toBeLessThanOrEqual(3);
-      expect(blocks[2]).toMatchObject({ variant: "insight" });
+      // The KPI strip only appears when there are figures beyond the headline.
+      expect(blocks.map((b) => b.type).filter((t) => t !== "kpi")).toEqual(["stat", "chart", "callout"]);
+      expect(blocks[0]).toMatchObject({ importance: "lead" });
+      expect(blocks[0]).toHaveProperty("compareTo");
+      const strip = blocks.find((b): b is Extract<Block, { type: "kpi" }> => b.type === "kpi");
+      expect(1 + (strip?.items.length ?? 0)).toBeLessThanOrEqual(3);
+      expect(blocks.at(-1)).toMatchObject({ variant: "insight", importance: "supporting" });
       expect(inspectReport({ spec, context, issues: [] }).pages).toBe(1);
     }
   });
 
-  it("trend: moving-average series, growth bars around zero, best/worst months, latest-change callout", () => {
-    const { spec, context, blocks, charts } = checkDraft(saasRows(), { archetype: "trend" });
+  it("trend: moving-average series, small multiples by the main dimension, growth bars around zero, best/worst months, latest-change callout", () => {
+    const rows = saasRows();
+    const { spec, context, blocks, charts } = checkDraft(rows, { archetype: "trend" });
     expect(spec.sections.map((s) => s.title)).toEqual(["Latest month", "MRR over time", "Best and worst months"]);
-    const [line, growth] = charts;
+    expect(charts.map((c) => c.facet)).toEqual([undefined, "plan", undefined]);
+    const [line, facet, growth] = charts;
     expect(line).toMatchObject({ kind: "line", x: "month" });
     const [mrr, ma] = line!.y as string[];
     const trend = rowsOf(context, line!.data);
     expect(trend.at(-1)![ma!]).toBeCloseTo(sum(trend.slice(-3), mrr!) / 3, 6);
+    // One row per month × plan; MRR is a level, so each panel's latest point is that plan's latest MRR.
+    expect(facet).toMatchObject({ kind: "line", x: "month", y: "mrr" });
+    const panels = rowsOf(context, facet!.data);
+    expect(panels).toHaveLength(rows.length);
+    const sep = (r: Row) => r.month === "2026-09-01";
+    expect(sum(panels.filter(sep), "mrr")).toBe(sum(rows.filter(sep), "mrr"));
     expect(growth).toMatchObject({ kind: "bar", x: "month", yFormat: "percent", reference: [{ value: 0 }] });
     const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
     const extremes = rowsOf(context, table.data).map((r) => r[mrr!] as number);
     const all = trend.map((r) => r[mrr!] as number).sort((a, b) => b - a);
     expect(extremes).toEqual([...all.slice(0, 3), ...all.slice(-3)]);
     expect(blocks.find((b) => b.type === "callout")).toMatchObject({ variant: "insight" });
+    // Narrative is supporting so the layout sets it beside the charts.
+    for (const b of blocks) if (b.type === "text" || b.type === "callout") expect(b.importance).toBe("supporting");
   });
 
   it("compare: latest six months vs the previous six, dumbbell by region, movers across region × channel", () => {
@@ -423,5 +452,60 @@ describe("autoReport archetypes", () => {
     const brief = checkDraft(rows, { archetype: "brief" });
     expect(brief.charts).toEqual([expect.objectContaining({ kind: "bar", x: "region" })]);
     expect(inspectReport({ spec: brief.spec, context: brief.context, issues: [] }).pages).toBe(1);
+  });
+
+  describe("compositions", () => {
+    const bands = (input: unknown, archetype: Archetype) => {
+      const { spec, context, blocks, charts } = checkDraft(input, { archetype });
+      const outline = inspectReport({ spec, context, issues: [] }, { mode: "web" }).outline;
+      return { spec, blocks, charts, all: outline.flatMap((s) => s.bands), bySection: Object.fromEntries(outline.map((s, i) => [spec.sections[i]!.id, s.bands])) };
+    };
+    const block = (blocks: Block[], id: string) => blocks.find((b) => b.id === id);
+
+    for (const [name, sample] of Object.entries({ salesRows, saasRows })) {
+      it(`${name}: overview varies its bands and leads with the headline stat`, () => {
+        const { all, blocks } = bands(sample(), "overview");
+        expect(new Set(all).size, all.join(",")).toBeGreaterThanOrEqual(3);
+        expect(blocks[0]).toMatchObject({ type: "stat", importance: "lead" });
+        for (const b of blocks) {
+          if (b.type === "chart") expect(b.importance).toBe("normal");
+          if (b.type === "text") expect(b.importance).toBe("supporting");
+        }
+      });
+
+      it(`${name}: brief opens with a hero stat`, () => {
+        expect(bands(sample(), "brief").bySection.brief![0]).toBe("hero");
+      });
+
+      it(`${name}: breakdown sets the lead ranking in a feature`, () => {
+        const { all, blocks } = bands(sample(), "breakdown");
+        expect(block(blocks, "ranking_chart")).toMatchObject({ importance: "lead" });
+        expect(all.some((c) => c.startsWith("feature-")), all.join(",")).toBe(true);
+      });
+
+      it(`${name}: trend adds small multiples of the headline`, () => {
+        const { charts } = bands(sample(), "trend");
+        expect(charts.filter((c) => c.facet !== undefined)).toHaveLength(1);
+      });
+
+      it(`${name}: compare leads with the dumbbell, bridge with the waterfall`, () => {
+        expect(block(bands(sample(), "compare").blocks, "dumbbell_chart")).toMatchObject({ importance: "lead" });
+        expect(block(bands(sample(), "bridge").blocks, "waterfall_chart")).toMatchObject({ importance: "lead" });
+      });
+    }
+
+    it("overview facets the trend by a dimension no other chart uses", () => {
+      const { charts } = bands(salesRows(), "overview");
+      expect(charts.map((c) => c.facet ?? c.x)).toEqual(["month", "channel", "region"]);
+    });
+
+    it("bridge runs the contributors callout as a sidebar aside when a second dimension is charted", () => {
+      const sales = bands(salesRows(), "bridge");
+      expect(sales.spec.sections.find((s) => s.id === "contributors")).toMatchObject({ layout: "sidebar" });
+      expect(sales.bySection.contributors!.some((c) => c.startsWith("sidebar-")), sales.all.join(",")).toBe(true);
+      // SaaS has one dimension (plan), so the section holds only the callout: a sidebar needs three blocks, so no hint is given.
+      const saas = bands(saasRows(), "bridge");
+      expect(saas.spec.sections.find((s) => s.id === "contributors")!.layout).toBeUndefined();
+    });
   });
 });

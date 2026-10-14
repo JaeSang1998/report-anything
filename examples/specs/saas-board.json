@@ -971,24 +971,28 @@
       "title": "Headline",
       "blocks": [
         {
+          "id": "mrr_stat",
+          "type": "stat",
+          "importance": "lead",
+          "label": "MRR",
+          "value": {
+            "data": "monthly",
+            "field": "mrr",
+            "where": "month == '2026-09-01'"
+          },
+          "compareTo": {
+            "data": "monthly",
+            "field": "mrr",
+            "where": "month == '2025-09-01'"
+          },
+          "format": "currency:0",
+          "deltaLabel": "vs Sep 2025",
+          "description": "MRR doubled in a year. Pro is now **{{first(latest.share) | percent}}** of it."
+        },
+        {
           "id": "kpis",
           "type": "kpi",
           "items": [
-            {
-              "label": "MRR",
-              "value": {
-                "data": "monthly",
-                "field": "mrr",
-                "where": "month == '2026-09-01'"
-              },
-              "compareTo": {
-                "data": "monthly",
-                "field": "mrr",
-                "where": "month == '2025-09-01'"
-              },
-              "format": "currency:0",
-              "deltaLabel": "vs Sep 2025"
-            },
             {
               "label": "Net new MRR",
               "value": {

@@ -233,6 +233,11 @@ export const ChartSpec = z
     labels: z.boolean().optional().describe("Print value labels on marks."),
     legend: z.boolean().optional().describe("Force legend on/off (default: shown with 2+ series)."),
     curve: z.enum(["linear", "monotone", "step"]).optional(),
+    facet: z
+      .string()
+      .optional()
+      .describe("Small multiples: draw one mini chart per value of this field, sharing axes so panels compare directly (bar/line/area/scatter)."),
+    facetLimit: z.number().int().min(2).max(24).optional().describe("Most panels to draw (default 12, largest totals first)."),
     base: z
       .enum(["zero", "first"])
       .optional()
@@ -253,6 +258,12 @@ const blockBase = {
   caption: z.string().optional().describe("Small note under the block (methodology, footnote)."),
   span: z.number().int().min(1).max(12).optional().describe("Force a 12-column span. Usually omit; the layout engine decides."),
   sourceRefs: z.array(z.string()).optional().describe("Dataset ids or citations backing this block."),
+  importance: z
+    .enum(["lead", "normal", "supporting"])
+    .optional()
+    .describe(
+      "How much attention the block deserves. The layout engine gives lead blocks the largest areas (feature / hero placements) and tucks supporting blocks into asides. Default: inferred from the block type.",
+    ),
 };
 
 const Markdown = z
@@ -277,6 +288,10 @@ export const KpiItem = z.object({
 export type KpiItem = z.infer<typeof KpiItem>;
 
 export const KpiBlock = z.object({ ...blockBase, type: z.literal("kpi"), items: z.array(KpiItem).min(1).max(8) });
+
+export const StatBlock = z
+  .object({ ...blockBase, type: z.literal("stat"), ...KpiItem.omit({ sparkline: true }).shape, description: Markdown.optional().describe("One or two sentences of context; data placeholders allowed.") })
+  .describe("One headline number set in display type, with its baseline and a sentence of context. Use for the single figure a reader must remember.");
 
 export const ChartBlock = z.object({
   ...blockBase,
@@ -386,7 +401,7 @@ export const DiagramBlock = z.object({
   height: z.enum(["sm", "md", "lg"]).optional().describe("Box the diagram is fitted into (default md)."),
 });
 
-export const Block = z.discriminatedUnion("type", [TextBlock, KpiBlock, ChartBlock, TableBlock, CalloutBlock, ListBlock, ComparisonBlock, DiagramBlock]);
+export const Block = z.discriminatedUnion("type", [TextBlock, KpiBlock, StatBlock, ChartBlock, TableBlock, CalloutBlock, ListBlock, ComparisonBlock, DiagramBlock]);
 export type Block = z.infer<typeof Block>;
 export type BlockType = Block["type"];
 export type BlockOf<T extends BlockType> = Extract<Block, { type: T }>;
@@ -394,9 +409,9 @@ export type BlockOf<T extends BlockType> = Extract<Block, { type: T }>;
 // ─── Sections & report ─────────────────────────────────────────────────────────
 
 export const LayoutPattern = z
-  .enum(["auto", "stack", "main-side", "side-main", "split", "thirds", "quarters"])
+  .enum(["auto", "stack", "main-side", "side-main", "split", "thirds", "quarters", "feature", "sidebar", "grid"])
   .describe(
-    "Row pattern. auto: engine decides by content; stack: full width; main-side: 8/4; side-main: 4/8; split: 6/6; thirds: 4/4/4; quarters: 3/3/3/3.",
+    "Composition. auto: the engine searches compositions for the best fit (recommended). stack: one block per row; main-side 8/4; side-main 4/8; split 6/6; thirds 4/4/4; quarters 3/3/3/3; feature: a lead block spanning two rows beside a stack of smaller blocks; sidebar: the first block becomes a narrow aside running alongside the rest; grid: equal tiles, 2–4 per row.",
   );
 export type LayoutPattern = z.infer<typeof LayoutPattern>;
 

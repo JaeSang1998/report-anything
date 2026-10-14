@@ -3,15 +3,19 @@ import type { ComponentType } from "react";
 import {
   buildComparisonModel,
   buildKpiModels,
+  buildStatModel,
   buildTableModel,
   chartPlotHeight,
   estimateTextWidth,
+  renderTemplate,
+  FACET_KINDS,
+  facetGrid,
   METRICS,
   sparklinePath,
   uiStrings,
 } from "@report-anything/core";
-import type { BlockOf, BlockType, Cell, DataContext, LayoutMode, TableCell } from "@report-anything/core";
-import { ChartView } from "./ChartView.js";
+import type { BlockOf, BlockType, DataContext, LayoutMode, Placement, TableCell } from "@report-anything/core";
+import { ChartView, FacetChartView } from "./ChartView.js";
 import { Markdown } from "./Markdown.js";
 
 /** Rows of a table rendered on one printed page. */
@@ -24,11 +28,16 @@ export interface TableSlice {
 export interface BlockProps<T extends BlockType = BlockType> {
   block: BlockOf<T>;
   context: DataContext;
-  /** Grid cell from the layout plan: pixel width and estimated height. */
-  cell: Cell;
+  /** Placement from the layout plan: pixel width and estimated height. */
+  cell: Placement;
   mode: LayoutMode;
   paletteSize: number;
   slice?: TableSlice;
+  /**
+   * Body height the layout engine assigned to elastic blocks (chart plot, diagram box), so blocks placed side by side
+   * end level. Undefined for blocks whose height follows their content.
+   */
+  plotHeight?: number;
 }
 
 /** Per-type body overrides — the SDUI extension point. Titles and captions stay with the frame. */
@@ -45,7 +54,9 @@ function CalloutBody({ block, context }: BlockProps<"callout">) {
 /** Marker shape carries tone, so status never depends on color alone. */
 const TONE_MARK: Record<string, string> = { warning: "!", critical: "!", positive: "✓" };
 
-function ListBody({ block }: BlockProps<"list">) {
+function ListBody({ block, context }: BlockProps<"list">) {
+  // Item text may carry data placeholders like any other prose.
+  const fill = (s: string) => (s.includes("{{") ? renderTemplate(s, context).text : s);
   return (
     <ul className={`ra-list ra-list--${block.style}`}>
       {block.items.map((item, i) => {
@@ -56,10 +67,10 @@ function ListBody({ block }: BlockProps<"list">) {
             <span className={tone ? `ra-list__marker ra-tone--${tone}` : "ra-list__marker"}>{mark}</span>
             <span className="ra-list__body">
               <span className="ra-list__text">
-                {item.text}
+                {fill(item.text)}
                 {item.tag ? <span className="ra-list__tag">{item.tag}</span> : null}
               </span>
-              {item.detail ? <span className="ra-list__detail">{item.detail}</span> : null}
+              {item.detail ? <span className="ra-list__detail">{fill(item.detail)}</span> : null}
             </span>
           </li>
         );
@@ -112,8 +123,33 @@ function KpiBody({ block, context, cell }: BlockProps<"kpi">) {
   );
 }
 
-function ChartBody({ block, context, cell, paletteSize }: BlockProps<"chart">) {
-  return <ChartView spec={block.chart} context={context} width={Math.max(120, Math.floor(cell.width))} height={chartPlotHeight(block)} paletteSize={paletteSize} />;
+/** One figure in display type: label, value, change against its baseline, and a sentence of context. */
+function StatBody({ block, context }: BlockProps<"stat">) {
+  const k = useMemo(() => buildStatModel(block, context), [block, context]);
+  return (
+    <div className="ra-stat">
+      <div className="ra-stat__label">{k.label}</div>
+      <div className="ra-stat__value">{k.text}</div>
+      {k.delta ? (
+        <div className="ra-stat__delta">
+          <span className={`ra-delta ra-delta--${k.delta.sentiment}`}>
+            {arrow(k.delta.ratio)} {k.delta.text}
+          </span>
+          {k.delta.label ? <span className="ra-kpi__baseline"> {k.delta.label}</span> : null}
+        </div>
+      ) : null}
+      {block.description ? <Markdown className="ra-stat__description" text={block.description} context={context} /> : null}
+    </div>
+  );
+}
+
+function ChartBody({ block, context, cell, paletteSize, plotHeight }: BlockProps<"chart">) {
+  const width = Math.max(120, Math.floor(cell.width));
+  if (block.chart.facet !== undefined && FACET_KINDS[block.chart.kind]) {
+    const grid = facetGrid(block, width, context, plotHeight);
+    return <FacetChartView spec={block.chart} context={context} width={width} columns={grid.columns} panelHeight={grid.panelHeight} paletteSize={paletteSize} />;
+  }
+  return <ChartView spec={block.chart} context={context} width={width} height={plotHeight ?? chartPlotHeight(block)} paletteSize={paletteSize} />;
 }
 
 function TableCellView({ c, align }: { c: TableCell; align: string }) {
@@ -227,8 +263,8 @@ function ComparisonBody({ block, context, cell }: BlockProps<"comparison">) {
  * until it renders (and during server rendering) the source is shown in a `.mermaid` element, which static
  * HTML upgrades with `mermaid.run()`.
  */
-function DiagramBody({ block }: BlockProps<"diagram">) {
-  const height = METRICS.chart.plot[block.height ?? "md"];
+function DiagramBody({ block, plotHeight }: BlockProps<"diagram">) {
+  const height = plotHeight ?? METRICS.chart.plot[block.height ?? "md"];
   const id = `ra-diagram-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
   const [state, setState] = useState<{ svg?: string; error?: string }>({});
   useEffect(() => {
@@ -267,6 +303,7 @@ export const DEFAULT_BLOCKS: { [T in BlockType]: ComponentType<BlockProps<T>> } 
   callout: CalloutBody,
   list: ListBody,
   kpi: KpiBody,
+  stat: StatBody,
   chart: ChartBody,
   table: TableBody,
   comparison: ComparisonBody,

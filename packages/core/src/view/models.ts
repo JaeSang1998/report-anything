@@ -171,6 +171,12 @@ export function buildKpiModels(block: BlockOf<"kpi">, ctx: DataContext): KpiMode
   });
 }
 
+/** A stat block is a single KPI set in display type: same value, baseline and sentiment rules. */
+export function buildStatModel(block: BlockOf<"stat">, ctx: DataContext): KpiModel {
+  const { id, title, caption, span, sourceRefs, importance, type, ...item } = block;
+  return buildKpiModels({ id, type: "kpi", items: [item] }, ctx)[0]!;
+}
+
 /** SVG path for normalized sparkline values in a w×h box (y=1 at top). */
 export function sparklinePath(values: ReadonlyArray<number | null>, width: number, height: number, inset = 2): string {
   const step = values.length > 1 ? (width - inset * 2) / (values.length - 1) : 0;

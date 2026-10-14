@@ -8,7 +8,11 @@ export interface LayoutOptions {
   contentWidth?: number;
   /** Gap between grid cells / rows in px (default 16). */
   gap?: number;
-  /** Measured block heights (px) from a real renderer; override estimates. Keyed by block id. */
+  /**
+   * Measured block heights (px) from a real renderer; override estimates. Keyed by block id.
+   * Elastic blocks (charts, diagrams) report their height without the assigned `plotHeight` (title, legend, caption):
+   * their body is solved by the engine.
+   */
   measured?: Readonly<Record<string, number>>;
   /** Measured section header heights (px) keyed by section id. */
   measuredHeaders?: Readonly<Record<string, number>>;
@@ -27,35 +31,56 @@ export interface PageGeometry {
   contentHeight: number;
 }
 
-export interface Cell {
+/** Band templates the solver chooses from (see layout/compose.ts). */
+export type Composition =
+  | "full"
+  | "hero"
+  | "pair"
+  | "trio"
+  | "quad"
+  | "grid"
+  | "feature-left"
+  | "feature-right"
+  | "sidebar-left"
+  | "sidebar-right"
+  | "stack";
+
+/** A block's cell in its band's 12-column grid. `col`/`row` are 1-based CSS grid lines. */
+export interface Placement {
   blockId: string;
+  col: number;
   span: number;
-  /** 1-based grid column start. */
-  start: number;
+  row: number;
+  rowSpan: number;
   /** Pixel width of the cell. */
   width: number;
-  /** Estimated (or measured) block height in px. */
+  /** Total block height in px: title + body + caption (after levelling). */
   height: number;
+  /** Elastic blocks (charts incl. facet grids, diagrams): the body height the renderer must draw, legend excluded. */
+  plotHeight?: number;
 }
 
-export interface RowLayout {
-  cells: Cell[];
+/** A 12-column grid region with `rows` auto row tracks. Placements are in block (reading) order. */
+export interface Band {
+  composition: Composition;
+  rows: number;
   height: number;
+  placements: Placement[];
 }
 
 export interface SectionLayout {
   id: string;
   headerHeight: number;
-  rows: RowLayout[];
+  bands: Band[];
 }
 
 /** `spacingBefore`: vertical space (px) the renderer puts above the item, exactly as the paginator accounted it. */
 export type PageItem = { spacingBefore: number } & (
   | { kind: "report-header" }
   | { kind: "section-header"; sectionId: string }
-  | { kind: "row"; sectionId: string; row: number }
-  /** Part of a full-width table row split across pages. `from`/`to` are body row indices (to exclusive). */
-  | { kind: "table-slice"; sectionId: string; row: number; blockId: string; from: number; to: number; continued: boolean }
+  | { kind: "band"; sectionId: string; band: number }
+  /** Part of a band holding a single full-width table, split across pages. `from`/`to` are body row indices (to exclusive). */
+  | { kind: "table-slice"; sectionId: string; band: number; blockId: string; from: number; to: number; continued: boolean }
 );
 
 export interface Page {

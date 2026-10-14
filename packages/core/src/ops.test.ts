@@ -105,6 +105,17 @@ describe("validateReport", () => {
     expect(chartIssues({ kind: "funnel", y: "revenue" })).toEqual([]);
     expect(chartIssues({ kind: "dumbbell", y: ["revenue", "revenue"] })).toEqual([]);
   });
+
+  it("checks the facet field exists and suggests the closest one", () => {
+    const r = validateReport({ ...base, sections: [{ id: "a", blocks: [{ id: "c", type: "chart", chart: { kind: "line", data: "sales", x: "month", y: "revenue", facet: "revnue" } }] }] });
+    expect(r.ok).toBe(false);
+    expect(r.issues).toContainEqual(expect.objectContaining({ code: "unknown_field", path: "sections[0].blocks[0].chart.facet", hint: "did you mean 'revenue'?" }));
+    expect(chartIssues({ kind: "bar", y: "revenue", facet: "month" })).toEqual([]);
+  });
+
+  it.each(["pie", "donut", "waterfall", "funnel"])("warns that facet is ignored on %s charts", (kind) => {
+    expect(chartIssues({ kind, y: "revenue", facet: "month" })).toEqual(["warning:ignored_option:sections[0].blocks[0].chart.facet"]);
+  });
 });
 
 describe("createReportSession", () => {

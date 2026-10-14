@@ -88,9 +88,23 @@ export const METRICS = {
   chart: {
     /** Chart SVG height (axes included, block title/caption excluded) by `height` preset. */
     plot: { sm: 200, md: 280, lg: 360 },
+    /** Small multiples: one panel's height, including its `facetLabel` line above the panel SVG. */
+    facetPlot: 150,
+    /** Gap between facet panels, horizontally and vertically. */
+    facetGap: 16,
+    /** Facet panel label line above each panel SVG. */
+    facetLabel: 20,
     /** HTML legend band below the SVG, shown for multi-series and pie/donut charts. */
     legendBand: 28,
     fontSize: 12,
+  },
+  stat: {
+    label: { fontSize: 14, line: 20 },
+    value: { fontSize: 56, line: 64 },
+    delta: { fontSize: 15, line: 24 },
+    description: { fontSize: 16, line: 26 },
+    /** Space above the description (only when there is one). */
+    gap: 6,
   },
   callout: {
     /**
@@ -152,12 +166,14 @@ export const METRICS = {
     /** Space between the report header and the first section. */
     marginBottom: 24,
   },
-  /** Minimum cell widths; spans are bumped until the cell is at least this wide. */
+  /** Minimum cell widths: a composition that would give a block less is infeasible. */
   minWidth: {
     chart: 300,
     table: 320,
+    diagram: 300,
     /** Text, callout and list blocks. */
     text: 220,
+    stat: 260,
   },
   page: {
     /** Print margin on every side. */

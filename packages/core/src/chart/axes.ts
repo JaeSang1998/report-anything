@@ -25,6 +25,12 @@ export interface SceneOptions {
   fontSize: number;
   /** Reserve the legend band at the top of the chart (false when the adapter draws the legend outside). */
   legendBand: boolean;
+  /** Fixed value-axis domain (already nice) shared by every small-multiple panel (bar/line/area). */
+  domain?: [number, number];
+  /** Draw tick labels and axis titles on the left / bottom axis (default both). Hidden axes keep their grid lines. */
+  tickLabels?: { left: boolean; bottom: boolean };
+  /** Fixed plot margins, so small-multiple panels share one plot size whatever their tick labels need. */
+  margins?: { left: number; right: number; top: number; bottom: number };
 }
 
 /** Linear value scale with a nice domain; degenerate extents are widened so the scale stays invertible. */

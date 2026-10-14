@@ -30,11 +30,11 @@ function itemHeight(plan: LayoutPlan, item: PageItem, s: ReportSpec, ctx: DataCo
   if (item.kind === "report-header") return plan.reportHeaderHeight;
   const section = plan.sections.find((x) => x.id === item.sectionId)!;
   if (item.kind === "section-header") return section.headerHeight;
-  const row = section.rows[item.row]!;
-  if (item.kind === "row") return row.height;
+  const band = section.bands[item.band]!;
+  if (item.kind === "band") return band.height;
   const block = s.sections.find((x) => x.id === item.sectionId)!.blocks.find((b) => b.id === item.blockId)!;
   if (block.type !== "table") throw new Error("slice of non-table");
-  const t = tableMetrics(block, row.cells[0]!.width, ctx, s.theme?.density);
+  const t = tableMetrics(block, band.placements[0]!.width, ctx, s.theme?.density);
   return t.top + t.header + (item.to - item.from) * t.row + (item.to === t.rows ? t.footer : 0);
 }
 
@@ -50,10 +50,13 @@ function check(plan: LayoutPlan, s: ReportSpec, ctx: DataContext): void {
   });
   expect(plan.pages[0]!.items[0]!.kind).toBe("report-header");
   for (const section of plan.sections) {
-    for (const row of section.rows) {
-      expect(row.cells.reduce((n, c) => n + c.span, 0)).toBe(12);
-      expect(row.cells.reduce((n, c) => n + c.width, 0) + (row.cells.length - 1) * plan.gap).toBe(plan.contentWidth);
-      expect(row.height).toBe(Math.max(...row.cells.map((c) => c.height)));
+    for (const band of section.bands) {
+      // Cells of the first row track span the content width exactly.
+      const top = band.placements.filter((p) => p.row === 1);
+      expect(top.reduce((n, p) => n + p.span, 0)).toBe(12);
+      expect(top.reduce((n, p) => n + p.width, 0) + (top.length - 1) * plan.gap).toBe(plan.contentWidth);
+      for (const p of band.placements) expect(p.height).toBeLessThanOrEqual(band.height + 0.5);
+      if (band.rows === 1) expect(band.height).toBe(Math.max(...band.placements.map((p) => p.height)));
     }
   }
 }
@@ -81,19 +84,20 @@ describe("layoutReport — web", () => {
     expect(plan.contentWidth).toBe(1040);
     expect(plan.page).toBeUndefined();
     expect(plan.pages).toHaveLength(1);
-    expect(kinds(plan.pages[0]!.items)).toEqual(["report-header", "section-header:a", "row:a", "row:a", "section-header:b", "row:b"]);
+    // The short note sits beside the chart: one band.
+    expect(kinds(plan.pages[0]!.items)).toEqual(["report-header", "section-header:a", "band:a", "section-header:b", "band:b"]);
     expect(plan.diagnostics).toEqual([]);
   });
 
   it("honours a custom web content width and gap", () => {
     const s = spec({ title: "T", sections: [{ id: "a", layout: "thirds", blocks: [text("x"), text("y"), text("z")] }] });
     const plan = layout(s, context(), { mode: "web", contentWidth: 1203, gap: 24 });
-    expect(plan.sections[0]!.rows[0]!.cells.map((c) => c.start)).toEqual([1, 5, 9]);
+    expect(plan.sections[0]!.bands[0]!.placements.map((p) => p.col)).toEqual([1, 5, 9]);
   });
 });
 
 describe("layoutReport — print", () => {
-  it("uses page geometry and gives print different spans than web", () => {
+  it("uses page geometry and gives print different compositions than web", () => {
     const s = spec({
       title: "T",
       sections: [{ id: "a", blocks: [{ id: "p", type: "chart", chart: { kind: "pie", data: "d", x: "name", y: "value" } }, { id: "c", type: "callout", content: "Hi" }, { id: "l", type: "list", items: [{ text: "x" }] }] }],
@@ -103,8 +107,9 @@ describe("layoutReport — print", () => {
     const print = layout(s, ctx, { mode: "print" });
     expect(print.page?.contentWidth).toBe(698);
     expect(print.contentWidth).toBe(698);
-    expect(web.sections[0]!.rows.map((r) => r.cells.map((c) => c.span))).toEqual([[4, 4, 4]]);
-    expect(print.sections[0]!.rows.map((r) => r.cells.map((c) => c.span))).toEqual([[6, 6], [12]]);
+    const compositions = (plan: LayoutPlan) => plan.sections[0]!.bands.map((b) => b.composition);
+    expect(compositions(web)).toHaveLength(1);
+    expect(compositions(print)).not.toEqual(compositions(web));
   });
 
   it("measured heights override estimates and change pagination", () => {
@@ -113,19 +118,19 @@ describe("layoutReport — print", () => {
     expect(estimated.pages).toHaveLength(1);
     const measured = layout(s, context(), { mode: "print", measured: { x: 700, y: 400 }, measuredReportHeader: 50 });
     expect(measured.reportHeaderHeight).toBe(50);
-    expect(measured.sections[0]!.rows[0]!.cells[0]!.height).toBe(700);
-    expect(measured.sections[0]!.rows[0]!.height).toBe(700);
-    expect(measured.pages.map((p) => kinds(p.items))).toEqual([["report-header", "row:a"], ["row:b"]]);
+    expect(measured.sections[0]!.bands[0]!.placements[0]!.height).toBe(700);
+    expect(measured.sections[0]!.bands[0]!.height).toBe(700);
+    expect(measured.pages.map((p) => kinds(p.items))).toEqual([["report-header", "band:a"], ["band:b"]]);
     expect(measured.pages[0]!.usedHeight).toBe(750);
   });
 
-  it("row height is the tallest cell", () => {
+  it("a single-track band is as tall as its tallest block", () => {
     const s = spec({ title: "T", sections: [{ id: "a", layout: "split", blocks: [text("x"), text("y")] }] });
     const plan = layout(s, context(), { mode: "print", measured: { x: 120, y: 300 } });
-    expect(plan.sections[0]!.rows[0]!.height).toBe(300);
+    expect(plan.sections[0]!.bands[0]!.height).toBe(300);
   });
 
-  it("keeps a section header with its first row", () => {
+  it("keeps a section header with its first band", () => {
     const s = spec({
       title: "T",
       sections: [
@@ -133,11 +138,11 @@ describe("layoutReport — print", () => {
         { id: "b", title: "B", blocks: [text("y")] },
       ],
     });
-    // Page 1: 100 + 40 + 700 = 840. Header B alone would fit (840 + 48 + 40 = 928) but not with its row (+200).
+    // Page 1: 100 + 40 + 700 = 840. Header B alone would fit (840 + 48 + 40 = 928) but not with its band (+200).
     const plan = layout(s, context(), { mode: "print", measuredReportHeader: 100, measuredHeaders: { a: 40, b: 40 }, measured: { x: 700, y: 200 } });
     expect(plan.pages.map((p) => kinds(p.items))).toEqual([
-      ["report-header", "section-header:a", "row:a"],
-      ["section-header:b", "row:b"],
+      ["report-header", "section-header:a", "band:a"],
+      ["section-header:b", "band:b"],
     ]);
     expect(plan.pages[1]!.usedHeight).toBe(240);
   });
@@ -174,7 +179,7 @@ describe("layoutReport — print", () => {
       ],
     });
     const plan = layout(s, context(), { mode: "print" });
-    expect(plan.pages.map((p) => kinds(p.items))).toEqual([["report-header", "row:a"], ["row:b"]]);
+    expect(plan.pages.map((p) => kinds(p.items))).toEqual([["report-header", "band:a"], ["band:b"]]);
   });
 
   it("splits a too-tall full-width table into slices covering [0, n) with repeated headers", () => {
@@ -231,19 +236,23 @@ describe("layoutReport — print", () => {
     const ctx = context(table("big", 100));
     const s = spec({ title: "T", sections: [{ id: "a", blocks: [text("x"), { id: "tbl", type: "table", data: "big", paginate: false }, text("y")] }] });
     const plan = layout(s, ctx, { mode: "print" });
-    expect(plan.pages.map((p) => kinds(p.items))).toEqual([["report-header", "row:a"], ["row:a"], ["row:a"]]);
+    expect(plan.pages.map((p) => kinds(p.items))).toEqual([["report-header", "band:a"], ["band:a"], ["band:a"]]);
     expect(plan.diagnostics).toEqual([expect.objectContaining({ code: "block_too_tall", path: "sections[0].blocks[1]", severity: "warning" })]);
     expect(plan.diagnostics[0]!.hint).toMatch(/paginate/);
   });
 
   it("puts a too-tall non-table block alone on its own page with a warning", () => {
-    // Long trailing text (> 500 chars) keeps the chart from pairing, so the chart is a row of its own.
+    // A band taller than the page cannot hold several blocks, so the chart gets a band of its own.
     const blocks = [text("x"), { id: "c", type: "chart", height: "lg", chart: { kind: "line", data: "d", x: "a", y: "b" } }, text("z", "word ".repeat(120))];
     const s = spec({ title: "T", sections: [{ id: "a", title: "A", blocks }] });
+    // Measured chart chrome (title, legend, caption) of 1500px; the plot body is solved on top of it.
     const plan = layout(s, context(), { mode: "print", measured: { c: 1500 } });
-    const tallPage = plan.pages.find((p) => p.items.some((i) => i.kind === "row" && i.row === 1))!;
+    const band = plan.sections[0]!.bands.findIndex((b) => b.placements.some((p) => p.blockId === "c"));
+    expect(plan.sections[0]!.bands[band]!.placements).toHaveLength(1);
+    const tallPage = plan.pages.find((p) => p.items.some((i) => i.kind === "band" && i.band === band))!;
     expect(tallPage.items).toHaveLength(1);
-    expect(tallPage.usedHeight).toBe(1500);
+    expect(tallPage.usedHeight).toBe(plan.sections[0]!.bands[band]!.height);
+    expect(tallPage.usedHeight).toBeGreaterThan(1500);
     expect(plan.pages).toHaveLength(3);
     expect(plan.diagnostics).toEqual([expect.objectContaining({ code: "block_too_tall", path: "sections[0].blocks[1]" })]);
     expect(plan.diagnostics[0]!.hint).toMatch(/'sm'/);
@@ -252,7 +261,7 @@ describe("layoutReport — print", () => {
   it("a too-tall first block stays with its section header", () => {
     const s = spec({ title: "T", sections: [{ id: "a", blocks: [text("x")] }, { id: "b", title: "B", blocks: [text("y")] }] });
     const plan = layout(s, context(), { mode: "print", measured: { y: 1200 } });
-    expect(plan.pages.map((p) => kinds(p.items))).toEqual([["report-header", "row:a"], ["section-header:b", "row:b"]]);
+    expect(plan.pages.map((p) => kinds(p.items))).toEqual([["report-header", "band:a"], ["section-header:b", "band:b"]]);
     expect(plan.diagnostics.map((d) => d.code)).toEqual(["block_too_tall"]);
   });
 

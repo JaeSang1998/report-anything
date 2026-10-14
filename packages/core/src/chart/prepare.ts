@@ -50,6 +50,14 @@ export interface Prepared {
   /** Format of the measure values (spec.yFormat, else the first y field's format). */
   yFormat?: string;
   secondaryFormat?: string;
+  /** Per-panel series over the shared `categories` (prepared with a facet split, in panel order). */
+  panels?: Array<Pick<Prepared, "series" | "secondary">>;
+}
+
+/** Small multiples: rows split into `count` panels; `of` maps a row to its panel index in [0, count). */
+export interface FacetSplit {
+  count: number;
+  of(row: Row): number;
 }
 
 export function yFields(y: string | readonly string[]): string[] {
@@ -67,7 +75,7 @@ export function loadSource(spec: ChartSpec, ctx: DataContext): { source?: ChartS
   if (infos.size === 0) {
     for (const row of ds.rows) for (const k of Object.keys(row)) if (!infos.has(k)) infos.set(k, { name: k, type: "string", label: humanize(k) });
   }
-  const referenced = [spec.x, ...yFields(spec.y), spec.series, spec.value, ...(spec.secondary ? yFields(spec.secondary.y) : [])];
+  const referenced = [spec.x, ...yFields(spec.y), spec.series, spec.value, spec.facet, ...(spec.secondary ? yFields(spec.secondary.y) : [])];
   const warnings: string[] = [];
   for (const name of referenced) {
     if (name === undefined || infos.has(name)) continue;
@@ -179,8 +187,11 @@ export function seriesBuckets(rows: readonly Row[], seriesField: string, measure
   };
 }
 
-/** Bar / line / area / pie: group by x (+series), aggregate y, sort, limit. */
-export function prepareCategorical(spec: ChartSpec, source: ChartSource, ctx: FormatContext): Prepared {
+/**
+ * Bar / line / area / pie: group by x (+series), aggregate y, sort, limit. With a facet split, categories, their order
+ * and the limit are decided over all rows, so every panel shares one x axis; `panels` holds each panel's series.
+ */
+export function prepareCategorical(spec: ChartSpec, source: ChartSource, ctx: FormatContext, facet?: FacetSplit): Prepared {
   const { ds } = source;
   const xInfo = source.field(spec.x);
   const xType = detectXType(ds.rows, xInfo);
@@ -203,10 +214,11 @@ export function prepareCategorical(spec: ChartSpec, source: ChartSource, ctx: Fo
   const primaryCount = defs.length;
   for (const y of secondaryFields) defs.push({ key: `secondary:${y}`, label: source.field(y).label, field: y, color: defs.length });
 
-  // raw[catIndex][defIndex] = collected y values
+  // raw[catIndex][defIndex] = collected y values; panelRaw[catIndex][panel][defIndex] the same split by facet panel.
   const index = new Map<string, number>();
   const cats: RawCategory[] = [];
   const raw: Scalar[][][] = [];
+  const panelRaw: Scalar[][][][] = [];
   for (const row of ds.rows) {
     const c = categoryOf(row[spec.x], xType);
     if (!c) continue;
@@ -216,10 +228,15 @@ export function prepareCategorical(spec: ChartSpec, source: ChartSource, ctx: Fo
       index.set(c.key, i);
       cats.push(c);
       raw.push(defs.map(() => []));
+      if (facet) panelRaw.push(Array.from({ length: facet.count }, () => defs.map(() => [])));
     }
     const cells = raw[i]!;
+    const panelCells = facet ? panelRaw[i]![facet.of(row)] : undefined;
     defs.forEach((d, j) => {
-      if (!d.match || d.match(row)) cells[j]!.push(row[d.field] ?? null);
+      if (d.match && !d.match(row)) return;
+      const v = row[d.field] ?? null;
+      cells[j]!.push(v);
+      panelCells?.[j]!.push(v);
     });
   }
 
@@ -244,40 +261,44 @@ export function prepareCategorical(spec: ChartSpec, source: ChartSource, ctx: Fo
   let finalType = xType;
   const finalCats: RawCategory[] = [];
   const finalRaw: Scalar[][][] = [];
+  const finalPanelRaw: Scalar[][][][] = [];
+  const keep = (i: number) => {
+    finalCats.push(cats[i]!);
+    finalRaw.push(raw[i]!);
+    if (facet) finalPanelRaw.push(panelRaw[i]!);
+  };
   if (spec.limit !== undefined && spec.limit < order.length) {
     const kept = new Set([...order].sort((a, b) => totals[b]! - totals[a]!).slice(0, spec.limit));
     const removed = order.filter((i) => !kept.has(i));
     order = order.filter((i) => kept.has(i));
-    for (const i of order) {
-      finalCats.push(cats[i]!);
-      finalRaw.push(raw[i]!);
-    }
+    for (const i of order) keep(i);
     if (spec.others && removed.length > 0) {
       finalCats.push({ key: OTHER_KEY, value: OTHER_LABEL, pos: null });
       finalRaw.push(defs.map((_, j) => removed.flatMap((i) => raw[i]![j]!)));
+      if (facet) finalPanelRaw.push(Array.from({ length: facet.count }, (_, p) => defs.map((_, j) => removed.flatMap((i) => panelRaw[i]![p]![j]!))));
       finalType = "category";
     }
   } else {
-    for (const i of order) {
-      finalCats.push(cats[i]!);
-      finalRaw.push(raw[i]!);
-    }
+    for (const i of order) keep(i);
   }
 
   const xFormat = spec.xFormat ?? xInfo.format;
   const categories = labelCategories(finalCats, xType, xFormat, ctx);
-  const toSeries = (d: SeriesDef, j: number): SeriesData => ({
-    key: d.key,
-    label: d.label,
-    color: d.color,
-    values: finalRaw.map((cells) => aggregateCell(cells[j]!, agg)),
-  });
+  const split = (cellsOf: (catIndex: number) => Scalar[][]) => {
+    const toSeries = (d: SeriesDef, j: number): SeriesData => ({
+      key: d.key,
+      label: d.label,
+      color: d.color,
+      values: finalCats.map((_, i) => aggregateCell(cellsOf(i)[j]!, agg)),
+    });
+    return { series: defs.slice(0, primaryCount).map(toSeries), secondary: defs.slice(primaryCount).map((d, j) => toSeries(d, primaryCount + j)) };
+  };
   return {
     xType: finalType,
     xLabel: spec.xLabel ?? xInfo.label,
     categories,
-    series: defs.slice(0, primaryCount).map(toSeries),
-    secondary: defs.slice(primaryCount).map((d, j) => toSeries(d, primaryCount + j)),
+    ...split((i) => finalRaw[i]!),
+    ...(facet ? { panels: Array.from({ length: facet.count }, (_, p) => split((i) => finalPanelRaw[i]![p]!)) } : {}),
     measure: spec.yLabel ?? ys.map((y) => source.field(y).label).join(", "),
     yFormat: spec.yFormat ?? source.field(ys[0]!).format,
     secondaryFormat: spec.secondary?.format ?? (secondaryFields[0] !== undefined ? source.field(secondaryFields[0]).format : undefined),

@@ -646,9 +646,10 @@ export interface AutoReportOptions {
   locale?: string;
   currency?: string;
   /**
-   * Structure of the draft (default "overview"): brief = one page of KPIs, one chart and one insight; trend = trajectory,
-   * growth and best/worst periods; compare = latest vs previous window; breakdown = ranking and mix; bridge = waterfall of
-   * what changed between two windows and who contributed.
+   * Structure of the draft (default "overview"): brief = one page with a headline stat, KPIs, one chart and one insight;
+   * trend = trajectory, small multiples by the main dimension, growth and best/worst periods; compare = latest vs
+   * previous window; breakdown = lead ranking beside share and mix views; bridge = waterfall of what changed between two
+   * windows and who contributed.
    */
   archetype?: Archetype;
 }
@@ -780,11 +781,66 @@ function picker(t: Table): (name: string) => string {
   };
 }
 
-function chartBlocks(id: string, c: Drafted): BlockInput[] {
+type Importance = NonNullable<BlockInput["importance"]>;
+
+/** A chart and its data-bound note; the note is supporting so the layout tucks it beside the chart. */
+function chartBlocks(id: string, c: Drafted, importance: Importance = "normal"): BlockInput[] {
   return [
-    { id: `${id}_chart`, type: "chart", title: c.title, chart: c.chart, height: "md" },
-    { id: `${id}_note`, type: "text", content: c.text },
+    { id: `${id}_chart`, type: "chart", title: c.title, chart: c.chart, height: "md", importance },
+    { id: `${id}_note`, type: "text", content: c.text, importance: "supporting" },
   ];
+}
+
+/** The headline KPI as a lead stat in display type, then the remaining KPIs as one strip. */
+function figureBlocks(items: KpiItemInput[]): BlockInput[] {
+  const [head, ...rest] = items;
+  if (!head) return [];
+  return [{ id: "headline", type: "stat", importance: "lead", ...head }, ...(rest.length ? [{ id: "kpis", type: "kpi" as const, items: rest }] : [])];
+}
+
+/**
+ * The headline per period, one line panel per `dim` value (shared axes), with the categories' change between the
+ * latest two windows as its note. Stocks keep each period's last snapshot per category; averages stay averages.
+ */
+function facetChart(d: Draft, trend: Trend, dim: string): Drafted {
+  const { plan, primary: t } = d;
+  const { head } = plan;
+  const time = trend.axis.time.name;
+  const unit = trend.axis.unit;
+  const value = trend.value;
+  const groupBy = [time, dim];
+  const notNull: Transform = { op: "filter", expr: `\`${time}\` != null and \`${dim}\` != null` };
+  const timeUnit: Transform[] = unit ? [{ op: "timeUnit", field: time, unit }] : [];
+  const first = { ...(head.field ? { field: head.field } : {}), agg: head.agg, as: value };
+  const snapshots = head.stock && unit !== undefined && trend.axis.time.distinct > trend.axis.periods.length;
+  const transform: Transform[] = snapshots
+    ? [
+        notNull,
+        { op: "aggregate", groupBy, measures: [first] },
+        { op: "sort", by: time },
+        ...timeUnit,
+        { op: "aggregate", groupBy, measures: [{ field: value, agg: "last", as: value }] },
+      ]
+    : [...timeUnit, notNull, { op: "aggregate", groupBy, measures: [first] }];
+  transform.push({ op: "sort", by: time });
+  const dims = fieldLabel(dim, true);
+  const format = head.field === undefined ? "integer" : fieldFormat(t, head.field);
+  const dimDef = fieldDef(dim, undefined);
+  const defs = [...t.defs.filter((x) => x.name === time), ...(dimDef ? [dimDef] : []), { name: value, label: head.label, ...(format ? { format } : {}) }];
+  const id = d.makeId(`${t.ds.id}_${dim}_trend`);
+  d.datasets[id] = {
+    from: t.ds.id,
+    transform,
+    description: `${head.label} per ${unit ?? fieldLabel(time, true)} and ${dims}${snapshots ? " (levels: last snapshot per period)" : ""}`,
+    fields: defs,
+  };
+  const w = windows(t, trend.axis, d.locale);
+  const s = periodSplit(d, w, [dim], head);
+  return {
+    chart: { kind: "line", data: id, x: time, y: value, facet: dim, ...(unit ? { xFormat: `date:${unit}` } : {}) },
+    title: `${head.label} per ${unit ?? "period"} by ${dims}`,
+    text: `${w.latestLabel} vs ${w.prevLabel}: ${moverText(s, dim, head)}`,
+  };
 }
 
 function headlineMetrics(plan: Plan): Metric[] {
@@ -963,14 +1019,25 @@ function overview(d: Draft): Outline {
   const { trend } = plan;
   const derivedRate = plan.rate?.derived;
   const analysisBlocks: BlockInput[] = [];
+  let charts = 0;
   const addChart = (c: Drafted) => {
-    const n = analysisBlocks.length / 2 + 1;
-    analysisBlocks.push({ id: `chart_${n}`, type: "chart", title: c.title, chart: c.chart, height: "md" }, { id: `insight_${n}`, type: "text", content: c.text });
+    charts += 1;
+    analysisBlocks.push(
+      { id: `chart_${charts}`, type: "chart", title: c.title, chart: c.chart, height: "md", importance: "normal" },
+      { id: `insight_${charts}`, type: "text", content: c.text, importance: "supporting" },
+    );
   };
-  if (trend) addChart(trendChart(plan, trend));
+  const all = breakdowns(tables, plan);
+  // The trend splits into small multiples by the primary table's next-best small dimension; the best keeps its bar.
+  const facet = trend ? all.find((b) => b.table === primary && b.dim.distinct <= MAX_FULL_BAR && b.dim.name !== all[0]?.dim.name) : undefined;
   const usedX = new Set(trend ? [trend.axis.time.name] : []);
-  for (const b of breakdowns(tables, plan)) {
-    if (analysisBlocks.length / 2 >= MAX_CHARTS) break;
+  if (trend) addChart(trendChart(plan, trend));
+  if (trend && facet) {
+    usedX.add(facet.dim.name);
+    addChart(facetChart(d, trend, facet.dim.name));
+  }
+  for (const b of all) {
+    if (charts >= MAX_CHARTS) break;
     if (usedX.has(b.dim.name)) continue;
     usedX.add(b.dim.name);
     const dd = byDimension(b.table, b.dim.name, b.measure, b.table === primary ? derivedRate : undefined, makeId, datasets);
@@ -990,12 +1057,12 @@ function overview(d: Draft): Outline {
     .slice(0, MAX_SPLITS)
     .map((f) => splitText(plan, f.name, byDimension(primary, f.name, plan.head, undefined, makeId, datasets)))
     .filter((s) => s !== "");
-  if (splits.length) analysisBlocks.push({ id: "splits", type: "text", title: "How it splits", content: splits.map((s) => `- ${s}`).join("\n") });
+  if (splits.length) analysisBlocks.push({ id: "splits", type: "text", title: "How it splits", content: splits.map((s) => `- ${s}`).join("\n"), importance: "supporting" });
 
-  const sections: SectionInput[] = [
-    { id: "summary", title: "Summary", role: "summary", blocks: [{ id: "kpis", type: "kpi", items: kpiItems(plan, makeId, datasets, locale) }] },
-  ];
-  if (analysisBlocks.length) sections.push({ id: "analysis", title: "Analysis", role: "analysis", layout: "main-side", blocks: analysisBlocks });
+  const items = kpiItems(plan, makeId, datasets, locale);
+  // With a time field the headline has a baseline worth a display-type stat; the other KPIs stay a strip.
+  const sections: SectionInput[] = [{ id: "summary", title: "Summary", role: "summary", blocks: trend ? figureBlocks(items) : [{ id: "kpis", type: "kpi", items }] }];
+  if (analysisBlocks.length) sections.push({ id: "analysis", title: "Analysis", role: "analysis", blocks: analysisBlocks });
   const columns = tableColumns(primary);
   const sortName = trend?.axis.time.name ?? plan.head.field;
   sections.push({
@@ -1017,7 +1084,7 @@ function overview(d: Draft): Outline {
   return { title: `${fieldLabel(primary.ds.id)} report`, sections };
 }
 
-/** One page: headline KPIs, the most informative chart (headline trend, else the strongest breakdown), one insight. */
+/** One page: the headline as a lead stat, the other KPIs, the most informative chart (headline trend, else the strongest breakdown), one insight. */
 function brief(d: Draft): Outline {
   const { plan, primary } = d;
   let lead: Drafted | undefined;
@@ -1026,11 +1093,11 @@ function brief(d: Draft): Outline {
     const b = breakdowns(d.tables, plan)[0];
     if (b) lead = barChart(b, byDimension(b.table, b.dim.name, b.measure, b.table === primary ? plan.rate?.derived : undefined, d.makeId, d.datasets), plan.trend);
   }
-  const blocks: BlockInput[] = [{ id: "kpis", type: "kpi", items: kpiItems(plan, d.makeId, d.datasets, d.locale) }];
+  const blocks = figureBlocks(kpiItems(plan, d.makeId, d.datasets, d.locale));
   if (lead) {
     blocks.push(
-      { id: "lead_chart", type: "chart", title: lead.title, chart: lead.chart, height: "md" },
-      { id: "insight", type: "callout", tone: "info", variant: "insight", title: "What stands out", content: lead.text },
+      { id: "lead_chart", type: "chart", title: lead.title, chart: lead.chart, height: "md", importance: "normal" },
+      { id: "insight", type: "callout", tone: "info", variant: "insight", title: "What stands out", content: lead.text, importance: "supporting" },
     );
   }
   return { title: `${d.subject} brief`, sections: [{ id: "brief", title: `${plan.head.label} at a glance`, role: "summary", blocks }], targetPages: 1 };
@@ -1091,6 +1158,9 @@ function trendReport(d: Draft): Outline | undefined {
       ? `Across {{count(${id})}} ${unit}s, growth averaged ${ref("avg", trend.changeField, " | percent")} per ${unit}, from ${ref("min", trend.changeField, " | percent")} in the weakest ${unit} to ${ref("max", trend.changeField, " | percent")} in the strongest.`
       : `${head.label} change vs the previous ${unit}.`,
   };
+  // Small multiples of the headline by the main dimension, when it has few enough categories to read as panels.
+  const main = breakdowns([primary], plan).find((b) => b.dim.distinct <= MAX_FULL_BAR);
+  const trajectory = [...chartBlocks("trend", line), ...(main ? chartBlocks("facet", facetChart(d, trend, main.dim.name)) : []), ...chartBlocks("growth", growth)];
   return {
     title: `${d.subject} trends`,
     sections: [
@@ -1100,10 +1170,10 @@ function trendReport(d: Draft): Outline | undefined {
         role: "summary",
         blocks: [
           { id: "kpis", type: "kpi", items: kpiItems(plan, d.makeId, d.datasets, d.locale) },
-          { id: "latest_change", type: "callout", tone: "info", variant: "insight", title: `Latest ${unit} change`, content: trendChart(plan, trend).text },
+          { id: "latest_change", type: "callout", tone: "info", variant: "insight", title: `Latest ${unit} change`, content: trendChart(plan, trend).text, importance: "supporting" },
         ],
       },
-      { id: "trajectory", title: `${head.label} over time`, role: "analysis", blocks: [...chartBlocks("trend", line), ...chartBlocks("growth", growth)] },
+      { id: "trajectory", title: `${head.label} over time`, role: "analysis", blocks: trajectory },
       {
         id: "extremes",
         title: `Best and worst ${unit}s`,
@@ -1170,11 +1240,11 @@ function compare(d: Draft): Outline | undefined {
     id: "by_dimension",
     title: `${head.label} by ${dims}`,
     role: "analysis",
-    blocks: chartBlocks("dumbbell", {
-      chart: { kind: "dumbbell", data: s.id, x: main.name, y: [s.from, s.to] },
-      title: `${head.label} by ${dims}, ${w.prevLabel} → ${w.latestLabel}`,
-      text: moverText(s, main.name, head),
-    }),
+    blocks: chartBlocks(
+      "dumbbell",
+      { chart: { kind: "dumbbell", data: s.id, x: main.name, y: [s.from, s.to] }, title: `${head.label} by ${dims}, ${w.prevLabel} → ${w.latestLabel}`, text: moverText(s, main.name, head) },
+      "lead",
+    ),
   });
   const index = second ? [main.name, second.name] : [main.name];
   const movers = second ? periodSplit(d, w, index, head) : s;
@@ -1296,7 +1366,7 @@ function compareCategories(d: Draft): Outline | undefined {
       id: "by_dimension",
       title: `${m.label} by ${dims}`,
       role: "analysis",
-      blocks: chartBlocks("dumbbell", { chart: { kind: "dumbbell", data: s.id, x: second.name, y: [s.from, s.to] }, title: `${m.label} by ${dims}: ${la} vs ${lb}`, text }),
+      blocks: chartBlocks("dumbbell", { chart: { kind: "dumbbell", data: s.id, x: second.name, y: [s.from, s.to] }, title: `${m.label} by ${dims}: ${la} vs ${lb}`, text }, "lead"),
     },
     {
       id: "gaps",
@@ -1329,18 +1399,19 @@ function breakdownReport(d: Draft): Outline | undefined {
   const dd = byDimension(t, dim.name, m, t === primary ? plan.rate?.derived : undefined, d.makeId, d.datasets, true);
   const suffix = latestSuffix(dd, trend);
   const bar = barChart(b, dd, trend);
-  const ranking = chartBlocks("ranking", { ...bar, chart: { ...bar.chart, horizontal: true } });
+  // The ranking leads; the share donut and the mix are smaller views beside it, their notes follow in the same order.
+  const views: Array<[string, Drafted]> = [];
   if (canDonut(b, dd) && dd.shareField && !unsafe(dd.valueField, dd.shareField)) {
     const ref = (agg: string, f: string, pipe = "") => `{{${agg}(${dd.id}.${f})${pipe}}}`;
-    ranking.push(
-      ...chartBlocks("share", {
+    views.push([
+      "share",
+      {
         chart: { kind: "donut", data: dd.id, x: dim.name, y: dd.valueField },
         title: `Share of ${m.inline} by ${dims}${suffix}`,
         text: `Across {{count(${dd.id})}} ${dims} values (${m.inline} ${ref("sum", dd.valueField)} in total), the median holds ${ref("median", dd.shareField, " | percent")} and the smallest ${ref("min", dd.shareField, " | percent")}.`,
-      }),
-    );
+      },
+    ]);
   }
-  const sections: SectionInput[] = [{ id: "ranking", title: `${fieldLabel(dim.name)} ranking`, role: "analysis", blocks: ranking }];
   const second = dimsOf(t, plan).find((f) => f !== dim && f.distinct <= MAX_FULL_BAR);
   // Shares of averages mean nothing, so the 100% mix needs a summable measure.
   if (second && m.agg !== "avg") {
@@ -1359,17 +1430,19 @@ function breakdownReport(d: Draft): Outline | undefined {
       ...(defs.length ? { fields: defs } : {}),
     };
     const secondSplit = byDimension(t, second.name, m, undefined, d.makeId, d.datasets);
-    sections.push({
-      id: "mix",
-      title: `${fieldLabel(second.name)} mix by ${dims}`,
-      role: "analysis",
-      blocks: chartBlocks("mix", {
+    views.push([
+      "mix",
+      {
         chart: { kind: "bar", data: mix, x: dim.name, y: value, series: second.name, stack: "percent", horizontal: true },
         title: `${fieldLabel(second.name)} share of ${m.inline} within each ${dims}${suffix}`,
         text: breakdownText({ table: t, dim: second, measure: m, score: 0 }, secondSplit, false, trend),
-      }),
-    });
+      },
+    ]);
   }
+  const ranking = [...chartBlocks("ranking", { ...bar, chart: { ...bar.chart, horizontal: true } }, "lead"), ...views.flatMap(([id, v]) => chartBlocks(id, v))];
+  const sections: SectionInput[] = [
+    { id: "ranking", title: second && views.some(([id]) => id === "mix") ? `${fieldLabel(dim.name)} ranking and ${fieldLabel(second.name, true)} mix` : `${fieldLabel(dim.name)} ranking`, role: "analysis", blocks: ranking },
+  ];
   const format = m.field === undefined ? "integer" : fieldFormat(t, m.field);
   sections.push({
     id: "ranked",
@@ -1437,7 +1510,7 @@ function bridge(d: Draft): Outline | undefined {
     ? `${m.label} bridge from ${w.prevLabel} to ${w.latestLabel}.`
     : `${m.label} went from {{sum(${s.id}.${s.from})}} in ${w.prevLabel} to **{{sum(${s.id}.${s.to})}}** in ${w.latestLabel}, a net change of ${net > 0 ? "+" : ""}{{sum(${s.id}.${s.change})}} across {{count(${s.id})}} ${dims} values.`;
   const contributors: BlockInput[] = [
-    { id: "contributors_callout", type: "callout", tone: "info", variant: "insight", title: `Biggest contributors by ${dims}`, content: moverText(s, main.name, m) },
+    { id: "contributors_callout", type: "callout", tone: "info", variant: "insight", title: `Biggest contributors by ${dims}`, content: moverText(s, main.name, m), importance: "supporting" },
   ];
   if (second) {
     const s2 = periodSplit(d, w, [second.name], m);
@@ -1456,13 +1529,14 @@ function bridge(d: Draft): Outline | undefined {
         id: "what_changed",
         title: "What changed",
         role: "summary",
-        blocks: chartBlocks("waterfall", {
-          chart: { kind: "waterfall", data: steps, x: step, y: amount, base: "first", total: w.latestLabel },
-          title: `${m.label} change by ${dims}, ${span}`,
-          text: totalText,
-        }),
+        blocks: chartBlocks(
+          "waterfall",
+          { chart: { kind: "waterfall", data: steps, x: step, y: amount, base: "first", total: w.latestLabel }, title: `${m.label} change by ${dims}, ${span}`, text: totalText },
+          "lead",
+        ),
       },
-      { id: "contributors", title: "Contributors", role: "analysis", blocks: contributors },
+      // The callout on the main dimension runs as an aside beside the second dimension's chart and note.
+      { id: "contributors", title: "Contributors", role: "analysis", ...(contributors.length >= 3 ? { layout: "sidebar" as const } : {}), blocks: contributors },
       {
         id: "contributions",
         title: "Detail",
@@ -1511,8 +1585,9 @@ function outline(d: Draft, archetype: Archetype): Outline {
 /**
  * Headless "any data → draft report".
  * Accepts an array of records, an object of named arrays / CSV strings, nested JSON, or a CSV string.
- * The archetype picks the structure (see AutoReportOptions); "overview" reads KPIs → trend of the headline measure →
- * up to two category breakdowns → two-way splits → detail table.
+ * The archetype picks the structure (see AutoReportOptions); "overview" reads headline stat + KPIs → trend of the headline
+ * measure → its small multiples by a second dimension → category breakdowns → two-way splits → detail table.
+ * Blocks carry `importance` (lead stats/charts, supporting narrative) so the layout solver composes varied bands.
  * Every number in the output is data-bound (Measure objects or {{...}} placeholders).
  */
 export function autoReport(input: unknown, opts: AutoReportOptions = {}): ReportSpecInput {
