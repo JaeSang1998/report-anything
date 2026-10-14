@@ -20,6 +20,8 @@ export interface ChatProps {
   onAttachFiles(files: FileList): void;
   onAttachSample(sample: Attachment): void;
   onRemoveAttachment(id: string): void;
+  /** Open the data viewer for a dataset id. */
+  onOpenData(id: string): void;
   onStarter(starter: { prompt: string; sample?: Attachment }): void;
   /** Report rendered at the end of an assistant message (null when the message did not touch the report). */
   artifact(message: ReportAgentMessage): ReactNode;
@@ -116,8 +118,10 @@ export function Chat(props: ChatProps) {
         <ul className="chips" aria-label="Attached data">
           {props.attachments.map((a) => (
             <li key={a.id} className="chip">
-              <span className="chip__id">{a.id}</span>
-              <span className="chip__label">{a.label}</span>
+              <button type="button" className="chip__open" title="View data" onClick={() => props.onOpenData(a.id)}>
+                <span className="chip__id">{a.id}</span>
+                <span className="chip__label">{a.label}</span>
+              </button>
               <button type="button" className="chip__x" aria-label={`Remove ${a.id}`} onClick={() => props.onRemoveAttachment(a.id)}>
                 ×
               </button>
@@ -130,7 +134,7 @@ export function Chat(props: ChatProps) {
         onChange={(e) => setText(e.target.value)}
         onKeyDown={onKeyDown}
         rows={2}
-        placeholder={messages.length ? "Ask for a change — “두 번째 차트를 표로 바꿔줘”" : "Attach data, then describe the report you need"}
+        placeholder={messages.length ? "Ask for a change — “turn the second chart into a table”" : "Attach data, then describe the report you need"}
       />
       <div className="composer__row">
         <button type="button" className="link" onClick={() => fileRef.current?.click()}>
@@ -198,7 +202,9 @@ export function Chat(props: ChatProps) {
                     <ul className="chips chips--sent">
                       {files.map((f) => (
                         <li key={f} className="chip">
-                          <span className="chip__label">{f}</span>
+                          <button type="button" className="chip__open" title="View data" onClick={() => props.onOpenData(f.split(" — ")[0]!)}>
+                            <span className="chip__label">{f}</span>
+                          </button>
                         </li>
                       ))}
                     </ul>

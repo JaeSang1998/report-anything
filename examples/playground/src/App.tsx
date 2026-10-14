@@ -11,15 +11,18 @@ import { reportTools } from "../server/tools.js";
 import type { ReportAgentMessage } from "../server/tools.js";
 import { createToolRunner, summarize } from "./agent.js";
 import { Chat } from "./Chat.js";
+import { DataViewer } from "./DataViewer.js";
 import { FrozenReport, LiveReport } from "./ReportArtifact.js";
 import { attachmentFromFile, SAMPLE_DATA } from "./data.js";
 import type { Attachment } from "./data.js";
 import { createLocalReportModel } from "./local-agent.js";
 
 const STARTERS = [
-  { label: "상반기 매출을 임원용 리포트로", prompt: "이 매출 데이터로 2026년 상반기 임원용 리포트를 만들어줘. 전년 동기 대비와 지역·채널별로 무엇이 성장을 이끌었는지 보여주고, 하반기 과제로 마무리해줘.", sample: SAMPLE_DATA.sales },
-  { label: "주문 API 응답 분석", prompt: "주문 API 응답을 분석해서 리포트로 만들어줘. 무엇이 매출을 만들고 환불은 어디서 나는지 알고 싶어.", sample: SAMPLE_DATA.orders },
-  { label: "Quarterly report in English", prompt: "Build a one-page quarterly revenue brief from this data for the leadership team.", sample: SAMPLE_DATA.sales },
+  { label: "Executive sales review", prompt: "Build an executive report for H1 2026: year-over-year growth, which regions and channels drove it, and what to do next.", sample: SAMPLE_DATA.sales },
+  { label: "SaaS board update", prompt: "Write a board update on MRR: growth by plan, churn, and where expansion comes from.", sample: SAMPLE_DATA.saas },
+  { label: "Acquisition channel review", prompt: "Which acquisition channels and devices convert best, and how did traffic trend over the last six months?", sample: SAMPLE_DATA.traffic },
+  { label: "Support quarter in review", prompt: "Review support for Q3: ticket volume, resolution time by priority and category, and customer satisfaction.", sample: SAMPLE_DATA.tickets },
+  { label: "Orders API deep dive", prompt: "Analyze this orders API response: what drives revenue and where do refunds come from?", sample: SAMPLE_DATA.orders },
 ];
 
 const AgentShape = z.object({ provider: z.enum(["anthropic", "openai"]), modelId: z.string() }).nullable();
@@ -51,6 +54,7 @@ function Playground({ agent }: { agent: ModelChoice | null }) {
   const [session, setSession] = useState<ReportSession>(() => createReportSession());
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [attachError, setAttachError] = useState<string>();
+  const [viewing, setViewing] = useState<string>();
   const snapshot = useReportSnapshot(session);
   const runner = useMemo(() => createToolRunner(session), [session]);
 
@@ -172,12 +176,21 @@ function Playground({ agent }: { agent: ModelChoice | null }) {
           session.apply({ op: "removeDataset", id });
           setAttachments((list) => list.filter((a) => a.id !== id));
         }}
+        onOpenData={setViewing}
         onStarter={(s) => {
           const extra = s.sample && !attachments.some((a) => a.id === s.sample!.id) ? [s.sample] : [];
           extra.forEach(attach);
           send(s.prompt, extra);
         }}
       />
+      {viewing ? (
+        <DataViewer
+          id={viewing}
+          dataset={snapshot.spec.datasets[viewing]}
+          resolved={snapshot.context.datasets.get(viewing)}
+          onClose={() => setViewing(undefined)}
+        />
+      ) : null}
     </div>
   );
 }

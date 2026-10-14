@@ -353,3 +353,12 @@ describe("buildChart geometry", () => {
     }
   });
 });
+
+describe("axis tick labels", () => {
+  it("adds decimals when rounding would print two percent ticks the same", () => {
+    const rows = [0.021, 0.026, 0.03, 0.024].map((rate, i) => ({ m: `2026-0${i + 1}`, rate }));
+    const m = buildChart({ kind: "line", data: "d", x: "m", y: "rate", yFormat: "percent" }, ctxOf({ d: { rows } }), SIZE);
+    const labels = m.axes.find((a) => a.position === "left")!.ticks.map((t) => t.label);
+    expect(new Set(labels).size).toBe(labels.length);
+  });
+});

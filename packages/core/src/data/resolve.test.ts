@@ -100,3 +100,22 @@ describe("createDataContext", () => {
     expect(createDataContext(ko).context).toMatchObject({ locale: "ko-KR", currency: "KRW" });
   });
 });
+
+describe("field metadata through `from`", () => {
+  it("inherits label and format for fields that keep their name; own fields win; types are re-inferred", () => {
+    const { datasets } = resolveDatasets(
+      parse({
+        base: { rows: [{ month: "2026-01", revenue: 10, region: "EU" }], fields: [{ name: "revenue", label: "Revenue", format: "currency" }, { name: "month", label: "Month" }] },
+        monthly: {
+          from: "base",
+          transform: [{ op: "aggregate", groupBy: ["month"], measures: [{ field: "revenue", agg: "sum", as: "revenue" }, { agg: "count", as: "rows" }] }],
+          fields: [{ name: "month", label: "Period" }],
+        },
+      }),
+    );
+    const fields = datasets.get("monthly")!.fields;
+    expect(fields.find((f) => f.name === "revenue")).toMatchObject({ label: "Revenue", format: "currency", type: "number" });
+    expect(fields.find((f) => f.name === "month")).toMatchObject({ label: "Period", type: "date" });
+    expect(fields.find((f) => f.name === "rows")?.format).toBeUndefined();
+  });
+});

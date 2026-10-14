@@ -94,12 +94,34 @@ The report is written **into the conversation**. While the agent streams its ops
 </tr>
 <tr>
 <td align="center"><sub>Building live — ops apply while the model is still writing them</sub></td>
-<td align="center"><sub>"두 번째 차트를 표로 바꿔줘" — earlier versions stay in the thread</sub></td>
+<td align="center"><sub>"Turn the second chart into a table" — earlier versions stay in the thread</sub></td>
 </tr>
 </table>
 
 - **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) and handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename.
 - **Locally with a key**, the same UI talks to Claude or GPT through the AI SDK. The system prompt *is* the [agent skill](skills/report-anything/SKILL.md); the browser owns the report session and executes the agent's tools, so the model always sees the real validation and layout result.
+- **See what the agent sees.** Click any data chip to open the dataset: the table the engine actually works on (after CSV parsing, JSON flattening and transforms), the raw source, and each field's inferred type and role.
+
+Five sample datasets, deliberately different in shape:
+
+| Sample | Shape | What it exercises |
+| --- | --- | --- |
+| Regional sales | flat rows, month × region × channel | year-over-year deltas, shares, channel mix |
+| SaaS MRR | monthly snapshots by plan | stock vs flow measures (MRR is never summed across months), churn rates |
+| Web traffic | **CSV text**, weekly channel × device | derived conversion rate (signups / sessions), weekly trends |
+| Support tickets | event records with nulls | counts as the headline, medians, durations where lower is better |
+| Orders API | **nested JSON** (`{ meta, data: { orders: [{ customer: {…}, items: [...] }] } }`) | record-array detection, dotted fields, exploded line items |
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/playground-data-table.png" alt="Data viewer: the normalized table of a nested API response" /></td>
+<td width="50%"><img src="docs/screenshots/playground-data-source.png" alt="Data viewer: the raw JSON source" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Nested API JSON, as the engine sees it</sub></td>
+<td align="center"><sub>…and the raw source it came from</sub></td>
+</tr>
+</table>
 
 ```sh
 pnpm install && pnpm dev                  # http://localhost:5173 — local agent, no key
@@ -136,18 +158,26 @@ pnpm dev                                  # same UI, LLM agent
 }
 ```
 
-No spans, no heights, no page breaks — the engine pairs the chart and the callout 8/4 on the web, re-flows them for A4, and formats every number from the data. A full hand-written example lives in [`examples/specs/sales-h1.json`](examples/specs/sales-h1.json):
+No spans, no heights, no page breaks — the engine pairs the chart and the callout 8/4 on the web, re-flows them for A4, and formats every number from the data.
+
+## Examples
+
+Three hand-written specs in [`examples/specs`](examples/specs), each with its data embedded. Render any of them with `report-anything render <file> [--mode print]`.
 
 <table>
 <tr>
-<td width="58%"><img src="docs/screenshots/report-web.png" alt="Web rendering of the H1 sales report" /></td>
-<td width="42%"><img src="docs/screenshots/report-print-1.png" alt="A4 page 1" /><br/><img src="docs/screenshots/report-print-2.png" alt="A4 page 2" /></td>
+<td width="33%" valign="top"><a href="examples/specs/regional-sales.json"><img src="docs/screenshots/example-regional-sales.png" alt="H1 sales review" /></a></td>
+<td width="33%" valign="top"><a href="examples/specs/saas-board.json"><img src="docs/screenshots/example-saas-board.png" alt="SaaS board update" /></a></td>
+<td width="33%" valign="top"><a href="examples/specs/support-review.json"><img src="docs/screenshots/example-support-review.png" alt="Support quarter in review" /></a></td>
 </tr>
 <tr>
-<td align="center"><sub>Web</sub></td>
-<td align="center"><sub>Print (A4, paginated by the engine)</sub></td>
+<td valign="top"><b>H1 sales review</b><br/><sub>KPIs with year-over-year baselines, bars + growth line on a second axis, horizontal and 100% stacked bars, comparison, totals, action list.</sub></td>
+<td valign="top"><b>SaaS board update</b><br/><sub>Stacked area by plan, MRR movement with churn below zero, latest-month plan table with ARPA, risk callout, board asks.</sub></td>
+<td valign="top"><b>Support quarter in review</b><br/><sub>Event data: counts and medians, heatmap of resolution time by category × priority, CSAT heat column, open-ticket table.</sub></td>
 </tr>
 </table>
+
+<p align="center"><img src="docs/screenshots/example-regional-sales-print.png" alt="H1 sales review, A4 page 1" width="480" /><br/><sub>The same H1 review in print mode: A4, paginated by the engine.</sub></p>
 
 ## How it works
 

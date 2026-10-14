@@ -155,7 +155,15 @@ function load(id: string, d: Dataset, resolved: ReadonlyMap<string, ResolvedData
       return undefined;
     }
   }
-  const fields = inferFields(rows, d.fields);
+  // Labels/formats declared once on a parent carry through `from` for fields that keep their name;
+  // the dataset's own `fields` win, and types are always re-inferred from the transformed rows.
+  const inherited: FieldDef[] =
+    d.from === undefined
+      ? []
+      : (resolved.get(d.from)?.fields ?? [])
+          .filter((f) => !d.fields?.some((own) => own.name === f.name))
+          .map((f) => ({ name: f.name, label: f.label, ...(f.format !== undefined ? { format: f.format } : {}), ...(f.description !== undefined ? { description: f.description } : {}) }));
+  const fields = inferFields(rows, [...(d.fields ?? []), ...inherited]);
   for (const def of d.fields ?? []) {
     if (rows.length === 0 || fields.some((f) => f.name === def.name)) continue;
     const guess = closest(

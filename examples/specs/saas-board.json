@@ -1,0 +1,1104 @@
+{
+  "title": "Board update: Subscription revenue",
+  "subtitle": "September 2026",
+  "summary": "MRR reached **{{sum(latest.mrr) | currency:0}}**. Pro is the growth engine, Enterprise expansion is accelerating, and Starter churn is the risk to watch.",
+  "meta": {
+    "author": "Finance",
+    "date": "2026-10-05",
+    "audience": "executive",
+    "locale": "en-US",
+    "currency": "USD"
+  },
+  "page": {
+    "size": "A4",
+    "targetPages": 2
+  },
+  "datasets": {
+    "subs": {
+      "rows": [
+        {
+          "month": "2024-10-01",
+          "plan": "Starter",
+          "customers": 852,
+          "mrr": 41923,
+          "new_mrr": 3430,
+          "expansion_mrr": 120,
+          "churned_mrr": 1807,
+          "logo_churn_rate": 0.0466
+        },
+        {
+          "month": "2024-11-01",
+          "plan": "Starter",
+          "customers": 899,
+          "mrr": 44611,
+          "new_mrr": 4655,
+          "expansion_mrr": 190,
+          "churned_mrr": 2157,
+          "logo_churn_rate": 0.0565
+        },
+        {
+          "month": "2024-12-01",
+          "plan": "Starter",
+          "customers": 933,
+          "mrr": 46321,
+          "new_mrr": 3577,
+          "expansion_mrr": 154,
+          "churned_mrr": 2021,
+          "logo_churn_rate": 0.0438
+        },
+        {
+          "month": "2025-01-01",
+          "plan": "Starter",
+          "customers": 971,
+          "mrr": 48376,
+          "new_mrr": 4116,
+          "expansion_mrr": 201,
+          "churned_mrr": 2262,
+          "logo_churn_rate": 0.0491
+        },
+        {
+          "month": "2025-02-01",
+          "plan": "Starter",
+          "customers": 1014,
+          "mrr": 50586,
+          "new_mrr": 4459,
+          "expansion_mrr": 182,
+          "churned_mrr": 2431,
+          "logo_churn_rate": 0.0498
+        },
+        {
+          "month": "2025-03-01",
+          "plan": "Starter",
+          "customers": 1066,
+          "mrr": 53160,
+          "new_mrr": 4753,
+          "expansion_mrr": 146,
+          "churned_mrr": 2325,
+          "logo_churn_rate": 0.0442
+        },
+        {
+          "month": "2025-04-01",
+          "plan": "Starter",
+          "customers": 1103,
+          "mrr": 55090,
+          "new_mrr": 4312,
+          "expansion_mrr": 155,
+          "churned_mrr": 2537,
+          "logo_churn_rate": 0.0479
+        },
+        {
+          "month": "2025-05-01",
+          "plan": "Starter",
+          "customers": 1166,
+          "mrr": 58266,
+          "new_mrr": 5733,
+          "expansion_mrr": 251,
+          "churned_mrr": 2808,
+          "logo_churn_rate": 0.0491
+        },
+        {
+          "month": "2025-06-01",
+          "plan": "Starter",
+          "customers": 1202,
+          "mrr": 60399,
+          "new_mrr": 5292,
+          "expansion_mrr": 272,
+          "churned_mrr": 3431,
+          "logo_churn_rate": 0.0617
+        },
+        {
+          "month": "2025-07-01",
+          "plan": "Starter",
+          "customers": 1247,
+          "mrr": 62619,
+          "new_mrr": 4704,
+          "expansion_mrr": 195,
+          "churned_mrr": 2679,
+          "logo_churn_rate": 0.0423
+        },
+        {
+          "month": "2025-08-01",
+          "plan": "Starter",
+          "customers": 1316,
+          "mrr": 66171,
+          "new_mrr": 6272,
+          "expansion_mrr": 316,
+          "churned_mrr": 3036,
+          "logo_churn_rate": 0.0475
+        },
+        {
+          "month": "2025-09-01",
+          "plan": "Starter",
+          "customers": 1361,
+          "mrr": 68684,
+          "new_mrr": 5880,
+          "expansion_mrr": 280,
+          "churned_mrr": 3647,
+          "logo_churn_rate": 0.0567
+        },
+        {
+          "month": "2025-10-01",
+          "plan": "Starter",
+          "customers": 1419,
+          "mrr": 71996,
+          "new_mrr": 6419,
+          "expansion_mrr": 294,
+          "churned_mrr": 3401,
+          "logo_churn_rate": 0.0535
+        },
+        {
+          "month": "2025-11-01",
+          "plan": "Starter",
+          "customers": 1465,
+          "mrr": 74292,
+          "new_mrr": 5782,
+          "expansion_mrr": 225,
+          "churned_mrr": 3711,
+          "logo_churn_rate": 0.0511
+        },
+        {
+          "month": "2025-12-01",
+          "plan": "Starter",
+          "customers": 1538,
+          "mrr": 78241,
+          "new_mrr": 6615,
+          "expansion_mrr": 312,
+          "churned_mrr": 2978,
+          "logo_churn_rate": 0.0423
+        },
+        {
+          "month": "2026-01-01",
+          "plan": "Starter",
+          "customers": 1628,
+          "mrr": 83156,
+          "new_mrr": 7987,
+          "expansion_mrr": 250,
+          "churned_mrr": 3322,
+          "logo_churn_rate": 0.0474
+        },
+        {
+          "month": "2026-02-01",
+          "plan": "Starter",
+          "customers": 1702,
+          "mrr": 87266,
+          "new_mrr": 7840,
+          "expansion_mrr": 297,
+          "churned_mrr": 4027,
+          "logo_churn_rate": 0.053
+        },
+        {
+          "month": "2026-03-01",
+          "plan": "Starter",
+          "customers": 1779,
+          "mrr": 91750,
+          "new_mrr": 9702,
+          "expansion_mrr": 358,
+          "churned_mrr": 5576,
+          "logo_churn_rate": 0.071
+        },
+        {
+          "month": "2026-04-01",
+          "plan": "Starter",
+          "customers": 1865,
+          "mrr": 96369,
+          "new_mrr": 9212,
+          "expansion_mrr": 290,
+          "churned_mrr": 4883,
+          "logo_churn_rate": 0.0571
+        },
+        {
+          "month": "2026-05-01",
+          "plan": "Starter",
+          "customers": 1960,
+          "mrr": 100828,
+          "new_mrr": 9555,
+          "expansion_mrr": 276,
+          "churned_mrr": 5372,
+          "logo_churn_rate": 0.0538
+        },
+        {
+          "month": "2026-06-01",
+          "plan": "Starter",
+          "customers": 2040,
+          "mrr": 104778,
+          "new_mrr": 9555,
+          "expansion_mrr": 365,
+          "churned_mrr": 5970,
+          "logo_churn_rate": 0.0587
+        },
+        {
+          "month": "2026-07-01",
+          "plan": "Starter",
+          "customers": 2162,
+          "mrr": 111164,
+          "new_mrr": 12005,
+          "expansion_mrr": 470,
+          "churned_mrr": 6089,
+          "logo_churn_rate": 0.0603
+        },
+        {
+          "month": "2026-08-01",
+          "plan": "Starter",
+          "customers": 2223,
+          "mrr": 114336,
+          "new_mrr": 10829,
+          "expansion_mrr": 413,
+          "churned_mrr": 8070,
+          "logo_churn_rate": 0.0739
+        },
+        {
+          "month": "2026-09-01",
+          "plan": "Starter",
+          "customers": 2315,
+          "mrr": 118812,
+          "new_mrr": 10633,
+          "expansion_mrr": 453,
+          "churned_mrr": 6610,
+          "logo_churn_rate": 0.0562
+        },
+        {
+          "month": "2024-10-01",
+          "plan": "Pro",
+          "customers": 329,
+          "mrr": 66269,
+          "new_mrr": 5373,
+          "expansion_mrr": 929,
+          "churned_mrr": 1723,
+          "logo_churn_rate": 0.0249
+        },
+        {
+          "month": "2024-11-01",
+          "plan": "Pro",
+          "customers": 349,
+          "mrr": 71682,
+          "new_mrr": 5373,
+          "expansion_mrr": 1324,
+          "churned_mrr": 1284,
+          "logo_churn_rate": 0.0219
+        },
+        {
+          "month": "2024-12-01",
+          "plan": "Pro",
+          "customers": 368,
+          "mrr": 76876,
+          "new_mrr": 5174,
+          "expansion_mrr": 1419,
+          "churned_mrr": 1399,
+          "logo_churn_rate": 0.0196
+        },
+        {
+          "month": "2025-01-01",
+          "plan": "Pro",
+          "customers": 391,
+          "mrr": 82815,
+          "new_mrr": 6169,
+          "expansion_mrr": 1490,
+          "churned_mrr": 1720,
+          "logo_churn_rate": 0.0208
+        },
+        {
+          "month": "2025-02-01",
+          "plan": "Pro",
+          "customers": 411,
+          "mrr": 88388,
+          "new_mrr": 5572,
+          "expansion_mrr": 1681,
+          "churned_mrr": 1680,
+          "logo_churn_rate": 0.0214
+        },
+        {
+          "month": "2025-03-01",
+          "plan": "Pro",
+          "customers": 433,
+          "mrr": 94248,
+          "new_mrr": 6169,
+          "expansion_mrr": 1458,
+          "churned_mrr": 1767,
+          "logo_churn_rate": 0.023
+        },
+        {
+          "month": "2025-04-01",
+          "plan": "Pro",
+          "customers": 453,
+          "mrr": 99649,
+          "new_mrr": 5572,
+          "expansion_mrr": 1281,
+          "churned_mrr": 1452,
+          "logo_churn_rate": 0.0174
+        },
+        {
+          "month": "2025-05-01",
+          "plan": "Pro",
+          "customers": 485,
+          "mrr": 107714,
+          "new_mrr": 8358,
+          "expansion_mrr": 1670,
+          "churned_mrr": 1963,
+          "logo_churn_rate": 0.0217
+        },
+        {
+          "month": "2025-06-01",
+          "plan": "Pro",
+          "customers": 513,
+          "mrr": 115336,
+          "new_mrr": 7960,
+          "expansion_mrr": 2243,
+          "churned_mrr": 2581,
+          "logo_churn_rate": 0.0246
+        },
+        {
+          "month": "2025-07-01",
+          "plan": "Pro",
+          "customers": 540,
+          "mrr": 122707,
+          "new_mrr": 7363,
+          "expansion_mrr": 2058,
+          "churned_mrr": 2050,
+          "logo_churn_rate": 0.0202
+        },
+        {
+          "month": "2025-08-01",
+          "plan": "Pro",
+          "customers": 568,
+          "mrr": 130586,
+          "new_mrr": 7761,
+          "expansion_mrr": 2230,
+          "churned_mrr": 2112,
+          "logo_churn_rate": 0.0199
+        },
+        {
+          "month": "2025-09-01",
+          "plan": "Pro",
+          "customers": 601,
+          "mrr": 139578,
+          "new_mrr": 8955,
+          "expansion_mrr": 2488,
+          "churned_mrr": 2451,
+          "logo_churn_rate": 0.021
+        },
+        {
+          "month": "2025-10-01",
+          "plan": "Pro",
+          "customers": 637,
+          "mrr": 149465,
+          "new_mrr": 9353,
+          "expansion_mrr": 2720,
+          "churned_mrr": 2186,
+          "logo_churn_rate": 0.019
+        },
+        {
+          "month": "2025-11-01",
+          "plan": "Pro",
+          "customers": 679,
+          "mrr": 160770,
+          "new_mrr": 11144,
+          "expansion_mrr": 3096,
+          "churned_mrr": 2935,
+          "logo_churn_rate": 0.0225
+        },
+        {
+          "month": "2025-12-01",
+          "plan": "Pro",
+          "customers": 713,
+          "mrr": 170532,
+          "new_mrr": 9353,
+          "expansion_mrr": 3108,
+          "churned_mrr": 2699,
+          "logo_churn_rate": 0.0189
+        },
+        {
+          "month": "2026-01-01",
+          "plan": "Pro",
+          "customers": 753,
+          "mrr": 180660,
+          "new_mrr": 10945,
+          "expansion_mrr": 2283,
+          "churned_mrr": 3100,
+          "logo_churn_rate": 0.0214
+        },
+        {
+          "month": "2026-02-01",
+          "plan": "Pro",
+          "customers": 791,
+          "mrr": 192217,
+          "new_mrr": 11144,
+          "expansion_mrr": 4157,
+          "churned_mrr": 3744,
+          "logo_churn_rate": 0.0239
+        },
+        {
+          "month": "2026-03-01",
+          "plan": "Pro",
+          "customers": 830,
+          "mrr": 203799,
+          "new_mrr": 11542,
+          "expansion_mrr": 4185,
+          "churned_mrr": 4145,
+          "logo_churn_rate": 0.0236
+        },
+        {
+          "month": "2026-04-01",
+          "plan": "Pro",
+          "customers": 877,
+          "mrr": 218042,
+          "new_mrr": 12537,
+          "expansion_mrr": 4751,
+          "churned_mrr": 3045,
+          "logo_churn_rate": 0.0187
+        },
+        {
+          "month": "2026-05-01",
+          "plan": "Pro",
+          "customers": 929,
+          "mrr": 232897,
+          "new_mrr": 13532,
+          "expansion_mrr": 4285,
+          "churned_mrr": 2962,
+          "logo_churn_rate": 0.0179
+        },
+        {
+          "month": "2026-06-01",
+          "plan": "Pro",
+          "customers": 987,
+          "mrr": 249734,
+          "new_mrr": 16119,
+          "expansion_mrr": 4916,
+          "churned_mrr": 4198,
+          "logo_churn_rate": 0.0243
+        },
+        {
+          "month": "2026-07-01",
+          "plan": "Pro",
+          "customers": 1035,
+          "mrr": 263542,
+          "new_mrr": 12935,
+          "expansion_mrr": 4590,
+          "churned_mrr": 3717,
+          "logo_churn_rate": 0.0173
+        },
+        {
+          "month": "2026-08-01",
+          "plan": "Pro",
+          "customers": 1095,
+          "mrr": 279599,
+          "new_mrr": 15721,
+          "expansion_mrr": 3754,
+          "churned_mrr": 3418,
+          "logo_churn_rate": 0.018
+        },
+        {
+          "month": "2026-09-01",
+          "plan": "Pro",
+          "customers": 1152,
+          "mrr": 295562,
+          "new_mrr": 15920,
+          "expansion_mrr": 4349,
+          "churned_mrr": 4306,
+          "logo_churn_rate": 0.0214
+        },
+        {
+          "month": "2024-10-01",
+          "plan": "Enterprise",
+          "customers": 25,
+          "mrr": 38710,
+          "new_mrr": 1500,
+          "expansion_mrr": 1210,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0056
+        },
+        {
+          "month": "2024-11-01",
+          "plan": "Enterprise",
+          "customers": 26,
+          "mrr": 41547,
+          "new_mrr": 1500,
+          "expansion_mrr": 1337,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.006
+        },
+        {
+          "month": "2024-12-01",
+          "plan": "Enterprise",
+          "customers": 27,
+          "mrr": 44453,
+          "new_mrr": 1500,
+          "expansion_mrr": 1406,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0072
+        },
+        {
+          "month": "2025-01-01",
+          "plan": "Enterprise",
+          "customers": 28,
+          "mrr": 46940,
+          "new_mrr": 1500,
+          "expansion_mrr": 987,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0068
+        },
+        {
+          "month": "2025-02-01",
+          "plan": "Enterprise",
+          "customers": 29,
+          "mrr": 49983,
+          "new_mrr": 1500,
+          "expansion_mrr": 1543,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0064
+        },
+        {
+          "month": "2025-03-01",
+          "plan": "Enterprise",
+          "customers": 30,
+          "mrr": 52926,
+          "new_mrr": 1500,
+          "expansion_mrr": 1443,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0066
+        },
+        {
+          "month": "2025-04-01",
+          "plan": "Enterprise",
+          "customers": 31,
+          "mrr": 55693,
+          "new_mrr": 1500,
+          "expansion_mrr": 1267,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0064
+        },
+        {
+          "month": "2025-05-01",
+          "plan": "Enterprise",
+          "customers": 32,
+          "mrr": 58636,
+          "new_mrr": 1500,
+          "expansion_mrr": 1443,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.006
+        },
+        {
+          "month": "2025-06-01",
+          "plan": "Enterprise",
+          "customers": 33,
+          "mrr": 61800,
+          "new_mrr": 1500,
+          "expansion_mrr": 1664,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0065
+        },
+        {
+          "month": "2025-07-01",
+          "plan": "Enterprise",
+          "customers": 34,
+          "mrr": 65722,
+          "new_mrr": 1500,
+          "expansion_mrr": 2422,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0049
+        },
+        {
+          "month": "2025-08-01",
+          "plan": "Enterprise",
+          "customers": 35,
+          "mrr": 69043,
+          "new_mrr": 1500,
+          "expansion_mrr": 1821,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0071
+        },
+        {
+          "month": "2025-09-01",
+          "plan": "Enterprise",
+          "customers": 37,
+          "mrr": 74141,
+          "new_mrr": 3000,
+          "expansion_mrr": 2098,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.006
+        },
+        {
+          "month": "2025-10-01",
+          "plan": "Enterprise",
+          "customers": 39,
+          "mrr": 79135,
+          "new_mrr": 3000,
+          "expansion_mrr": 1994,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0059
+        },
+        {
+          "month": "2025-11-01",
+          "plan": "Enterprise",
+          "customers": 41,
+          "mrr": 85311,
+          "new_mrr": 3000,
+          "expansion_mrr": 3176,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0063
+        },
+        {
+          "month": "2025-12-01",
+          "plan": "Enterprise",
+          "customers": 43,
+          "mrr": 90533,
+          "new_mrr": 3000,
+          "expansion_mrr": 2222,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0049
+        },
+        {
+          "month": "2026-01-01",
+          "plan": "Enterprise",
+          "customers": 45,
+          "mrr": 96658,
+          "new_mrr": 3000,
+          "expansion_mrr": 3125,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0067
+        },
+        {
+          "month": "2026-02-01",
+          "plan": "Enterprise",
+          "customers": 47,
+          "mrr": 102580,
+          "new_mrr": 3000,
+          "expansion_mrr": 2922,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0071
+        },
+        {
+          "month": "2026-03-01",
+          "plan": "Enterprise",
+          "customers": 49,
+          "mrr": 108850,
+          "new_mrr": 3000,
+          "expansion_mrr": 3270,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0072
+        },
+        {
+          "month": "2026-04-01",
+          "plan": "Enterprise",
+          "customers": 51,
+          "mrr": 114398,
+          "new_mrr": 3000,
+          "expansion_mrr": 2548,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0063
+        },
+        {
+          "month": "2026-05-01",
+          "plan": "Enterprise",
+          "customers": 53,
+          "mrr": 120387,
+          "new_mrr": 3000,
+          "expansion_mrr": 2989,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0059
+        },
+        {
+          "month": "2026-06-01",
+          "plan": "Enterprise",
+          "customers": 55,
+          "mrr": 127776,
+          "new_mrr": 3000,
+          "expansion_mrr": 4389,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.007
+        },
+        {
+          "month": "2026-07-01",
+          "plan": "Enterprise",
+          "customers": 57,
+          "mrr": 133687,
+          "new_mrr": 3000,
+          "expansion_mrr": 2911,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0058
+        },
+        {
+          "month": "2026-08-01",
+          "plan": "Enterprise",
+          "customers": 60,
+          "mrr": 142247,
+          "new_mrr": 4500,
+          "expansion_mrr": 4060,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0061
+        },
+        {
+          "month": "2026-09-01",
+          "plan": "Enterprise",
+          "customers": 63,
+          "mrr": 152298,
+          "new_mrr": 4500,
+          "expansion_mrr": 5551,
+          "churned_mrr": 0,
+          "logo_churn_rate": 0.0054
+        }
+      ],
+      "source": "billing.mrr_by_plan"
+    },
+    "monthly": {
+      "from": "subs",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "month"
+          ],
+          "measures": [
+            {
+              "field": "mrr",
+              "agg": "sum",
+              "as": "mrr"
+            },
+            {
+              "field": "customers",
+              "agg": "sum",
+              "as": "customers"
+            },
+            {
+              "field": "new_mrr",
+              "agg": "sum",
+              "as": "new_mrr"
+            },
+            {
+              "field": "expansion_mrr",
+              "agg": "sum",
+              "as": "expansion_mrr"
+            },
+            {
+              "field": "churned_mrr",
+              "agg": "sum",
+              "as": "churned_mrr"
+            }
+          ]
+        },
+        {
+          "op": "derive",
+          "as": "net_new_mrr",
+          "expr": "new_mrr + expansion_mrr - churned_mrr"
+        },
+        {
+          "op": "derive",
+          "as": "churned_negative",
+          "expr": "-churned_mrr"
+        },
+        {
+          "op": "window",
+          "fn": "pctChange",
+          "field": "mrr",
+          "as": "growth",
+          "sortBy": "month"
+        }
+      ],
+      "fields": [
+        {
+          "name": "month",
+          "label": "Month",
+          "format": "date:month"
+        },
+        {
+          "name": "mrr",
+          "label": "MRR",
+          "format": "currency:0"
+        },
+        {
+          "name": "new_mrr",
+          "label": "New",
+          "format": "currency:0"
+        },
+        {
+          "name": "expansion_mrr",
+          "label": "Expansion",
+          "format": "currency:0"
+        },
+        {
+          "name": "churned_negative",
+          "label": "Churned",
+          "format": "currency:0"
+        },
+        {
+          "name": "net_new_mrr",
+          "label": "Net new MRR",
+          "format": "currency:0"
+        },
+        {
+          "name": "growth",
+          "label": "MoM growth",
+          "format": "percent"
+        }
+      ]
+    },
+    "last12": {
+      "from": "monthly",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "month >= '2025-10-01'"
+        }
+      ]
+    },
+    "latest": {
+      "from": "subs",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "month == '2026-09-01'"
+        },
+        {
+          "op": "derive",
+          "as": "arpa",
+          "expr": "mrr / customers"
+        },
+        {
+          "op": "window",
+          "fn": "share",
+          "field": "mrr",
+          "as": "share"
+        },
+        {
+          "op": "sort",
+          "by": "-mrr"
+        }
+      ],
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Plan"
+        },
+        {
+          "name": "mrr",
+          "label": "MRR",
+          "format": "currency:0"
+        },
+        {
+          "name": "customers",
+          "label": "Customers",
+          "format": "integer"
+        },
+        {
+          "name": "arpa",
+          "label": "ARPA",
+          "format": "currency:0"
+        },
+        {
+          "name": "logo_churn_rate",
+          "label": "Logo churn",
+          "format": "percent"
+        },
+        {
+          "name": "share",
+          "label": "Share of MRR",
+          "format": "percent"
+        }
+      ]
+    },
+    "starter_churn": {
+      "from": "subs",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "plan == 'Starter'"
+        }
+      ],
+      "fields": [
+        {
+          "name": "month",
+          "label": "Month",
+          "format": "date:month"
+        },
+        {
+          "name": "logo_churn_rate",
+          "label": "Starter logo churn",
+          "format": "percent"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "id": "headline",
+      "title": "Headline",
+      "blocks": [
+        {
+          "id": "kpis",
+          "type": "kpi",
+          "items": [
+            {
+              "label": "MRR",
+              "value": {
+                "data": "monthly",
+                "field": "mrr",
+                "where": "month == '2026-09-01'"
+              },
+              "compareTo": {
+                "data": "monthly",
+                "field": "mrr",
+                "where": "month == '2025-09-01'"
+              },
+              "format": "currency:0",
+              "deltaLabel": "vs Sep 2025"
+            },
+            {
+              "label": "Net new MRR",
+              "value": {
+                "data": "monthly",
+                "field": "net_new_mrr",
+                "where": "month == '2026-09-01'"
+              },
+              "compareTo": {
+                "data": "monthly",
+                "field": "net_new_mrr",
+                "where": "month == '2026-08-01'"
+              },
+              "format": "currency:0",
+              "deltaLabel": "vs Aug"
+            },
+            {
+              "label": "Customers",
+              "value": {
+                "data": "monthly",
+                "field": "customers",
+                "where": "month == '2026-09-01'"
+              },
+              "compareTo": {
+                "data": "monthly",
+                "field": "customers",
+                "where": "month == '2025-09-01'"
+              },
+              "format": "integer",
+              "deltaLabel": "vs Sep 2025"
+            },
+            {
+              "label": "Starter logo churn",
+              "value": {
+                "data": "starter_churn",
+                "field": "logo_churn_rate",
+                "agg": "avg",
+                "where": "month >= '2026-07-01'"
+              },
+              "compareTo": {
+                "data": "starter_churn",
+                "field": "logo_churn_rate",
+                "agg": "avg",
+                "where": "month >= '2026-04-01' and month < '2026-07-01'"
+              },
+              "format": "percent",
+              "goodWhen": "down",
+              "deltaLabel": "Q3 vs Q2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "growth",
+      "title": "Where growth comes from",
+      "blocks": [
+        {
+          "id": "mrr_by_plan",
+          "type": "chart",
+          "title": "MRR by plan",
+          "chart": {
+            "kind": "area",
+            "data": "subs",
+            "x": "month",
+            "y": "mrr",
+            "series": "plan",
+            "stack": true
+          }
+        },
+        {
+          "id": "mrr_note",
+          "type": "text",
+          "content": "Pro is now **{{first(latest.share) | percent}}** of MRR. Enterprise ARPA is {{max(latest.arpa) | currency:0}}, which is why a handful of expansions moves the total."
+        },
+        {
+          "id": "movement",
+          "type": "chart",
+          "title": "MRR movement, last 12 months",
+          "chart": {
+            "kind": "bar",
+            "data": "last12",
+            "x": "month",
+            "y": [
+              "new_mrr",
+              "expansion_mrr",
+              "churned_negative"
+            ],
+            "stack": true,
+            "reference": [
+              {
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "risk",
+          "type": "callout",
+          "tone": "warning",
+          "variant": "risk",
+          "title": "Starter churn is rising",
+          "content": "Starter logo churn averaged {{avg(starter_churn.logo_churn_rate) | percent}} over two years but ran higher in Q3. Starter is small in MRR, but it feeds Pro upgrades."
+        }
+      ]
+    },
+    {
+      "id": "plans",
+      "title": "Plans at a glance",
+      "blocks": [
+        {
+          "id": "plan_table",
+          "type": "table",
+          "title": "September 2026 by plan",
+          "data": "latest",
+          "columns": [
+            {
+              "field": "plan"
+            },
+            {
+              "field": "mrr"
+            },
+            {
+              "field": "share"
+            },
+            {
+              "field": "customers"
+            },
+            {
+              "field": "arpa"
+            },
+            {
+              "field": "logo_churn_rate"
+            }
+          ],
+          "totals": [
+            "mrr",
+            "customers"
+          ]
+        },
+        {
+          "id": "asks",
+          "type": "list",
+          "title": "Asks for the board",
+          "style": "numbered",
+          "items": [
+            {
+              "text": "Approve the Starter onboarding rebuild",
+              "detail": "Target: Starter logo churn back under 5%",
+              "tag": "Q4"
+            },
+            {
+              "text": "Fund two enterprise account managers",
+              "detail": "Expansion is the cheapest MRR we add",
+              "tag": "Q4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

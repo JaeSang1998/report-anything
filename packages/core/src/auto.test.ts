@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { autoReport } from "./auto.js";
 import { evaluateMeasure } from "./data/measure.js";
+import { isStockMeasure } from "./data/profile.js";
 import { createDataContext } from "./data/resolve.js";
 import { renderTemplate } from "./data/template.js";
 import type { DataContext } from "./data/types.js";
 import { toNumber } from "./data/values.js";
 import { ReportSpec } from "./spec.js";
 import type { Block, ChartSpec, Measure } from "./spec.js";
+import { ordersPayload, saasRows, salesRows, ticketRows, trafficCsv } from "../../../examples/playground/src/samples.js";
 
 const maxAbs = (ctx: DataContext, data: string, field: string) =>
   Math.max(0, ...ctx.datasets.get(data)!.rows.map((r) => Math.abs(toNumber(r[field]) ?? 0)));
@@ -57,6 +59,22 @@ function check(input: unknown, opts?: Parameters<typeof autoReport>[1]) {
   const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
   expect(table.maxRows).toBe(20);
   for (const col of table.columns ?? []) expect(col.emphasis).toBeUndefined();
+  // Aggregation sanity: rates are never summed; level metrics are never summed across periods.
+  for (const [id, ds] of Object.entries(spec.datasets)) {
+    const source = ds.from === undefined ? undefined : context.datasets.get(ds.from);
+    if (!source) continue;
+    const times = source.fields.filter((f) => f.type === "date" || /month|week|year/.test(f.name)).map((f) => f.name);
+    (ds.transform ?? []).forEach((t, i) => {
+      if (t.op !== "aggregate") return;
+      for (const m of t.measures) {
+        const f = source.fields.find((x) => x.name === m.field);
+        if (f?.format === "percent" || /rate|ratio/.test(m.field ?? "")) expect(m.agg, `${id}: ${m.field}`).not.toBe("sum");
+        if (m.agg !== "sum" || !m.field || !isStockMeasure(m.field) || t.groupBy.some((g) => times.includes(g))) continue;
+        const pinned = (ds.transform ?? []).slice(0, i).some((p) => p.op === "filter" && times.some((tf) => p.expr.startsWith(`\`${tf}\` ==`)));
+        expect(pinned, `${id} sums level metric ${m.field} across periods`).toBe(true);
+      }
+    });
+  }
   return { spec, context, blocks, charts, table, kpis: kpiItems };
 }
 
@@ -76,14 +94,13 @@ describe("autoReport", () => {
     const { spec, context, charts, table, kpis } = check(monthly, { title: "Sales", locale: "ko-KR", currency: "krw" });
     expect(spec.title).toBe("Sales");
     expect(spec.meta).toEqual({ locale: "ko-KR", currency: "KRW" });
-    expect(kpis.map((k) => k.label)).toEqual(["Revenue", "Records", "Orders"]);
+    // One row per month is a pre-aggregated table: no record-count KPI.
+    expect(kpis.map((k) => k.label)).toEqual(["Revenue", "Orders", "Avg conversion rate"]);
     const revenue = kpis[0]!;
     expect(evaluateMeasure(revenue.value as Measure, context)).toBe(1500);
     expect(evaluateMeasure(revenue.compareTo as Measure, context)).toBe(1400);
     expect((revenue.compareTo as Measure).where).toBe("`month` == '2026-02-01'");
     expect(revenue.format).toBe("currency");
-    // One row per month: a per-month record count would always be 1, so no comparison.
-    expect(kpis[1]!.compareTo).toBeUndefined();
     expect(charts).toHaveLength(1);
     expect(charts[0]).toMatchObject({ kind: "line", y: "revenue", secondary: { y: "conversion_rate", format: "percent" } });
     expect(table).toMatchObject({ data: "data", sortBy: "-month" });
@@ -169,9 +186,8 @@ describe("autoReport", () => {
     const { spec, context, charts, kpis } = check(csv);
     expect(spec.title).toBe("Data report");
     expect(spec.meta).toBeUndefined();
-    expect(kpis.map((k) => k.label)).toEqual(["Amount", "Records", "Units"]);
+    expect(kpis.map((k) => k.label)).toEqual(["Amount", "Units"]);
     expect(evaluateMeasure(kpis[0]!.value as Measure, context)).toBe(3795);
-    expect(kpis[1]!.value).toEqual({ data: "data", agg: "count" });
     expect(charts.map((c) => c.x).sort()).toEqual(["category", "product"]);
   });
 
@@ -184,5 +200,60 @@ describe("autoReport", () => {
   it("handles an object of named CSV strings and arrays", () => {
     const { spec } = check({ targets: "team,goal\nA,10\nB,20", actuals: [{ team: "A", done: 7 }, { team: "B", done: 25 }] });
     expect(Object.keys(spec.datasets)).toEqual(expect.arrayContaining(["targets", "actuals"]));
+  });
+  describe("playground samples", () => {
+    const kpiFields = (kpis: Array<{ value: unknown }>) => kpis.map((k) => (k.value as Measure).field ?? "count");
+
+    it("SaaS: MRR headline, level metrics shown as the latest snapshot, churn rate averaged", () => {
+      const { spec, context, charts, kpis, blocks } = check(saasRows());
+      expect(kpis.map((k) => k.label)).toEqual(["MRR", "Customers", "Avg logo churn rate"]);
+      expect(kpis[0]!.format).toBe("currency");
+      expect(kpis[2]).toMatchObject({ format: "percent", goodWhen: "down" });
+      const latestMrr = evaluateMeasure(kpis[0]!.value as Measure, context) as number;
+      const sep = saasRows().filter((r) => r.month === "2026-09-01");
+      expect(latestMrr).toBe(sep.reduce((a, r) => a + (r.mrr as number), 0));
+      expect(evaluateMeasure(kpis[1]!.value as Measure, context)).toBe(sep.reduce((a, r) => a + (r.customers as number), 0));
+      // The plan breakdown shows the latest month only, so its total equals the latest MRR.
+      const byPlan = charts.find((c) => c.x === "plan")!;
+      expect(byPlan.y).toBe("mrr");
+      expect(context.datasets.get(byPlan.data)!.rows.reduce((a, r) => a + (r.mrr as number), 0)).toBe(latestMrr);
+      expect(blocks.find((b) => b.type === "chart" && b.chart.x === "plan")!.title).toMatch(/latest month$/);
+      // Acronym-aware labels reach the renderer through field overrides.
+      expect(context.datasets.get("data")!.fields.find((f) => f.name === "new_mrr")!.label).toBe("New MRR");
+      expect(spec.datasets.data!.fields).toContainEqual({ name: "mrr", format: "currency", label: "MRR" });
+    });
+
+    it("sales cross-tab: no record count, revenue headline", () => {
+      const { kpis, charts } = check(salesRows());
+      expect(kpis.map((k) => k.label)).toEqual(["Revenue", "Orders"]);
+      expect(charts[0]).toMatchObject({ kind: "line", y: "revenue" });
+    });
+
+    it("traffic CSV: weekly trend with a derived conversion rate that is computed, never summed", () => {
+      const { spec, context, charts, kpis } = check(trafficCsv());
+      expect(kpis.map((k) => k.label)).toEqual(["Sessions", "Signups", "Conversion rate"]);
+      const trendId = charts[0]!.data;
+      expect(charts[0]).toMatchObject({ kind: "line", x: "week", y: "sessions", secondary: { y: "conversion_rate", format: "percent" } });
+      expect(spec.datasets[trendId]!.transform).toContainEqual({ op: "derive", as: "conversion_rate", expr: "`signups` / `sessions`" });
+      const last = context.datasets.get(trendId)!.rows.at(-1)!;
+      expect(last.conversion_rate).toBeCloseTo((last.signups as number) / (last.sessions as number), 12);
+      expect(evaluateMeasure(kpis[2]!.value as Measure, context)).toBeCloseTo(last.conversion_rate as number, 12);
+      const byChannel = charts.find((c) => c.x === "channel")!;
+      const email = context.datasets.get(byChannel.data)!.rows.find((r) => r.channel === "Email")!;
+      expect(email.conversion_rate).toBeCloseTo((email.signups as number) / (email.sessions as number), 12);
+    });
+
+    it("tickets: count headline for events whose measures are durations and scores", () => {
+      const { kpis, charts } = check(ticketRows());
+      expect(kpiFields(kpis)).toEqual(["records", "first_response_minutes", "resolution_hours"]);
+      expect(kpis.slice(1).every((k) => k.goodWhen === "down" && k.label.startsWith("Avg "))).toBe(true);
+      expect(charts[0]).toMatchObject({ kind: "line", y: "records" });
+      expect(charts.some((c) => c.x === "status")).toBe(false);
+    });
+
+    it("orders payload: identifier rows are events, so the record count is a KPI", () => {
+      const { kpis } = check(ordersPayload());
+      expect(kpiFields(kpis)).toEqual(["total", "records", "total"]);
+    });
   });
 });

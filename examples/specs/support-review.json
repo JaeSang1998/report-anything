@@ -1,0 +1,4388 @@
+{
+  "title": "Support Q3 2026 in review",
+  "subtitle": "Volume, speed and satisfaction",
+  "summary": "We handled **{{count(tickets)}} tickets** with a median resolution of **{{median(resolved.resolution_hours) | number:1}} h**. Everything got faster except integrations.",
+  "meta": {
+    "author": "Support Operations",
+    "date": "2026-10-02",
+    "locale": "en-US"
+  },
+  "page": {
+    "size": "A4"
+  },
+  "datasets": {
+    "tickets": {
+      "rows": [
+        {
+          "id": "T-4100",
+          "created_at": "2026-07-01T10:21:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 39.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4101",
+          "created_at": "2026-07-01T10:54:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 140,
+          "resolution_hours": 7.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4102",
+          "created_at": "2026-07-01T10:39:00.000Z",
+          "priority": "P1",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 66,
+          "resolution_hours": 0.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4103",
+          "created_at": "2026-07-01T15:25:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 114,
+          "resolution_hours": 23.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4104",
+          "created_at": "2026-07-02T13:19:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 436,
+          "resolution_hours": 5.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4105",
+          "created_at": "2026-07-02T08:32:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 19.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4106",
+          "created_at": "2026-07-02T09:39:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 174,
+          "resolution_hours": 44.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4107",
+          "created_at": "2026-07-02T14:27:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 100,
+          "resolution_hours": 7.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4108",
+          "created_at": "2026-07-03T17:24:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 128,
+          "resolution_hours": 40.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4109",
+          "created_at": "2026-07-03T12:36:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 14,
+          "resolution_hours": 69.7,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4110",
+          "created_at": "2026-07-03T12:18:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 3.7,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4111",
+          "created_at": "2026-07-03T09:08:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 408,
+          "resolution_hours": 68.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4112",
+          "created_at": "2026-07-04T13:39:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 299,
+          "resolution_hours": 11,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4113",
+          "created_at": "2026-07-04T15:37:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 103,
+          "resolution_hours": 2.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4114",
+          "created_at": "2026-07-04T13:50:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 85.3,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4115",
+          "created_at": "2026-07-04T12:27:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 252,
+          "resolution_hours": 56.8,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4116",
+          "created_at": "2026-07-05T15:56:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 73.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4117",
+          "created_at": "2026-07-05T12:32:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 116,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4118",
+          "created_at": "2026-07-05T12:19:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 152,
+          "resolution_hours": 3.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4119",
+          "created_at": "2026-07-05T14:47:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 22.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4120",
+          "created_at": "2026-07-06T14:05:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 165,
+          "resolution_hours": 4.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4121",
+          "created_at": "2026-07-06T16:42:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 4.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4122",
+          "created_at": "2026-07-06T15:46:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 445,
+          "resolution_hours": 26.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4123",
+          "created_at": "2026-07-06T17:56:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 396,
+          "resolution_hours": 95,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4124",
+          "created_at": "2026-07-07T13:47:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 3.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4125",
+          "created_at": "2026-07-07T11:50:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 106,
+          "resolution_hours": 3.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4126",
+          "created_at": "2026-07-07T08:04:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 123,
+          "resolution_hours": 1.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4127",
+          "created_at": "2026-07-07T12:03:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 229,
+          "resolution_hours": 5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4128",
+          "created_at": "2026-07-08T10:36:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 125,
+          "resolution_hours": 27.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4129",
+          "created_at": "2026-07-08T10:02:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 53,
+          "resolution_hours": 53,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4130",
+          "created_at": "2026-07-08T17:59:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 4.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4131",
+          "created_at": "2026-07-08T17:41:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 116,
+          "resolution_hours": 18.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4132",
+          "created_at": "2026-07-09T10:00:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 28.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4133",
+          "created_at": "2026-07-09T15:50:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 3.7,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4134",
+          "created_at": "2026-07-09T08:11:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 1.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4135",
+          "created_at": "2026-07-09T13:49:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 345,
+          "resolution_hours": 60.5,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4136",
+          "created_at": "2026-07-10T09:21:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 221,
+          "resolution_hours": 4.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4137",
+          "created_at": "2026-07-10T08:06:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 39.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4138",
+          "created_at": "2026-07-10T14:13:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 272,
+          "resolution_hours": 34,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4139",
+          "created_at": "2026-07-10T09:46:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 44.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4140",
+          "created_at": "2026-07-11T10:55:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 51.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4141",
+          "created_at": "2026-07-11T11:07:00.000Z",
+          "priority": "P1",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 26,
+          "resolution_hours": 0.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4142",
+          "created_at": "2026-07-11T12:33:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 48,
+          "resolution_hours": 9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4143",
+          "created_at": "2026-07-11T14:16:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 256,
+          "resolution_hours": 39.8,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4144",
+          "created_at": "2026-07-12T09:49:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 274,
+          "resolution_hours": 24.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4145",
+          "created_at": "2026-07-12T13:36:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 226,
+          "resolution_hours": 29.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4146",
+          "created_at": "2026-07-12T14:31:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 35.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4147",
+          "created_at": "2026-07-13T15:26:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 1.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4148",
+          "created_at": "2026-07-13T08:06:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 22.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4149",
+          "created_at": "2026-07-13T17:34:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4150",
+          "created_at": "2026-07-13T15:19:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 25.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4151",
+          "created_at": "2026-07-14T12:48:00.000Z",
+          "priority": "P1",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 54,
+          "resolution_hours": 1.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4152",
+          "created_at": "2026-07-14T13:41:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 86,
+          "resolution_hours": 36.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4153",
+          "created_at": "2026-07-14T11:31:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 251,
+          "resolution_hours": 2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4154",
+          "created_at": "2026-07-14T16:06:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 14,
+          "resolution_hours": 64.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4155",
+          "created_at": "2026-07-15T10:16:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 91,
+          "resolution_hours": 1.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4156",
+          "created_at": "2026-07-15T12:23:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 110,
+          "resolution_hours": 2.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4157",
+          "created_at": "2026-07-15T15:17:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 366,
+          "resolution_hours": 6.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4158",
+          "created_at": "2026-07-15T12:51:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 15.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4159",
+          "created_at": "2026-07-16T16:07:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 194,
+          "resolution_hours": 94.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4160",
+          "created_at": "2026-07-16T13:54:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 52.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4161",
+          "created_at": "2026-07-16T09:06:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 14.6,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4162",
+          "created_at": "2026-07-16T12:30:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 68,
+          "resolution_hours": 11.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4163",
+          "created_at": "2026-07-17T08:02:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 1.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4164",
+          "created_at": "2026-07-17T13:49:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 110,
+          "resolution_hours": 4.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4165",
+          "created_at": "2026-07-17T12:36:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 115,
+          "resolution_hours": 79.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4166",
+          "created_at": "2026-07-17T12:48:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 382,
+          "resolution_hours": 10.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4167",
+          "created_at": "2026-07-18T11:05:00.000Z",
+          "priority": "P1",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 0,
+          "resolution_hours": 16.6,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4168",
+          "created_at": "2026-07-18T17:39:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 29,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4169",
+          "created_at": "2026-07-18T10:49:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 8.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4170",
+          "created_at": "2026-07-18T09:27:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 28.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4171",
+          "created_at": "2026-07-19T10:46:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 123,
+          "resolution_hours": 21.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4172",
+          "created_at": "2026-07-19T13:45:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 326,
+          "resolution_hours": 65.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4173",
+          "created_at": "2026-07-19T12:09:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 14.4,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4174",
+          "created_at": "2026-07-19T16:02:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 28.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4175",
+          "created_at": "2026-07-20T11:55:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 2.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4176",
+          "created_at": "2026-07-20T15:23:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 264,
+          "resolution_hours": 6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4177",
+          "created_at": "2026-07-20T15:23:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 139,
+          "resolution_hours": 4.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4178",
+          "created_at": "2026-07-20T11:00:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 54,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4179",
+          "created_at": "2026-07-21T17:46:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 150,
+          "resolution_hours": 6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4180",
+          "created_at": "2026-07-21T08:43:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 138,
+          "resolution_hours": 3.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4181",
+          "created_at": "2026-07-21T16:45:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 431,
+          "resolution_hours": 84.1,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4182",
+          "created_at": "2026-07-21T17:41:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 5.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4183",
+          "created_at": "2026-07-22T13:59:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 66,
+          "resolution_hours": 4.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4184",
+          "created_at": "2026-07-22T17:49:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 241,
+          "resolution_hours": 65.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4185",
+          "created_at": "2026-07-22T11:48:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 160,
+          "resolution_hours": 9.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4186",
+          "created_at": "2026-07-22T11:22:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 17.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4187",
+          "created_at": "2026-07-23T12:35:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 160,
+          "resolution_hours": 72.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4188",
+          "created_at": "2026-07-23T16:35:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 296,
+          "resolution_hours": 69.3,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4189",
+          "created_at": "2026-07-23T16:31:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 156,
+          "resolution_hours": 47.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4190",
+          "created_at": "2026-07-24T13:09:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 1.5,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4191",
+          "created_at": "2026-07-24T17:59:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 2.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4192",
+          "created_at": "2026-07-24T08:52:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 58,
+          "resolution_hours": 20.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4193",
+          "created_at": "2026-07-24T16:16:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 2.4,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4194",
+          "created_at": "2026-07-25T09:05:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 52,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4195",
+          "created_at": "2026-07-25T12:00:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 103,
+          "resolution_hours": 17.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4196",
+          "created_at": "2026-07-25T08:23:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 97,
+          "resolution_hours": 90.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4197",
+          "created_at": "2026-07-25T16:48:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 389,
+          "resolution_hours": 97.7,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4198",
+          "created_at": "2026-07-26T10:04:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 53,
+          "resolution_hours": 18.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4199",
+          "created_at": "2026-07-26T17:49:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 15,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4200",
+          "created_at": "2026-07-26T15:45:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 10,
+          "resolution_hours": 58.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4201",
+          "created_at": "2026-07-26T11:16:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 247,
+          "resolution_hours": 7.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4202",
+          "created_at": "2026-07-27T11:54:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 12,
+          "resolution_hours": 51.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4203",
+          "created_at": "2026-07-27T15:03:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 214,
+          "resolution_hours": 83.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4204",
+          "created_at": "2026-07-27T15:27:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 386,
+          "resolution_hours": 73.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4205",
+          "created_at": "2026-07-27T14:13:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 4.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4206",
+          "created_at": "2026-07-28T11:18:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 67.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4207",
+          "created_at": "2026-07-28T17:39:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 252,
+          "resolution_hours": 5.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4208",
+          "created_at": "2026-07-28T17:54:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 20.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4209",
+          "created_at": "2026-07-28T09:33:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 3.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4210",
+          "created_at": "2026-07-29T14:50:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 252,
+          "resolution_hours": 47.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4211",
+          "created_at": "2026-07-29T14:01:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 8.5,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4212",
+          "created_at": "2026-07-29T14:22:00.000Z",
+          "priority": "P1",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 1.6,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4213",
+          "created_at": "2026-07-29T08:36:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 290,
+          "resolution_hours": 96.6,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4214",
+          "created_at": "2026-07-30T08:00:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 12,
+          "resolution_hours": 102.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4215",
+          "created_at": "2026-07-30T16:54:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 5.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4216",
+          "created_at": "2026-07-30T15:01:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 12,
+          "resolution_hours": 10.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4217",
+          "created_at": "2026-07-30T15:05:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 7.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4218",
+          "created_at": "2026-07-31T17:08:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 4.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4219",
+          "created_at": "2026-07-31T12:28:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 244,
+          "resolution_hours": 2.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4220",
+          "created_at": "2026-07-31T13:56:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 445,
+          "resolution_hours": 2.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4221",
+          "created_at": "2026-07-31T12:04:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 5.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4222",
+          "created_at": "2026-08-01T09:32:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 34.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4223",
+          "created_at": "2026-08-01T12:14:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 127,
+          "resolution_hours": 30.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4224",
+          "created_at": "2026-08-01T14:04:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 49.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4225",
+          "created_at": "2026-08-01T09:05:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 1.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4226",
+          "created_at": "2026-08-02T14:19:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 11,
+          "resolution_hours": 5.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4227",
+          "created_at": "2026-08-02T15:09:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 38.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4228",
+          "created_at": "2026-08-02T11:15:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 5,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4229",
+          "created_at": "2026-08-02T08:58:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 11,
+          "resolution_hours": 41.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4230",
+          "created_at": "2026-08-03T11:33:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 1.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4231",
+          "created_at": "2026-08-03T09:34:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 12,
+          "resolution_hours": 117.7,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4232",
+          "created_at": "2026-08-03T10:13:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 145,
+          "resolution_hours": 4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4233",
+          "created_at": "2026-08-03T10:02:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 24.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4234",
+          "created_at": "2026-08-04T09:08:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 140,
+          "resolution_hours": 1.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4235",
+          "created_at": "2026-08-04T12:09:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 14.6,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4236",
+          "created_at": "2026-08-04T13:36:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 202,
+          "resolution_hours": 57.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4237",
+          "created_at": "2026-08-05T15:54:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 261,
+          "resolution_hours": 34.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4238",
+          "created_at": "2026-08-05T15:55:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 241,
+          "resolution_hours": 19.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4239",
+          "created_at": "2026-08-05T12:03:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 272,
+          "resolution_hours": 3.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4240",
+          "created_at": "2026-08-05T14:56:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 68.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4241",
+          "created_at": "2026-08-06T12:40:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 76,
+          "resolution_hours": 16.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4242",
+          "created_at": "2026-08-06T09:36:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 163,
+          "resolution_hours": 6.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4243",
+          "created_at": "2026-08-06T15:44:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 205,
+          "resolution_hours": 39.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4244",
+          "created_at": "2026-08-06T13:35:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 80,
+          "resolution_hours": 1.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4245",
+          "created_at": "2026-08-07T11:44:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 145,
+          "resolution_hours": 2.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4246",
+          "created_at": "2026-08-07T16:47:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 62,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4247",
+          "created_at": "2026-08-07T09:07:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 51,
+          "resolution_hours": 9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4248",
+          "created_at": "2026-08-07T15:54:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 172,
+          "resolution_hours": 38.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4249",
+          "created_at": "2026-08-08T11:57:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 15.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4250",
+          "created_at": "2026-08-08T14:58:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 2.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4251",
+          "created_at": "2026-08-08T08:27:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 40.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4252",
+          "created_at": "2026-08-08T09:01:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 2.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4253",
+          "created_at": "2026-08-09T10:32:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 13,
+          "resolution_hours": 97.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4254",
+          "created_at": "2026-08-09T08:32:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 239,
+          "resolution_hours": 2.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4255",
+          "created_at": "2026-08-09T09:25:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 72.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4256",
+          "created_at": "2026-08-09T09:04:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 17.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4257",
+          "created_at": "2026-08-10T15:07:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 3.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4258",
+          "created_at": "2026-08-10T16:45:00.000Z",
+          "priority": "P1",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 1,
+          "resolution_hours": 0.4,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4259",
+          "created_at": "2026-08-10T16:04:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 124.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4260",
+          "created_at": "2026-08-10T12:58:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 360,
+          "resolution_hours": 4.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4261",
+          "created_at": "2026-08-11T14:41:00.000Z",
+          "priority": "P1",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 67,
+          "resolution_hours": 12.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4262",
+          "created_at": "2026-08-11T12:48:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 7.9,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4263",
+          "created_at": "2026-08-11T15:52:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 6.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4264",
+          "created_at": "2026-08-11T12:37:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 256,
+          "resolution_hours": 31.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4265",
+          "created_at": "2026-08-12T15:39:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 4.1,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4266",
+          "created_at": "2026-08-12T11:43:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 182,
+          "resolution_hours": 6.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4267",
+          "created_at": "2026-08-12T09:39:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 63,
+          "resolution_hours": 9.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4268",
+          "created_at": "2026-08-12T15:46:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 1.3,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4269",
+          "created_at": "2026-08-13T12:47:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 162,
+          "resolution_hours": 1.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4270",
+          "created_at": "2026-08-13T17:27:00.000Z",
+          "priority": "P1",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 48,
+          "resolution_hours": 1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4271",
+          "created_at": "2026-08-13T13:39:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 5.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4272",
+          "created_at": "2026-08-13T13:02:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 26.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4273",
+          "created_at": "2026-08-14T13:16:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4274",
+          "created_at": "2026-08-14T15:51:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 41.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4275",
+          "created_at": "2026-08-14T09:29:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 20.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4276",
+          "created_at": "2026-08-14T13:58:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 3.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4277",
+          "created_at": "2026-08-15T13:40:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 2.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4278",
+          "created_at": "2026-08-15T17:38:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 1.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4279",
+          "created_at": "2026-08-15T10:10:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 4.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4280",
+          "created_at": "2026-08-16T15:59:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 232,
+          "resolution_hours": 77.1,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4281",
+          "created_at": "2026-08-16T17:57:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 13.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4282",
+          "created_at": "2026-08-16T09:26:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 187,
+          "resolution_hours": 3.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4283",
+          "created_at": "2026-08-16T08:06:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 256,
+          "resolution_hours": 5.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4284",
+          "created_at": "2026-08-17T14:24:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 66,
+          "resolution_hours": 5.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4285",
+          "created_at": "2026-08-17T09:27:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 41.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4286",
+          "created_at": "2026-08-17T09:44:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 4.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4287",
+          "created_at": "2026-08-17T16:05:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 110,
+          "resolution_hours": 77.5,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4288",
+          "created_at": "2026-08-18T11:25:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 263,
+          "resolution_hours": 27.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4289",
+          "created_at": "2026-08-18T13:56:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 55,
+          "resolution_hours": 39.4,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4290",
+          "created_at": "2026-08-18T14:58:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 124,
+          "resolution_hours": 6.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4291",
+          "created_at": "2026-08-18T14:18:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 411,
+          "resolution_hours": 2.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4292",
+          "created_at": "2026-08-19T09:08:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 3.1,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4293",
+          "created_at": "2026-08-19T14:30:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 1.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4294",
+          "created_at": "2026-08-19T11:23:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 12,
+          "resolution_hours": 6.4,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4295",
+          "created_at": "2026-08-19T13:19:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 172,
+          "resolution_hours": 29.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4296",
+          "created_at": "2026-08-20T17:32:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 5.8,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4297",
+          "created_at": "2026-08-20T14:41:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 11,
+          "resolution_hours": 42.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4298",
+          "created_at": "2026-08-20T15:12:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 1.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4299",
+          "created_at": "2026-08-20T15:07:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 31.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4300",
+          "created_at": "2026-08-21T10:29:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4301",
+          "created_at": "2026-08-21T15:23:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 14.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4302",
+          "created_at": "2026-08-21T14:28:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 91,
+          "resolution_hours": 19.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4303",
+          "created_at": "2026-08-21T08:02:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 126,
+          "resolution_hours": 72.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4304",
+          "created_at": "2026-08-22T14:46:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 84.9,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4305",
+          "created_at": "2026-08-22T11:56:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 2.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4306",
+          "created_at": "2026-08-22T10:09:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 203,
+          "resolution_hours": 56.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4307",
+          "created_at": "2026-08-22T12:50:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 131,
+          "resolution_hours": 6.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4308",
+          "created_at": "2026-08-23T13:02:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 99,
+          "resolution_hours": 2.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4309",
+          "created_at": "2026-08-23T12:59:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 5,
+          "resolution_hours": 53.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4310",
+          "created_at": "2026-08-23T12:07:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 50.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4311",
+          "created_at": "2026-08-23T17:39:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 345,
+          "resolution_hours": 35.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4312",
+          "created_at": "2026-08-24T13:51:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 390,
+          "resolution_hours": 10.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4313",
+          "created_at": "2026-08-24T11:39:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 201,
+          "resolution_hours": 56.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4314",
+          "created_at": "2026-08-24T09:05:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 98,
+          "resolution_hours": 38.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4315",
+          "created_at": "2026-08-24T11:00:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 1.1,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4316",
+          "created_at": "2026-08-25T16:37:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 100,
+          "resolution_hours": 38.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4317",
+          "created_at": "2026-08-25T17:24:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 66,
+          "resolution_hours": 13,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4318",
+          "created_at": "2026-08-25T10:42:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 187,
+          "resolution_hours": 3.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4319",
+          "created_at": "2026-08-25T11:49:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 163,
+          "resolution_hours": 31.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4320",
+          "created_at": "2026-08-26T08:41:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 80,
+          "resolution_hours": 13.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4321",
+          "created_at": "2026-08-26T12:05:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 72.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4322",
+          "created_at": "2026-08-26T14:30:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 3.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4323",
+          "created_at": "2026-08-26T16:25:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 112,
+          "resolution_hours": 36,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4324",
+          "created_at": "2026-08-27T09:16:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 82.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4325",
+          "created_at": "2026-08-27T14:58:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 192,
+          "resolution_hours": 31.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4326",
+          "created_at": "2026-08-27T17:53:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 33.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4327",
+          "created_at": "2026-08-28T12:28:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 115,
+          "resolution_hours": 22.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4328",
+          "created_at": "2026-08-28T15:30:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 15.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4329",
+          "created_at": "2026-08-28T15:42:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 124,
+          "resolution_hours": 1.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4330",
+          "created_at": "2026-08-28T09:09:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 3.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4331",
+          "created_at": "2026-08-29T17:06:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 1.1,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4332",
+          "created_at": "2026-08-29T15:21:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 127,
+          "resolution_hours": 33.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4333",
+          "created_at": "2026-08-29T11:18:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 35.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4334",
+          "created_at": "2026-08-29T15:31:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 93,
+          "resolution_hours": 1.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4335",
+          "created_at": "2026-08-30T16:46:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 148,
+          "resolution_hours": 16.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4336",
+          "created_at": "2026-08-30T14:43:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 10.1,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4337",
+          "created_at": "2026-08-30T12:13:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 182,
+          "resolution_hours": 17.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4338",
+          "created_at": "2026-08-30T13:04:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 3.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4339",
+          "created_at": "2026-08-31T15:21:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 147,
+          "resolution_hours": 1.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4340",
+          "created_at": "2026-08-31T11:24:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 326,
+          "resolution_hours": 53.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4341",
+          "created_at": "2026-08-31T16:15:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 1.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4342",
+          "created_at": "2026-08-31T17:46:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 9.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4343",
+          "created_at": "2026-09-01T09:06:00.000Z",
+          "priority": "P1",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 0,
+          "resolution_hours": 16,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4344",
+          "created_at": "2026-09-01T17:03:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 6.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4345",
+          "created_at": "2026-09-01T11:38:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 159,
+          "resolution_hours": 56.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4346",
+          "created_at": "2026-09-01T14:29:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 42,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4347",
+          "created_at": "2026-09-02T14:42:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 37.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4348",
+          "created_at": "2026-09-02T12:15:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 408,
+          "resolution_hours": 1.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4349",
+          "created_at": "2026-09-02T13:56:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 12,
+          "resolution_hours": 8.5,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4350",
+          "created_at": "2026-09-02T08:59:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 115,
+          "resolution_hours": 60.7,
+          "csat": 2,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4351",
+          "created_at": "2026-09-03T13:11:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 116,
+          "resolution_hours": 3.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4352",
+          "created_at": "2026-09-03T08:26:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 20,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4353",
+          "created_at": "2026-09-03T08:09:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 93,
+          "resolution_hours": 18.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4354",
+          "created_at": "2026-09-03T16:55:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 79,
+          "resolution_hours": 0.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4355",
+          "created_at": "2026-09-04T10:58:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 10,
+          "resolution_hours": 9.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4356",
+          "created_at": "2026-09-04T11:58:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 222,
+          "resolution_hours": 26,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4357",
+          "created_at": "2026-09-04T14:40:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 157,
+          "resolution_hours": 3.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4358",
+          "created_at": "2026-09-04T08:50:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 5.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4359",
+          "created_at": "2026-09-05T09:53:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 136,
+          "resolution_hours": 12.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4360",
+          "created_at": "2026-09-05T13:05:00.000Z",
+          "priority": "P1",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 37,
+          "resolution_hours": 1.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4361",
+          "created_at": "2026-09-05T16:16:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 100,
+          "resolution_hours": 9.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4362",
+          "created_at": "2026-09-05T12:09:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 5.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4363",
+          "created_at": "2026-09-06T13:09:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 50.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4364",
+          "created_at": "2026-09-06T10:53:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 451,
+          "resolution_hours": 11.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4365",
+          "created_at": "2026-09-06T08:05:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 260,
+          "resolution_hours": 18.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4366",
+          "created_at": "2026-09-06T08:11:00.000Z",
+          "priority": "P1",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 54,
+          "resolution_hours": 8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4367",
+          "created_at": "2026-09-07T14:23:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 209,
+          "resolution_hours": 4.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4368",
+          "created_at": "2026-09-07T12:25:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 200,
+          "resolution_hours": 80.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4369",
+          "created_at": "2026-09-07T16:42:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 67.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4370",
+          "created_at": "2026-09-08T11:09:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 14,
+          "resolution_hours": 5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4371",
+          "created_at": "2026-09-08T13:35:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 14.6,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4372",
+          "created_at": "2026-09-08T14:35:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 451,
+          "resolution_hours": 47.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4373",
+          "created_at": "2026-09-08T14:02:00.000Z",
+          "priority": "P1",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 46,
+          "resolution_hours": 4.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4374",
+          "created_at": "2026-09-09T11:10:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 3.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4375",
+          "created_at": "2026-09-09T14:07:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 318,
+          "resolution_hours": 5.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4376",
+          "created_at": "2026-09-09T16:09:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 41.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4377",
+          "created_at": "2026-09-09T15:26:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 34.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4378",
+          "created_at": "2026-09-10T12:12:00.000Z",
+          "priority": "P4",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 66.1,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4379",
+          "created_at": "2026-09-10T15:46:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 148,
+          "resolution_hours": 51.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4380",
+          "created_at": "2026-09-10T12:51:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 63,
+          "resolution_hours": 1.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4381",
+          "created_at": "2026-09-10T13:36:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 243,
+          "resolution_hours": 10.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4382",
+          "created_at": "2026-09-11T12:10:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 2.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4383",
+          "created_at": "2026-09-11T09:43:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 30.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4384",
+          "created_at": "2026-09-11T10:14:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 112,
+          "resolution_hours": 1.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4385",
+          "created_at": "2026-09-11T11:41:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 282,
+          "resolution_hours": 5.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4386",
+          "created_at": "2026-09-12T17:48:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 281,
+          "resolution_hours": 44,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4387",
+          "created_at": "2026-09-12T15:31:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 0.9,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4388",
+          "created_at": "2026-09-12T13:47:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 32.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4389",
+          "created_at": "2026-09-12T11:10:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 109,
+          "resolution_hours": 4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4390",
+          "created_at": "2026-09-13T12:49:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 263,
+          "resolution_hours": 21.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4391",
+          "created_at": "2026-09-13T13:07:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 111,
+          "resolution_hours": 2.8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4392",
+          "created_at": "2026-09-13T10:51:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 3,
+          "resolution_hours": 40.8,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4393",
+          "created_at": "2026-09-13T15:56:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 204,
+          "resolution_hours": 3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4394",
+          "created_at": "2026-09-14T11:44:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 104,
+          "resolution_hours": 9.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4395",
+          "created_at": "2026-09-14T12:51:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 15.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4396",
+          "created_at": "2026-09-14T11:42:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 14,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4397",
+          "created_at": "2026-09-14T15:18:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 239,
+          "resolution_hours": 4.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4398",
+          "created_at": "2026-09-15T11:00:00.000Z",
+          "priority": "P4",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 204,
+          "resolution_hours": 4.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4399",
+          "created_at": "2026-09-15T10:29:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 55,
+          "resolution_hours": 31.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4400",
+          "created_at": "2026-09-15T15:27:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 137,
+          "resolution_hours": 2.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4401",
+          "created_at": "2026-09-15T10:56:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 5.3,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4402",
+          "created_at": "2026-09-16T12:58:00.000Z",
+          "priority": "P2",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 111,
+          "resolution_hours": 1.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4403",
+          "created_at": "2026-09-16T17:05:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 39.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4404",
+          "created_at": "2026-09-16T12:09:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 30.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4405",
+          "created_at": "2026-09-16T13:53:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 2,
+          "resolution_hours": 32.1,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4406",
+          "created_at": "2026-09-17T11:52:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 185,
+          "resolution_hours": 8,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4407",
+          "created_at": "2026-09-17T09:13:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 115,
+          "resolution_hours": 3.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4408",
+          "created_at": "2026-09-17T17:44:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 110,
+          "resolution_hours": 23,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4409",
+          "created_at": "2026-09-17T12:37:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 6,
+          "resolution_hours": 43.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4410",
+          "created_at": "2026-09-18T09:48:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 2.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4411",
+          "created_at": "2026-09-18T14:45:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 8,
+          "resolution_hours": 25.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4412",
+          "created_at": "2026-09-18T12:00:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 246,
+          "resolution_hours": 8.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4413",
+          "created_at": "2026-09-18T08:00:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 1.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4414",
+          "created_at": "2026-09-19T11:46:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 211,
+          "resolution_hours": 69.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4415",
+          "created_at": "2026-09-19T08:00:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 154,
+          "resolution_hours": 5.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4416",
+          "created_at": "2026-09-19T11:38:00.000Z",
+          "priority": "P1",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 0.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4417",
+          "created_at": "2026-09-20T09:15:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4418",
+          "created_at": "2026-09-20T15:42:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 11.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4419",
+          "created_at": "2026-09-20T14:38:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 148,
+          "resolution_hours": 2.6,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4420",
+          "created_at": "2026-09-20T13:04:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 24.6,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4421",
+          "created_at": "2026-09-21T11:00:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 76,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4422",
+          "created_at": "2026-09-21T11:35:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 83,
+          "resolution_hours": 15,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4423",
+          "created_at": "2026-09-21T13:09:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 132,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4424",
+          "created_at": "2026-09-21T08:33:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 200,
+          "resolution_hours": 24.5,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4425",
+          "created_at": "2026-09-22T12:33:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": 38.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4426",
+          "created_at": "2026-09-22T15:24:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 417,
+          "resolution_hours": 60.3,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4427",
+          "created_at": "2026-09-22T08:19:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Phone",
+          "first_response_minutes": 1,
+          "resolution_hours": 12.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4428",
+          "created_at": "2026-09-22T13:24:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 201,
+          "resolution_hours": 3.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4429",
+          "created_at": "2026-09-23T09:33:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 2.4,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4430",
+          "created_at": "2026-09-23T17:36:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": 6.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4431",
+          "created_at": "2026-09-23T13:50:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4432",
+          "created_at": "2026-09-23T10:36:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4433",
+          "created_at": "2026-09-24T13:10:00.000Z",
+          "priority": "P1",
+          "category": "Feature request",
+          "channel": "Chat",
+          "first_response_minutes": 1,
+          "resolution_hours": 12.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4434",
+          "created_at": "2026-09-24T11:34:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 3.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4435",
+          "created_at": "2026-09-24T14:39:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 9,
+          "resolution_hours": 1.2,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4436",
+          "created_at": "2026-09-24T11:00:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 113,
+          "resolution_hours": 2.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4437",
+          "created_at": "2026-09-25T13:59:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 249,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4438",
+          "created_at": "2026-09-25T09:20:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 208,
+          "resolution_hours": 46.9,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4439",
+          "created_at": "2026-09-25T15:29:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 405,
+          "resolution_hours": 3.5,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4440",
+          "created_at": "2026-09-25T16:39:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 230,
+          "resolution_hours": 25,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4441",
+          "created_at": "2026-09-26T09:50:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 109,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4442",
+          "created_at": "2026-09-26T13:51:00.000Z",
+          "priority": "P1",
+          "category": "Billing",
+          "channel": "Chat",
+          "first_response_minutes": 2,
+          "resolution_hours": 1.2,
+          "csat": 5,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4443",
+          "created_at": "2026-09-26T12:29:00.000Z",
+          "priority": "P4",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 437,
+          "resolution_hours": 6.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4444",
+          "created_at": "2026-09-26T16:56:00.000Z",
+          "priority": "P2",
+          "category": "Integrations",
+          "channel": "Chat",
+          "first_response_minutes": 3,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4445",
+          "created_at": "2026-09-27T16:14:00.000Z",
+          "priority": "P2",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 59,
+          "resolution_hours": 29.9,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4446",
+          "created_at": "2026-09-27T15:40:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 147,
+          "resolution_hours": 3.3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4447",
+          "created_at": "2026-09-27T11:12:00.000Z",
+          "priority": "P2",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 85,
+          "resolution_hours": 1.7,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4448",
+          "created_at": "2026-09-27T10:53:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": 32,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4449",
+          "created_at": "2026-09-28T08:16:00.000Z",
+          "priority": "P3",
+          "category": "Billing",
+          "channel": "Email",
+          "first_response_minutes": 240,
+          "resolution_hours": 5.2,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4450",
+          "created_at": "2026-09-28T13:32:00.000Z",
+          "priority": "P3",
+          "category": "Bug",
+          "channel": "Email",
+          "first_response_minutes": 217,
+          "resolution_hours": 12.8,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4451",
+          "created_at": "2026-09-28T14:38:00.000Z",
+          "priority": "P4",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 7,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4452",
+          "created_at": "2026-09-28T08:25:00.000Z",
+          "priority": "P4",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 384,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4453",
+          "created_at": "2026-09-29T13:30:00.000Z",
+          "priority": "P2",
+          "category": "Bug",
+          "channel": "Chat",
+          "first_response_minutes": 5,
+          "resolution_hours": 11.1,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4454",
+          "created_at": "2026-09-29T17:55:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 105,
+          "resolution_hours": 3,
+          "csat": 4,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4455",
+          "created_at": "2026-09-29T16:39:00.000Z",
+          "priority": "P3",
+          "category": "Integrations",
+          "channel": "Email",
+          "first_response_minutes": 271,
+          "resolution_hours": 31.4,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4456",
+          "created_at": "2026-09-29T09:35:00.000Z",
+          "priority": "P3",
+          "category": "Feature request",
+          "channel": "Email",
+          "first_response_minutes": 225,
+          "resolution_hours": 51.7,
+          "csat": 3,
+          "status": "resolved"
+        },
+        {
+          "id": "T-4457",
+          "created_at": "2026-09-30T09:04:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Chat",
+          "first_response_minutes": 4,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4458",
+          "created_at": "2026-09-30T08:06:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 241,
+          "resolution_hours": null,
+          "csat": null,
+          "status": "open"
+        },
+        {
+          "id": "T-4459",
+          "created_at": "2026-09-30T11:28:00.000Z",
+          "priority": "P3",
+          "category": "Login & access",
+          "channel": "Email",
+          "first_response_minutes": 225,
+          "resolution_hours": 2,
+          "csat": 4,
+          "status": "resolved"
+        }
+      ],
+      "source": "helpdesk.tickets"
+    },
+    "resolved": {
+      "from": "tickets",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "status == 'resolved'"
+        }
+      ]
+    },
+    "weekly": {
+      "from": "tickets",
+      "transform": [
+        {
+          "op": "timeUnit",
+          "field": "created_at",
+          "unit": "week",
+          "as": "week"
+        },
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "week"
+          ],
+          "measures": [
+            {
+              "agg": "count",
+              "as": "tickets"
+            },
+            {
+              "field": "resolution_hours",
+              "agg": "median",
+              "as": "median_resolution"
+            }
+          ]
+        },
+        {
+          "op": "sort",
+          "by": "week"
+        }
+      ],
+      "fields": [
+        {
+          "name": "week",
+          "label": "Week",
+          "format": "date:day"
+        },
+        {
+          "name": "tickets",
+          "label": "Tickets",
+          "format": "integer"
+        },
+        {
+          "name": "median_resolution",
+          "label": "Median resolution (h)",
+          "format": "number:1"
+        }
+      ]
+    },
+    "by_category": {
+      "from": "tickets",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "category"
+          ],
+          "measures": [
+            {
+              "agg": "count",
+              "as": "tickets"
+            },
+            {
+              "field": "resolution_hours",
+              "agg": "median",
+              "as": "median_resolution"
+            },
+            {
+              "field": "csat",
+              "agg": "avg",
+              "as": "csat"
+            }
+          ]
+        },
+        {
+          "op": "sort",
+          "by": "-median_resolution"
+        }
+      ],
+      "fields": [
+        {
+          "name": "category",
+          "label": "Category"
+        },
+        {
+          "name": "tickets",
+          "label": "Tickets",
+          "format": "integer"
+        },
+        {
+          "name": "median_resolution",
+          "label": "Median resolution (h)",
+          "format": "number:1"
+        },
+        {
+          "name": "csat",
+          "label": "CSAT",
+          "format": "number:2"
+        }
+      ]
+    },
+    "heat": {
+      "from": "resolved",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "category",
+            "priority"
+          ],
+          "measures": [
+            {
+              "field": "resolution_hours",
+              "agg": "median",
+              "as": "hours"
+            }
+          ]
+        },
+        {
+          "op": "sort",
+          "by": [
+            "priority",
+            "category"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "name": "hours",
+          "label": "Median resolution (h)",
+          "format": "number:1"
+        }
+      ]
+    },
+    "by_channel": {
+      "from": "resolved",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "channel"
+          ],
+          "measures": [
+            {
+              "field": "csat",
+              "agg": "avg",
+              "as": "csat"
+            },
+            {
+              "field": "first_response_minutes",
+              "agg": "median",
+              "as": "first_response"
+            },
+            {
+              "agg": "count",
+              "as": "tickets"
+            }
+          ]
+        },
+        {
+          "op": "sort",
+          "by": "-csat"
+        }
+      ],
+      "fields": [
+        {
+          "name": "channel",
+          "label": "Channel"
+        },
+        {
+          "name": "csat",
+          "label": "CSAT",
+          "format": "number:2"
+        },
+        {
+          "name": "first_response",
+          "label": "Median first response (min)",
+          "format": "integer"
+        },
+        {
+          "name": "tickets",
+          "label": "Tickets",
+          "format": "integer"
+        }
+      ]
+    },
+    "open_urgent": {
+      "from": "tickets",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "status == 'open' and (priority == 'P1' or priority == 'P2')"
+        },
+        {
+          "op": "sort",
+          "by": "created_at"
+        }
+      ],
+      "fields": [
+        {
+          "name": "created_at",
+          "label": "Opened",
+          "format": "date:day"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "id": "summary",
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "kpis",
+          "type": "kpi",
+          "items": [
+            {
+              "label": "Tickets",
+              "value": {
+                "data": "tickets",
+                "agg": "count"
+              },
+              "format": "integer"
+            },
+            {
+              "label": "Median resolution",
+              "value": {
+                "data": "resolved",
+                "field": "resolution_hours",
+                "agg": "median",
+                "where": "month(created_at) == 9"
+              },
+              "compareTo": {
+                "data": "resolved",
+                "field": "resolution_hours",
+                "agg": "median",
+                "where": "month(created_at) == 7"
+              },
+              "format": "number:1",
+              "goodWhen": "down",
+              "deltaLabel": "Sep vs Jul",
+              "description": "hours"
+            },
+            {
+              "label": "CSAT",
+              "value": {
+                "data": "resolved",
+                "field": "csat",
+                "agg": "avg"
+              },
+              "format": "number:2",
+              "description": "out of 5"
+            },
+            {
+              "label": "Open P1/P2",
+              "value": {
+                "data": "open_urgent",
+                "agg": "count"
+              },
+              "format": "integer",
+              "description": "at quarter end"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "volume",
+      "title": "Volume and speed",
+      "blocks": [
+        {
+          "id": "weekly",
+          "type": "chart",
+          "title": "Tickets per week",
+          "chart": {
+            "kind": "bar",
+            "data": "weekly",
+            "x": "week",
+            "y": "tickets",
+            "secondary": {
+              "y": "median_resolution",
+              "label": "Median resolution (h)"
+            }
+          }
+        },
+        {
+          "id": "volume_note",
+          "type": "callout",
+          "tone": "positive",
+          "variant": "insight",
+          "content": "Median resolution fell from {{first(weekly.median_resolution) | number:1}} h in the first week to {{last(weekly.median_resolution) | number:1}} h in the last."
+        },
+        {
+          "id": "heatmap",
+          "type": "chart",
+          "title": "Median resolution (h) by category and priority",
+          "height": "sm",
+          "chart": {
+            "kind": "heatmap",
+            "data": "heat",
+            "x": "priority",
+            "y": "category",
+            "value": "hours"
+          }
+        },
+        {
+          "id": "slow",
+          "type": "chart",
+          "title": "Slowest categories",
+          "chart": {
+            "kind": "bar",
+            "data": "by_category",
+            "x": "category",
+            "y": "median_resolution",
+            "horizontal": true,
+            "labels": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "satisfaction",
+      "title": "Satisfaction",
+      "blocks": [
+        {
+          "id": "channels",
+          "type": "table",
+          "title": "By channel",
+          "data": "by_channel",
+          "columns": [
+            {
+              "field": "channel"
+            },
+            {
+              "field": "csat",
+              "emphasis": "heat"
+            },
+            {
+              "field": "first_response"
+            },
+            {
+              "field": "tickets"
+            }
+          ]
+        },
+        {
+          "id": "csat_risk",
+          "type": "callout",
+          "tone": "warning",
+          "variant": "risk",
+          "title": "Email lags",
+          "content": "Email tickets wait hours for a first response and score lowest. Most integration tickets arrive by email too."
+        },
+        {
+          "id": "open",
+          "type": "table",
+          "title": "Open P1/P2 tickets",
+          "data": "open_urgent",
+          "columns": [
+            {
+              "field": "id"
+            },
+            {
+              "field": "created_at"
+            },
+            {
+              "field": "priority"
+            },
+            {
+              "field": "category"
+            },
+            {
+              "field": "channel"
+            }
+          ],
+          "maxRows": 10
+        },
+        {
+          "id": "next",
+          "type": "list",
+          "title": "Q4 plan",
+          "style": "check",
+          "items": [
+            {
+              "text": "Integration runbooks for the top five connectors",
+              "tag": "Eng + Support"
+            },
+            {
+              "text": "Move email first-response target to 60 minutes",
+              "tag": "Support"
+            },
+            {
+              "text": "Route P1s straight to chat",
+              "tag": "Ops"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

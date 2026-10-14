@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Row } from "../spec.js";
-import { profileDataset, rankMeasures, suggestCharts } from "./profile.js";
+import { defaultAgg, fieldLabel, isStockMeasure, profileDataset, rankMeasures, suggestCharts } from "./profile.js";
 import { inferFields } from "./resolve.js";
 import type { ResolvedDataset } from "./types.js";
 
@@ -55,6 +55,36 @@ describe("rankMeasures", () => {
   });
 });
 
+describe("measure semantics", () => {
+  it("separates level metrics from flows", () => {
+    for (const name of ["mrr", "arr", "customers", "active_users", "open_tickets", "headcount", "inventory", "customer_count", "account balance"]) {
+      expect(isStockMeasure(name), name).toBe(true);
+    }
+    for (const name of ["new_mrr", "churned_mrr", "expansion_mrr", "new_customers", "revenue", "signups", "array_size", "carrier"]) {
+      expect(isStockMeasure(name), name).toBe(false);
+    }
+  });
+
+  it("averages rates, scores and durations; sums the rest", () => {
+    const agg = (name: string, v = 3) => defaultAgg(profileDataset(ds([{ [name]: v }, { [name]: v + 1 }])).fields[0]!);
+    expect(["csat", "first_response_minutes", "resolution_hours", "unit_price", "latency_ms"].map((n) => agg(n))).toEqual(["avg", "avg", "avg", "avg", "avg"]);
+    expect(agg("logo_churn_rate", 0.02)).toBe("avg");
+    expect(["revenue", "billable_hours", "orders"].map((n) => agg(n))).toEqual(["sum", "sum", "sum"]);
+  });
+
+  it("ranks MRR-style metrics as currency headlines and keeps acronyms in labels", () => {
+    const rows = [{ customers: 10, mrr: 500, gmv: 900 }];
+    const p = profileDataset(ds(rows));
+    expect(rankMeasures(p.fields).map((f) => f.name)).toEqual(["mrr", "gmv", "customers"]);
+    expect(p.fields.find((f) => f.name === "mrr")!.suggestedFormat).toBe("currency");
+    expect(fieldLabel("mrr")).toBe("MRR");
+    expect(fieldLabel("new_mrr")).toBe("New MRR");
+    expect(fieldLabel("customer.id")).toBe("Customer ID");
+    expect(fieldLabel("avg_csat", true)).toBe("avg CSAT");
+    expect(fieldLabel("nps_score", true)).toBe("NPS score");
+  });
+});
+
 describe("suggestCharts", () => {
   it("ranks a time trend first and covers bar, donut, scatter with reasons", () => {
     const s = suggestCharts(ds(sales));
@@ -86,6 +116,24 @@ describe("suggestCharts", () => {
     const rows = Array.from({ length: 6 }, (_, i) => ({ month: `2026-0${i + 1}`, "items.count": 30 + i, total: 4000 + i * 100, net: 3500 + i }));
     const line = suggestCharts(ds(rows)).find((x) => x.chart.kind === "line")!;
     expect(line.chart.y).toEqual(["total", "net"]);
+  });
+
+  it("never sums a level metric across periods in category charts", () => {
+    const rows = ["2026-01", "2026-02", "2026-03"].flatMap((month, i) =>
+      ["Starter", "Pro", "Team"].map((plan, j) => ({ month, plan, customers: 100 * (j + 1) + i, new_customers: 5 + j, churn_rate: 0.02 + j / 100 })),
+    );
+    const s = suggestCharts(ds(rows));
+    expect(s[0]!.chart).toMatchObject({ kind: "line", y: "customers" });
+    const byPlan = s.filter((x) => x.chart.x === "plan");
+    expect(byPlan.length).toBeGreaterThan(0);
+    for (const x of byPlan) expect(x.chart.y).toBe("new_customers");
+  });
+
+  it("averages rate measures in category charts and skips shares of them", () => {
+    const rows = Array.from({ length: 9 }, (_, i) => ({ region: ["N", "S", "E"][i % 3]!, conversion_rate: 0.01 * (i + 1) }));
+    const s = suggestCharts(ds(rows));
+    expect(s.find((x) => x.chart.kind === "bar")!.chart.aggregate).toBe("avg");
+    expect(s.some((x) => x.chart.kind === "donut")).toBe(false);
   });
 
   it("returns nothing without a measure", () => {

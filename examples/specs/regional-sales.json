@@ -1,0 +1,2621 @@
+{
+  "title": "H1 2026 Sales Review",
+  "subtitle": "Growth by region and channel, and what to do in H2",
+  "summary": "First-half revenue reached **{{sum(h1_2026.revenue) | currency:0}}**. Online drove most of the growth; partner margins are the open problem for H2.",
+  "meta": {
+    "author": "Revenue Analytics",
+    "date": "2026-07-03",
+    "audience": "executive",
+    "locale": "en-US",
+    "currency": "USD"
+  },
+  "page": {
+    "size": "A4",
+    "targetPages": 3
+  },
+  "datasets": {
+    "sales": {
+      "rows": [
+        {
+          "month": "2025-01-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 550093,
+          "cost": 288957,
+          "orders": 6472
+        },
+        {
+          "month": "2025-01-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 452081,
+          "cost": 259202,
+          "orders": 5319
+        },
+        {
+          "month": "2025-01-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 260477,
+          "cost": 167106,
+          "orders": 109
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 422676,
+          "cost": 222796,
+          "orders": 4973
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 353167,
+          "cost": 218850,
+          "orders": 4155
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 211087,
+          "cost": 141424,
+          "orders": 88
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 340113,
+          "cost": 194438,
+          "orders": 4001
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 259308,
+          "cost": 146624,
+          "orders": 3051
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 141656,
+          "cost": 98735,
+          "orders": 59
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 164451,
+          "cost": 94291,
+          "orders": 1935
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 117778,
+          "cost": 67231,
+          "orders": 1386
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 70661,
+          "cost": 46321,
+          "orders": 29
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 105009,
+          "cost": 59781,
+          "orders": 1235
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 69085,
+          "cost": 42126,
+          "orders": 813
+        },
+        {
+          "month": "2025-01-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 44225,
+          "cost": 28465,
+          "orders": 18
+        },
+        {
+          "month": "2025-02-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 561530,
+          "cost": 310098,
+          "orders": 6606
+        },
+        {
+          "month": "2025-02-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 499187,
+          "cost": 304863,
+          "orders": 5873
+        },
+        {
+          "month": "2025-02-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 291137,
+          "cost": 192979,
+          "orders": 121
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 466077,
+          "cost": 261835,
+          "orders": 5483
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 360250,
+          "cost": 217273,
+          "orders": 4238
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 227718,
+          "cost": 151885,
+          "orders": 95
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 326229,
+          "cost": 173389,
+          "orders": 3838
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 267396,
+          "cost": 151779,
+          "orders": 3146
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 170860,
+          "cost": 115437,
+          "orders": 71
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 172504,
+          "cost": 93733,
+          "orders": 2029
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 115674,
+          "cost": 66666,
+          "orders": 1361
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 66510,
+          "cost": 43676,
+          "orders": 28
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 100035,
+          "cost": 57317,
+          "orders": 1177
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 85163,
+          "cost": 48676,
+          "orders": 1002
+        },
+        {
+          "month": "2025-02-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 50306,
+          "cost": 33954,
+          "orders": 21
+        },
+        {
+          "month": "2025-03-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 627038,
+          "cost": 337885,
+          "orders": 7377
+        },
+        {
+          "month": "2025-03-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 444241,
+          "cost": 274896,
+          "orders": 5226
+        },
+        {
+          "month": "2025-03-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 265025,
+          "cost": 184269,
+          "orders": 110
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 507697,
+          "cost": 277191,
+          "orders": 5973
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 369022,
+          "cost": 213442,
+          "orders": 4341
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 196278,
+          "cost": 131615,
+          "orders": 82
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 342061,
+          "cost": 182870,
+          "orders": 4024
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 285372,
+          "cost": 171757,
+          "orders": 3357
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 167419,
+          "cost": 109254,
+          "orders": 70
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 160510,
+          "cost": 90152,
+          "orders": 1888
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 135260,
+          "cost": 82376,
+          "orders": 1591
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 78372,
+          "cost": 54106,
+          "orders": 33
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 105910,
+          "cost": 56046,
+          "orders": 1246
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 73991,
+          "cost": 43831,
+          "orders": 870
+        },
+        {
+          "month": "2025-03-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 49436,
+          "cost": 34569,
+          "orders": 21
+        },
+        {
+          "month": "2025-04-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 647260,
+          "cost": 365587,
+          "orders": 7615
+        },
+        {
+          "month": "2025-04-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 470897,
+          "cost": 264989,
+          "orders": 5540
+        },
+        {
+          "month": "2025-04-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 262308,
+          "cost": 180873,
+          "orders": 109
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 531350,
+          "cost": 301797,
+          "orders": 6251
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 329124,
+          "cost": 191944,
+          "orders": 3872
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 202318,
+          "cost": 135430,
+          "orders": 84
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 401023,
+          "cost": 230518,
+          "orders": 4718
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 263852,
+          "cost": 152760,
+          "orders": 3104
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 169515,
+          "cost": 111176,
+          "orders": 71
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 168760,
+          "cost": 87881,
+          "orders": 1985
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 128776,
+          "cost": 74948,
+          "orders": 1515
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 74661,
+          "cost": 48925,
+          "orders": 31
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 111545,
+          "cost": 62693,
+          "orders": 1312
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 80433,
+          "cost": 47955,
+          "orders": 946
+        },
+        {
+          "month": "2025-04-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 45195,
+          "cost": 29955,
+          "orders": 19
+        },
+        {
+          "month": "2025-05-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 637622,
+          "cost": 367372,
+          "orders": 7501
+        },
+        {
+          "month": "2025-05-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 438507,
+          "cost": 269791,
+          "orders": 5159
+        },
+        {
+          "month": "2025-05-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 302804,
+          "cost": 204175,
+          "orders": 126
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 519095,
+          "cost": 270719,
+          "orders": 6107
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 325013,
+          "cost": 192558,
+          "orders": 3824
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 205137,
+          "cost": 143008,
+          "orders": 85
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 405959,
+          "cost": 228335,
+          "orders": 4776
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 292121,
+          "cost": 169000,
+          "orders": 3437
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 166962,
+          "cost": 113722,
+          "orders": 70
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 154480,
+          "cost": 83474,
+          "orders": 1817
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 120282,
+          "cost": 72889,
+          "orders": 1415
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 79632,
+          "cost": 51147,
+          "orders": 33
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 109670,
+          "cost": 59024,
+          "orders": 1290
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 79407,
+          "cost": 47650,
+          "orders": 934
+        },
+        {
+          "month": "2025-05-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 46002,
+          "cost": 30145,
+          "orders": 19
+        },
+        {
+          "month": "2025-06-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 655668,
+          "cost": 360856,
+          "orders": 7714
+        },
+        {
+          "month": "2025-06-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 399922,
+          "cost": 244220,
+          "orders": 4705
+        },
+        {
+          "month": "2025-06-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 276847,
+          "cost": 192200,
+          "orders": 115
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 485567,
+          "cost": 268138,
+          "orders": 5713
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 357822,
+          "cost": 221480,
+          "orders": 4210
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 200026,
+          "cost": 137436,
+          "orders": 83
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 326837,
+          "cost": 180615,
+          "orders": 3845
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 270117,
+          "cost": 155310,
+          "orders": 3178
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 166232,
+          "cost": 106629,
+          "orders": 69
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 178938,
+          "cost": 97858,
+          "orders": 2105
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 112096,
+          "cost": 66643,
+          "orders": 1319
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 70282,
+          "cost": 45110,
+          "orders": 29
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 102714,
+          "cost": 57045,
+          "orders": 1208
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 67172,
+          "cost": 38183,
+          "orders": 790
+        },
+        {
+          "month": "2025-06-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 40642,
+          "cost": 26636,
+          "orders": 17
+        },
+        {
+          "month": "2025-07-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 579273,
+          "cost": 320705,
+          "orders": 6815
+        },
+        {
+          "month": "2025-07-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 412638,
+          "cost": 255212,
+          "orders": 4855
+        },
+        {
+          "month": "2025-07-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 259559,
+          "cost": 175440,
+          "orders": 108
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 434614,
+          "cost": 244264,
+          "orders": 5113
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 295280,
+          "cost": 181577,
+          "orders": 3474
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 199495,
+          "cost": 134321,
+          "orders": 83
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 356822,
+          "cost": 201572,
+          "orders": 4198
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 257198,
+          "cost": 148313,
+          "orders": 3026
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 140905,
+          "cost": 92153,
+          "orders": 59
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 146030,
+          "cost": 78935,
+          "orders": 1718
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 108318,
+          "cost": 65717,
+          "orders": 1274
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 67658,
+          "cost": 46660,
+          "orders": 28
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 96731,
+          "cost": 54320,
+          "orders": 1138
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 68720,
+          "cost": 39944,
+          "orders": 808
+        },
+        {
+          "month": "2025-07-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 43779,
+          "cost": 29393,
+          "orders": 18
+        },
+        {
+          "month": "2025-08-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 622033,
+          "cost": 349003,
+          "orders": 7318
+        },
+        {
+          "month": "2025-08-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 384440,
+          "cost": 233804,
+          "orders": 4523
+        },
+        {
+          "month": "2025-08-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 263873,
+          "cost": 181472,
+          "orders": 110
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 470245,
+          "cost": 249097,
+          "orders": 5532
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 302477,
+          "cost": 178760,
+          "orders": 3559
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 185386,
+          "cost": 118741,
+          "orders": 77
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 334052,
+          "cost": 174759,
+          "orders": 3930
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 261253,
+          "cost": 149868,
+          "orders": 3074
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 143763,
+          "cost": 100409,
+          "orders": 60
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 160339,
+          "cost": 89198,
+          "orders": 1886
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 97424,
+          "cost": 57478,
+          "orders": 1146
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 64187,
+          "cost": 44657,
+          "orders": 27
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 91659,
+          "cost": 48507,
+          "orders": 1078
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 71364,
+          "cost": 44108,
+          "orders": 840
+        },
+        {
+          "month": "2025-08-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 42421,
+          "cost": 27452,
+          "orders": 18
+        },
+        {
+          "month": "2025-09-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 562893,
+          "cost": 319242,
+          "orders": 6622
+        },
+        {
+          "month": "2025-09-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 428662,
+          "cost": 262521,
+          "orders": 5043
+        },
+        {
+          "month": "2025-09-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 256624,
+          "cost": 165647,
+          "orders": 107
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 455558,
+          "cost": 262324,
+          "orders": 5360
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 301795,
+          "cost": 179437,
+          "orders": 3551
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 190590,
+          "cost": 130691,
+          "orders": 79
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 357946,
+          "cost": 195698,
+          "orders": 4211
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 258882,
+          "cost": 148673,
+          "orders": 3046
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 146985,
+          "cost": 99323,
+          "orders": 61
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 147947,
+          "cost": 78315,
+          "orders": 1741
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 102948,
+          "cost": 58509,
+          "orders": 1211
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 66409,
+          "cost": 45232,
+          "orders": 28
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 93874,
+          "cost": 50112,
+          "orders": 1104
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 61092,
+          "cost": 37200,
+          "orders": 719
+        },
+        {
+          "month": "2025-09-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 43751,
+          "cost": 29050,
+          "orders": 18
+        },
+        {
+          "month": "2025-10-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 613144,
+          "cost": 323377,
+          "orders": 7213
+        },
+        {
+          "month": "2025-10-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 377839,
+          "cost": 230656,
+          "orders": 4445
+        },
+        {
+          "month": "2025-10-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 234231,
+          "cost": 156212,
+          "orders": 98
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 467123,
+          "cost": 253121,
+          "orders": 5496
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 316139,
+          "cost": 182645,
+          "orders": 3719
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 171924,
+          "cost": 119942,
+          "orders": 72
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 373748,
+          "cost": 195466,
+          "orders": 4397
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 272191,
+          "cost": 155430,
+          "orders": 3202
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 146391,
+          "cost": 96577,
+          "orders": 61
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 176446,
+          "cost": 100269,
+          "orders": 2076
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 106633,
+          "cost": 60031,
+          "orders": 1255
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 68130,
+          "cost": 45389,
+          "orders": 28
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 111714,
+          "cost": 58365,
+          "orders": 1314
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 71014,
+          "cost": 40158,
+          "orders": 835
+        },
+        {
+          "month": "2025-10-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 42957,
+          "cost": 28207,
+          "orders": 18
+        },
+        {
+          "month": "2025-11-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 635035,
+          "cost": 362981,
+          "orders": 7471
+        },
+        {
+          "month": "2025-11-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 451340,
+          "cost": 254402,
+          "orders": 5310
+        },
+        {
+          "month": "2025-11-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 277305,
+          "cost": 180467,
+          "orders": 116
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 466699,
+          "cost": 263322,
+          "orders": 5491
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 299853,
+          "cost": 174906,
+          "orders": 3528
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 210848,
+          "cost": 144552,
+          "orders": 88
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 376895,
+          "cost": 207606,
+          "orders": 4434
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 282374,
+          "cost": 161453,
+          "orders": 3322
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 148200,
+          "cost": 99380,
+          "orders": 62
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 180376,
+          "cost": 104548,
+          "orders": 2122
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 107700,
+          "cost": 62794,
+          "orders": 1267
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 73407,
+          "cost": 49553,
+          "orders": 31
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 106118,
+          "cost": 61097,
+          "orders": 1248
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 78901,
+          "cost": 47320,
+          "orders": 928
+        },
+        {
+          "month": "2025-11-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 44713,
+          "cost": 31297,
+          "orders": 19
+        },
+        {
+          "month": "2025-12-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 703776,
+          "cost": 374683,
+          "orders": 8280
+        },
+        {
+          "month": "2025-12-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 491240,
+          "cost": 291259,
+          "orders": 5779
+        },
+        {
+          "month": "2025-12-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 256777,
+          "cost": 165532,
+          "orders": 107
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 558351,
+          "cost": 319524,
+          "orders": 6569
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 354017,
+          "cost": 214603,
+          "orders": 4165
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 204408,
+          "cost": 140110,
+          "orders": 85
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 384010,
+          "cost": 203010,
+          "orders": 4518
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 285581,
+          "cost": 168689,
+          "orders": 3360
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 167690,
+          "cost": 109536,
+          "orders": 70
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 172705,
+          "cost": 90187,
+          "orders": 2032
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 128526,
+          "cost": 74715,
+          "orders": 1512
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 72846,
+          "cost": 48556,
+          "orders": 30
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 129020,
+          "cost": 70128,
+          "orders": 1518
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 78384,
+          "cost": 48006,
+          "orders": 922
+        },
+        {
+          "month": "2025-12-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 44390,
+          "cost": 30002,
+          "orders": 18
+        },
+        {
+          "month": "2026-01-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 733325,
+          "cost": 404159,
+          "orders": 8627
+        },
+        {
+          "month": "2026-01-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 469160,
+          "cost": 276080,
+          "orders": 5520
+        },
+        {
+          "month": "2026-01-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 285190,
+          "cost": 199516,
+          "orders": 119
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 571117,
+          "cost": 323448,
+          "orders": 6719
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 404483,
+          "cost": 240147,
+          "orders": 4759
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 235177,
+          "cost": 154480,
+          "orders": 98
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 440003,
+          "cost": 252404,
+          "orders": 5177
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 320931,
+          "cost": 184049,
+          "orders": 3776
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 191039,
+          "cost": 125790,
+          "orders": 80
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 225788,
+          "cost": 122069,
+          "orders": 2656
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 120811,
+          "cost": 72779,
+          "orders": 1421
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 83012,
+          "cost": 58059,
+          "orders": 35
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 132656,
+          "cost": 74281,
+          "orders": 1561
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 77708,
+          "cost": 47292,
+          "orders": 914
+        },
+        {
+          "month": "2026-01-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 48887,
+          "cost": 32340,
+          "orders": 20
+        },
+        {
+          "month": "2026-02-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 902742,
+          "cost": 515414,
+          "orders": 10620
+        },
+        {
+          "month": "2026-02-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 543038,
+          "cost": 313659,
+          "orders": 6389
+        },
+        {
+          "month": "2026-02-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 321343,
+          "cost": 208634,
+          "orders": 134
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 575052,
+          "cost": 300760,
+          "orders": 6765
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 405188,
+          "cost": 231716,
+          "orders": 4767
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 245912,
+          "cost": 164429,
+          "orders": 102
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 492798,
+          "cost": 277187,
+          "orders": 5798
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 308495,
+          "cost": 173661,
+          "orders": 3629
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 202545,
+          "cost": 138490,
+          "orders": 84
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 235045,
+          "cost": 126940,
+          "orders": 2765
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 134013,
+          "cost": 83033,
+          "orders": 1577
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 78796,
+          "cost": 54167,
+          "orders": 33
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 131605,
+          "cost": 75750,
+          "orders": 1548
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 83844,
+          "cost": 48554,
+          "orders": 986
+        },
+        {
+          "month": "2026-02-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 50163,
+          "cost": 34737,
+          "orders": 21
+        },
+        {
+          "month": "2026-03-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 918119,
+          "cost": 493792,
+          "orders": 10801
+        },
+        {
+          "month": "2026-03-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 553268,
+          "cost": 322135,
+          "orders": 6509
+        },
+        {
+          "month": "2026-03-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 294024,
+          "cost": 188953,
+          "orders": 123
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 689668,
+          "cost": 380288,
+          "orders": 8114
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 392390,
+          "cost": 241017,
+          "orders": 4616
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 232417,
+          "cost": 160732,
+          "orders": 97
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 459467,
+          "cost": 250537,
+          "orders": 5405
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 343372,
+          "cost": 196214,
+          "orders": 4040
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 222910,
+          "cost": 146682,
+          "orders": 93
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 249998,
+          "cost": 135080,
+          "orders": 2941
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 143216,
+          "cost": 81082,
+          "orders": 1685
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 76949,
+          "cost": 52923,
+          "orders": 32
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 133969,
+          "cost": 76785,
+          "orders": 1576
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 93379,
+          "cost": 55915,
+          "orders": 1099
+        },
+        {
+          "month": "2026-03-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 52667,
+          "cost": 34473,
+          "orders": 22
+        },
+        {
+          "month": "2026-04-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 796142,
+          "cost": 429732,
+          "orders": 9366
+        },
+        {
+          "month": "2026-04-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 562851,
+          "cost": 329805,
+          "orders": 6622
+        },
+        {
+          "month": "2026-04-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 298680,
+          "cost": 192420,
+          "orders": 124
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 652518,
+          "cost": 361642,
+          "orders": 7677
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 381099,
+          "cost": 214832,
+          "orders": 4484
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 253446,
+          "cost": 163212,
+          "orders": 106
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 546952,
+          "cost": 307908,
+          "orders": 6435
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 371029,
+          "cost": 225022,
+          "orders": 4365
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 196379,
+          "cost": 132426,
+          "orders": 82
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 211865,
+          "cost": 117239,
+          "orders": 2493
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 143381,
+          "cost": 86211,
+          "orders": 1687
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 83106,
+          "cost": 54187,
+          "orders": 35
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 148917,
+          "cost": 82660,
+          "orders": 1752
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 96040,
+          "cost": 59079,
+          "orders": 1130
+        },
+        {
+          "month": "2026-04-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 51318,
+          "cost": 33108,
+          "orders": 21
+        },
+        {
+          "month": "2026-05-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 853147,
+          "cost": 487600,
+          "orders": 10037
+        },
+        {
+          "month": "2026-05-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 555887,
+          "cost": 331932,
+          "orders": 6540
+        },
+        {
+          "month": "2026-05-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 315979,
+          "cost": 208592,
+          "orders": 132
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 667052,
+          "cost": 379272,
+          "orders": 7848
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 402383,
+          "cost": 243443,
+          "orders": 4734
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 221473,
+          "cost": 147762,
+          "orders": 92
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 508914,
+          "cost": 276172,
+          "orders": 5987
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 325753,
+          "cost": 185916,
+          "orders": 3832
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 215941,
+          "cost": 144645,
+          "orders": 90
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 217307,
+          "cost": 118212,
+          "orders": 2557
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 131188,
+          "cost": 77798,
+          "orders": 1543
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 88634,
+          "cost": 58663,
+          "orders": 37
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 143145,
+          "cost": 76965,
+          "orders": 1684
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 88222,
+          "cost": 51487,
+          "orders": 1038
+        },
+        {
+          "month": "2026-05-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 51654,
+          "cost": 33508,
+          "orders": 22
+        },
+        {
+          "month": "2026-06-01",
+          "region": "North America",
+          "channel": "Online",
+          "revenue": 778900,
+          "cost": 434583,
+          "orders": 9164
+        },
+        {
+          "month": "2026-06-01",
+          "region": "North America",
+          "channel": "Retail",
+          "revenue": 540010,
+          "cost": 307782,
+          "orders": 6353
+        },
+        {
+          "month": "2026-06-01",
+          "region": "North America",
+          "channel": "Partner",
+          "revenue": 305997,
+          "cost": 212189,
+          "orders": 127
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Europe",
+          "channel": "Online",
+          "revenue": 622028,
+          "cost": 338600,
+          "orders": 7318
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Europe",
+          "channel": "Retail",
+          "revenue": 370369,
+          "cost": 216341,
+          "orders": 4357
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Europe",
+          "channel": "Partner",
+          "revenue": 228555,
+          "cost": 153661,
+          "orders": 95
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Asia Pacific",
+          "channel": "Online",
+          "revenue": 446791,
+          "cost": 247955,
+          "orders": 5256
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Asia Pacific",
+          "channel": "Retail",
+          "revenue": 348155,
+          "cost": 195120,
+          "orders": 4096
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Asia Pacific",
+          "channel": "Partner",
+          "revenue": 198572,
+          "cost": 128433,
+          "orders": 83
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Latin America",
+          "channel": "Online",
+          "revenue": 225782,
+          "cost": 119124,
+          "orders": 2656
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Latin America",
+          "channel": "Retail",
+          "revenue": 133680,
+          "cost": 82260,
+          "orders": 1573
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Latin America",
+          "channel": "Partner",
+          "revenue": 73309,
+          "cost": 50642,
+          "orders": 31
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Middle East",
+          "channel": "Online",
+          "revenue": 130148,
+          "cost": 74769,
+          "orders": 1531
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Middle East",
+          "channel": "Retail",
+          "revenue": 77428,
+          "cost": 43962,
+          "orders": 911
+        },
+        {
+          "month": "2026-06-01",
+          "region": "Middle East",
+          "channel": "Partner",
+          "revenue": 51347,
+          "cost": 34281,
+          "orders": 21
+        }
+      ],
+      "source": "warehouse.sales_monthly"
+    },
+    "h1_2026": {
+      "from": "sales",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "year(month) == 2026"
+        }
+      ]
+    },
+    "h1_2025": {
+      "from": "sales",
+      "transform": [
+        {
+          "op": "filter",
+          "expr": "year(month) == 2025 and month(month) <= 6"
+        }
+      ]
+    },
+    "monthly": {
+      "from": "sales",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "month"
+          ],
+          "measures": [
+            {
+              "field": "revenue",
+              "agg": "sum",
+              "as": "revenue"
+            },
+            {
+              "field": "cost",
+              "agg": "sum",
+              "as": "cost"
+            },
+            {
+              "field": "orders",
+              "agg": "sum",
+              "as": "orders"
+            }
+          ]
+        },
+        {
+          "op": "derive",
+          "as": "margin",
+          "expr": "(revenue - cost) / revenue"
+        },
+        {
+          "op": "window",
+          "fn": "pctChange",
+          "field": "revenue",
+          "as": "growth",
+          "sortBy": "month"
+        }
+      ],
+      "fields": [
+        {
+          "name": "month",
+          "label": "Month",
+          "format": "date:month"
+        },
+        {
+          "name": "revenue",
+          "label": "Revenue",
+          "format": "currency:0"
+        },
+        {
+          "name": "margin",
+          "label": "Gross margin",
+          "format": "percent"
+        },
+        {
+          "name": "growth",
+          "label": "MoM growth",
+          "format": "percent"
+        }
+      ]
+    },
+    "by_region": {
+      "from": "h1_2026",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "region"
+          ],
+          "measures": [
+            {
+              "field": "revenue",
+              "agg": "sum",
+              "as": "revenue"
+            },
+            {
+              "field": "cost",
+              "agg": "sum",
+              "as": "cost"
+            },
+            {
+              "field": "orders",
+              "agg": "sum",
+              "as": "orders"
+            }
+          ]
+        },
+        {
+          "op": "derive",
+          "as": "margin",
+          "expr": "(revenue - cost) / revenue"
+        },
+        {
+          "op": "window",
+          "fn": "share",
+          "field": "revenue",
+          "as": "share"
+        },
+        {
+          "op": "sort",
+          "by": "-revenue"
+        }
+      ],
+      "fields": [
+        {
+          "name": "region",
+          "label": "Region"
+        },
+        {
+          "name": "revenue",
+          "label": "Revenue",
+          "format": "currency:0"
+        },
+        {
+          "name": "orders",
+          "label": "Orders",
+          "format": "integer"
+        },
+        {
+          "name": "margin",
+          "label": "Gross margin",
+          "format": "percent"
+        },
+        {
+          "name": "share",
+          "label": "Share",
+          "format": "percent"
+        }
+      ]
+    },
+    "channel_margin": {
+      "from": "h1_2026",
+      "transform": [
+        {
+          "op": "aggregate",
+          "groupBy": [
+            "channel"
+          ],
+          "measures": [
+            {
+              "field": "revenue",
+              "agg": "sum",
+              "as": "revenue"
+            },
+            {
+              "field": "cost",
+              "agg": "sum",
+              "as": "cost"
+            }
+          ]
+        },
+        {
+          "op": "derive",
+          "as": "margin",
+          "expr": "(revenue - cost) / revenue"
+        },
+        {
+          "op": "sort",
+          "by": "-margin"
+        }
+      ],
+      "fields": [
+        {
+          "name": "channel",
+          "label": "Channel"
+        },
+        {
+          "name": "margin",
+          "label": "Gross margin",
+          "format": "percent"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "id": "summary",
+      "title": "Summary",
+      "blocks": [
+        {
+          "id": "kpis",
+          "type": "kpi",
+          "items": [
+            {
+              "label": "H1 revenue",
+              "value": {
+                "data": "h1_2026",
+                "field": "revenue"
+              },
+              "compareTo": {
+                "data": "h1_2025",
+                "field": "revenue"
+              },
+              "format": "currency:0",
+              "deltaLabel": "vs H1 2025"
+            },
+            {
+              "label": "Orders",
+              "value": {
+                "data": "h1_2026",
+                "field": "orders"
+              },
+              "compareTo": {
+                "data": "h1_2025",
+                "field": "orders"
+              },
+              "format": "compact",
+              "deltaLabel": "vs H1 2025"
+            },
+            {
+              "label": "Gross margin",
+              "value": {
+                "data": "monthly",
+                "field": "margin",
+                "agg": "avg",
+                "where": "year(month) == 2026"
+              },
+              "compareTo": {
+                "data": "monthly",
+                "field": "margin",
+                "agg": "avg",
+                "where": "year(month) == 2025 and month(month) <= 6"
+              },
+              "format": "percent",
+              "deltaLabel": "vs H1 2025"
+            },
+            {
+              "label": "Top region",
+              "value": {
+                "data": "by_region",
+                "field": "region",
+                "agg": "first"
+              },
+              "description": "{{first(by_region.share) | percent}} of revenue"
+            }
+          ]
+        },
+        {
+          "id": "headline",
+          "type": "callout",
+          "tone": "positive",
+          "variant": "insight",
+          "title": "Online carried the half",
+          "content": "June closed at **{{last(monthly.revenue) | currency:0}}**, the strongest month on record, with online up fastest in every region."
+        }
+      ]
+    },
+    {
+      "id": "trend",
+      "title": "Monthly trend",
+      "description": "Bars are monthly revenue; the line is month-over-month growth.",
+      "blocks": [
+        {
+          "id": "revenue_trend",
+          "type": "chart",
+          "title": "Revenue and growth",
+          "chart": {
+            "kind": "bar",
+            "data": "monthly",
+            "x": "month",
+            "y": "revenue",
+            "secondary": {
+              "y": "growth",
+              "format": "percent",
+              "label": "MoM growth"
+            }
+          },
+          "caption": "Source: warehouse.sales_monthly"
+        },
+        {
+          "id": "trend_notes",
+          "type": "text",
+          "title": "Reading the trend",
+          "content": "- January dip is seasonal; recovery from March\n- Gross margin held near {{avg(monthly.margin) | percent}}\n- June orders: {{last(monthly.orders) | compact}}"
+        }
+      ]
+    },
+    {
+      "id": "regions",
+      "title": "Regions and channels",
+      "blocks": [
+        {
+          "id": "region_bar",
+          "type": "chart",
+          "title": "Revenue by region",
+          "chart": {
+            "kind": "bar",
+            "data": "by_region",
+            "x": "region",
+            "y": "revenue",
+            "horizontal": true,
+            "labels": true
+          }
+        },
+        {
+          "id": "channel_mix",
+          "type": "chart",
+          "title": "Channel mix by region",
+          "chart": {
+            "kind": "bar",
+            "data": "h1_2026",
+            "x": "region",
+            "y": "revenue",
+            "series": "channel",
+            "stack": "percent"
+          }
+        },
+        {
+          "id": "region_table",
+          "type": "table",
+          "title": "Region detail",
+          "data": "by_region",
+          "columns": [
+            {
+              "field": "region"
+            },
+            {
+              "field": "revenue"
+            },
+            {
+              "field": "orders"
+            },
+            {
+              "field": "margin"
+            },
+            {
+              "field": "share"
+            }
+          ],
+          "totals": [
+            "revenue",
+            "orders"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "next",
+      "title": "Year over year and next steps",
+      "blocks": [
+        {
+          "id": "yoy",
+          "type": "comparison",
+          "title": "H1 vs H1",
+          "entities": [
+            "H1 2025",
+            "H1 2026"
+          ],
+          "metrics": [
+            {
+              "label": "Revenue",
+              "values": [
+                {
+                  "data": "h1_2025",
+                  "field": "revenue"
+                },
+                {
+                  "data": "h1_2026",
+                  "field": "revenue"
+                }
+              ],
+              "format": "currency:0"
+            },
+            {
+              "label": "Orders",
+              "values": [
+                {
+                  "data": "h1_2025",
+                  "field": "orders"
+                },
+                {
+                  "data": "h1_2026",
+                  "field": "orders"
+                }
+              ],
+              "format": "integer"
+            },
+            {
+              "label": "Cost",
+              "values": [
+                {
+                  "data": "h1_2025",
+                  "field": "cost"
+                },
+                {
+                  "data": "h1_2026",
+                  "field": "cost"
+                }
+              ],
+              "format": "currency:0",
+              "goodWhen": "down"
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "type": "list",
+          "title": "H2 priorities",
+          "style": "check",
+          "items": [
+            {
+              "text": "Run three online conversion experiments",
+              "tag": "Growth",
+              "detail": "Checkout and landing page A/B tests"
+            },
+            {
+              "text": "Renegotiate partner commission tiers",
+              "tag": "Partnerships",
+              "tone": "warning",
+              "detail": "Partner margin is {{first(channel_margin.margin) | percent}} at best"
+            },
+            {
+              "text": "Lock in renewals with the top 20 retail accounts",
+              "tag": "Sales"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

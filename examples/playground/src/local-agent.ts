@@ -90,8 +90,9 @@ function rawDatasets(spec: ReportSpec): Array<[string, Dataset]> {
 
 function withLabels(dataset: Dataset, labels: readonly FieldDef[]): Dataset {
   if (!labels.length) return dataset;
+  // What the user declared on the attached data (labels, formats) beats what autoReport inferred.
   const own = dataset.fields ?? [];
-  const merged = [...own, ...labels.filter((l) => !own.some((o) => o.name === l.name))];
+  const merged = [...labels, ...own.filter((o) => !labels.some((l) => l.name === o.name))];
   return { ...dataset, fields: merged };
 }
 
@@ -109,7 +110,7 @@ function buildPlan(text: string, lang: Lang, session: ReportSession): Plan {
   const [sourceId, source] = named ?? raw[raw.length - 1]!;
   const input = source.rows ?? source.json ?? source.csv;
   const resolved = context.datasets.get(sourceId);
-  const title = t(lang, `${sourceId} 데이터 리포트`, `${humanize(sourceId)} report`);
+  const title = source.description ?? t(lang, `${sourceId} 데이터 리포트`, `${humanize(sourceId)} report`);
   const draft = ReportSpec.parse(
     autoReport(input, { title, ...(lang === "ko" ? { locale: "ko-KR", currency: spec.meta?.currency ?? "KRW" } : { locale: "en-US" }) }),
   );
@@ -130,6 +131,18 @@ function buildPlan(text: string, lang: Lang, session: ReportSession): Plan {
     // Copied-row datasets (e.g. exploded child tables) only ship when something in the draft reads them.
     if (ds.rows !== undefined && !referenced.has(id)) continue;
     datasetOps.push({ op: "setDataset", id, dataset: withLabels(ds, labels) });
+  }
+
+  // KPI items carry their own format; use the declared one when the KPI measures a declared field.
+  for (const section of draft.sections) {
+    for (const block of section.blocks) {
+      if (block.type !== "kpi") continue;
+      for (const item of block.items) {
+        const field = typeof item.value === "object" && item.value !== null ? item.value.field : undefined;
+        const declared = labels.find((l) => l.name === field)?.format;
+        if (declared) item.format = declared;
+      }
+    }
   }
 
   const [first, ...rest] = draft.sections;

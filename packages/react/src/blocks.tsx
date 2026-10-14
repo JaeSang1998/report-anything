@@ -68,7 +68,8 @@ function ListBody({ block }: BlockProps<"list">) {
   );
 }
 
-const ARROW: Record<string, string> = { positive: "▲", negative: "▼", neutral: "■" };
+/** Arrow shows the direction of change; colour (sentiment) says whether that direction is good. */
+const arrow = (ratio: number) => (ratio > 0 ? "▲" : ratio < 0 ? "▼" : "■");
 
 function KpiBody({ block, context, cell }: BlockProps<"kpi">) {
   const items = useMemo(() => buildKpiModels(block, context), [block, context]);
@@ -92,7 +93,7 @@ function KpiBody({ block, context, cell }: BlockProps<"kpi">) {
               {k.delta ? (
                 <>
                   <span className={`ra-delta ra-delta--${k.delta.sentiment}`}>
-                    {ARROW[k.delta.sentiment]} {k.delta.text}
+                    {arrow(k.delta.ratio)} {k.delta.text}
                   </span>
                   {k.delta.label ? <span className="ra-kpi__baseline"> {k.delta.label}</span> : null}
                 </>
@@ -212,7 +213,7 @@ function ComparisonBody({ block, context, cell }: BlockProps<"comparison">) {
                   {compact ? c.compactText : c.text}
                 </td>
               ))}
-              {showDelta ? <td className={`ra-align--right${r.delta ? ` ra-delta ra-delta--${r.delta.sentiment}` : ""}`}>{r.delta ? `${ARROW[r.delta.sentiment]} ${r.delta.text}` : ""}</td> : null}
+              {showDelta ? <td className={`ra-align--right${r.delta ? ` ra-delta ra-delta--${r.delta.sentiment}` : ""}`}>{r.delta ? `${arrow(r.delta.ratio)} ${r.delta.text}` : ""}</td> : null}
             </tr>
           ))}
         </tbody>

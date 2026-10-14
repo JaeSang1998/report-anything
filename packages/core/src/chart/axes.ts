@@ -56,7 +56,13 @@ export function valueExtent(values: readonly number[], forceZero: boolean): [num
 }
 
 export function ticksOf(scale: ScaleLinear<number, number>, count: number, format: string | undefined, ctx: FormatContext): Array<{ value: number; label: string }> {
-  return scale.ticks(count).map((value) => ({ value, label: formatCompact(value, format, ctx) }));
+  const values = scale.ticks(count);
+  let labels = values.map((v) => formatCompact(v, format, ctx));
+  // Rounding can make neighbours read the same (2.5% and 3% → "3%"): add decimals until every tick is distinct.
+  if (format?.startsWith("percent")) {
+    for (let d = 1; d <= 2 && new Set(labels).size < labels.length; d++) labels = values.map((v) => formatCompact(v, `percent:${d}`, ctx));
+  }
+  return values.map((value, i) => ({ value, label: labels[i]! }));
 }
 
 export function maxTextWidth(labels: readonly string[], fontSize: number): number {
