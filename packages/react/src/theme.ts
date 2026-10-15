@@ -28,9 +28,11 @@ const METRIC_VARS: Record<string, string> = (() => {
 
 export function rootStyle(spec: ReportSpec): CSSProperties {
   const style: Record<string, string> = { ...METRIC_VARS };
-  const palette = spec.theme?.palette ?? DEFAULT_PALETTE;
-  palette.forEach((c, i) => {
-    style[`--ra-c${i + 1}`] = c;
+  const explicit = spec.theme?.palette;
+  (explicit ?? DEFAULT_PALETTE).forEach((c, i) => {
+    // A spec palette is the author's decision; the default palette yields to a host theme that sets
+    // `--ra-theme-c1` … `--ra-theme-c8` on any ancestor (e.g. a dark mode).
+    style[`--ra-c${i + 1}`] = explicit ? c : `var(--ra-theme-c${i + 1}, ${c})`;
   });
   if (spec.theme?.accent) style["--ra-accent"] = spec.theme.accent;
   return style as CSSProperties;

@@ -1,0 +1,499 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T07:19:04.026081+00:00",
+  "title": "Design System: report-anything playground",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "bg-elevated": {
+        "role": "neutral",
+        "displayName": "Lifted Ground",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "surface-1": {
+        "role": "neutral",
+        "displayName": "Sidebar Wash",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Soft Fill",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "surface-3": {
+        "role": "neutral",
+        "displayName": "Pressed Fill",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "fg": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "fg-2": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "fg-3": {
+        "role": "neutral",
+        "displayName": "Quiet Ink",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-bg": {
+        "role": "neutral",
+        "displayName": "Ink Black",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-bg-elevated": {
+        "role": "neutral",
+        "displayName": "Lifted Ground (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-surface-1": {
+        "role": "neutral",
+        "displayName": "Sidebar Wash (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-surface-2": {
+        "role": "neutral",
+        "displayName": "Soft Fill (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-surface-3": {
+        "role": "neutral",
+        "displayName": "Pressed Fill (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-fg": {
+        "role": "neutral",
+        "displayName": "Ink (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-fg-2": {
+        "role": "neutral",
+        "displayName": "Secondary Ink (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "dark-fg-3": {
+        "role": "neutral",
+        "displayName": "Quiet Ink (dark)",
+        "tonalRamp": [
+          "#09090b",
+          "#18181b",
+          "#27272a",
+          "#3f3f46",
+          "#52525b",
+          "#a1a1aa",
+          "#e4e4e7",
+          "#f4f4f5"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Focus Blue",
+        "tonalRamp": [
+          "#172554",
+          "#1e3a8a",
+          "#1d4ed8",
+          "#2563eb",
+          "#3b82f6",
+          "#60a5fa",
+          "#93c5fd",
+          "#dbeafe"
+        ]
+      },
+      "dark-accent": {
+        "role": "primary",
+        "displayName": "Focus Blue (dark)",
+        "tonalRamp": [
+          "#172554",
+          "#1e3a8a",
+          "#1d4ed8",
+          "#2563eb",
+          "#3b82f6",
+          "#60a5fa",
+          "#93c5fd",
+          "#dbeafe"
+        ]
+      },
+      "danger": {
+        "role": "error",
+        "displayName": "Alarm Red",
+        "tonalRamp": [
+          "#450a0a",
+          "#7f1d1d",
+          "#b91c1c",
+          "#dc2626",
+          "#ef4444",
+          "#f87171",
+          "#fca5a5",
+          "#fee2e2"
+        ]
+      },
+      "dark-danger": {
+        "role": "error",
+        "displayName": "Alarm Red (dark)",
+        "tonalRamp": [
+          "#450a0a",
+          "#7f1d1d",
+          "#b91c1c",
+          "#dc2626",
+          "#ef4444",
+          "#f87171",
+          "#fca5a5",
+          "#fee2e2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Greeting",
+        "purpose": "Empty-state greeting only."
+      },
+      "title": {
+        "displayName": "Sheet title",
+        "purpose": "Data sheet heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Messages and composer."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Sidebar, suggestions, menu."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Tool steps, artifact head, version row."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Hints, group labels, table cells."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Spec, code, tool detail."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-float",
+        "value": "0 1px 2px rgb(9 9 11 / 0.04), 0 8px 24px rgb(9 9 11 / 0.08)",
+        "dark": "0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.35)",
+        "purpose": "Composer."
+      },
+      {
+        "name": "shadow-menu",
+        "value": "0 2px 6px rgb(9 9 11 / 0.06), 0 16px 40px rgb(9 9 11 / 0.14)",
+        "dark": "0 2px 6px rgb(0 0 0 / 0.3), 0 16px 40px rgb(0 0 0 / 0.5)",
+        "purpose": "Attach menu, data sheet, mobile drawer."
+      },
+      {
+        "name": "segment-lift",
+        "value": "0 1px 2px rgb(9 9 11 / 0.08)",
+        "purpose": "Pressed Web/Print segment."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All eased transitions."
+      },
+      {
+        "name": "rise",
+        "value": "520ms ease-out; from opacity 0, translateY(10px), blur(3px)",
+        "purpose": "Report blocks while the artifact is building; the one expressive moment."
+      },
+      {
+        "name": "menu-in",
+        "value": "180ms ease-out; from opacity 0, translateY(4px) scale(0.98)",
+        "purpose": "Attach menu open."
+      },
+      {
+        "name": "sheet-slide",
+        "value": "320ms ease-out; from translateX(24px), opacity 0",
+        "purpose": "Data sheet; backdrop fades 200ms."
+      },
+      {
+        "name": "sidebar",
+        "value": "320ms ease-out",
+        "purpose": "Sidebar collapse / drawer slide."
+      },
+      {
+        "name": "spin",
+        "value": "0.9s linear infinite",
+        "purpose": "Running tool step."
+      },
+      {
+        "name": "pulse",
+        "value": "1.2s ease-in-out infinite",
+        "purpose": "Thinking dot."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "1ms",
+        "purpose": "All animation and transition durations under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "drawer",
+        "value": "899px",
+        "purpose": "At or below: sidebar becomes a drawer, avatar hidden, one-column suggestions."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Composer",
+      "kind": "input",
+      "refersTo": "composer",
+      "description": "Surface-2 slab with float shadow; borderless textarea, attach left, ink-circle send right.",
+      "html": "<div class=\"ds-composer\"><textarea class=\"ds-composer-input\" rows=\"1\" placeholder=\"Ask for a report…\"></textarea><div class=\"ds-composer-row\"><button class=\"ds-icon-btn\" aria-label=\"Attach\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48\"/></svg></button><span style=\"flex:1\"></span><button class=\"ds-send\" aria-label=\"Send\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m5 12 7-7 7 7\"/><path d=\"M12 19V5\"/></svg></button></div></div>",
+      "css": ".ds-composer{width:480px;padding:12px 12px 10px 16px;border-radius:24px;background:var(--surface-2,#f4f4f5);box-shadow:var(--shadow-float,0 1px 2px rgb(9 9 11 / .04),0 8px 24px rgb(9 9 11 / .08));font-family:var(--font,'Geist Variable',system-ui,sans-serif)}.ds-composer-input{display:block;width:100%;border:none;outline:none;background:none;resize:none;font:inherit;font-size:15px;line-height:24px;color:var(--fg,#09090b);caret-color:var(--accent,#2563eb)}.ds-composer-input::placeholder{color:var(--fg-3,#71717a)}.ds-composer-row{display:flex;align-items:center;margin:6px 0 0 -8px}.ds-icon-btn{display:inline-grid;place-items:center;width:36px;height:36px;border:none;border-radius:10px;background:none;color:var(--fg-2,#52525b);cursor:pointer}.ds-icon-btn:hover{background:var(--surface-3,#e9e9ec);color:var(--fg,#09090b)}.ds-icon-btn:focus-visible,.ds-send:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:2px}.ds-send{display:grid;place-items:center;width:34px;height:34px;border:none;border-radius:50%;background:var(--fg,#09090b);color:var(--bg,#fff);cursor:pointer;transition:transform 160ms cubic-bezier(.16,1,.3,1)}.ds-send:active{transform:scale(.94)}"
+    },
+    {
+      "name": "Sidebar",
+      "kind": "nav",
+      "refersTo": "sidebar",
+      "description": "Surface-1 wash; ghost New chat, grouped history rows filled surface-3 on hover/current.",
+      "html": "<nav class=\"ds-sidebar\"><button class=\"ds-side-row\">New chat</button><h2 class=\"ds-side-label\">Today</h2><a class=\"ds-side-row ds-current\" href=\"#\">Revenue by region</a><a class=\"ds-side-row\" href=\"#\">Churn cohort review</a></nav>",
+      "css": ".ds-sidebar{width:264px;padding:12px 8px;background:var(--surface-1,#fafafa);font-family:var(--font,'Geist Variable',system-ui,sans-serif);font-size:14px;color:var(--fg,#09090b)}.ds-side-label{margin:12px 0 0;padding:4px 10px;font-size:12px;font-weight:500;color:var(--fg-3,#71717a)}.ds-side-row{display:flex;align-items:center;width:100%;height:34px;padding:0 10px;border:none;border-radius:10px;background:none;color:inherit;font:inherit;text-decoration:none;cursor:pointer;box-sizing:border-box}.ds-side-row:hover,.ds-current{background:var(--surface-3,#e9e9ec)}.ds-side-row:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Suggestion",
+      "kind": "button",
+      "refersTo": "suggestion",
+      "description": "Ghost suggestion row beneath the empty-state composer.",
+      "html": "<button class=\"ds-suggest\"><span class=\"ds-suggest-label\">Monthly revenue by region</span><span class=\"ds-suggest-data\">sales.csv</span></button>",
+      "css": ".ds-suggest{display:flex;align-items:center;gap:12px;width:320px;height:44px;padding:0 12px;border:none;border-radius:12px;background:none;color:var(--fg-2,#52525b);font-family:var(--font,'Geist Variable',system-ui,sans-serif);font-size:14px;text-align:left;cursor:pointer}.ds-suggest:hover{background:var(--surface-2,#f4f4f5);color:var(--fg,#09090b)}.ds-suggest:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:2px}.ds-suggest-label{flex:1;color:var(--fg,#09090b)}.ds-suggest-data{font-size:12px;color:var(--fg-3,#71717a)}"
+    },
+    {
+      "name": "Attach Menu",
+      "kind": "custom",
+      "refersTo": "attach-menu",
+      "description": "Floating menu above the attach button; ghost rows with icon, title, hint.",
+      "html": "<div class=\"ds-menu\"><button class=\"ds-menu-item\"><span><span>Upload a file</span><small>CSV, JSON, XLSX</small></span></button><button class=\"ds-menu-item\"><span><span>Sample dataset</span><small>Sales, 1,200 rows</small></span></button></div>",
+      "css": ".ds-menu{width:280px;padding:6px;border-radius:16px;background:var(--bg-elevated,#fff);box-shadow:var(--shadow-menu,0 2px 6px rgb(9 9 11 / .06),0 16px 40px rgb(9 9 11 / .14));font-family:var(--font,'Geist Variable',system-ui,sans-serif);animation:ds-menu-in 180ms cubic-bezier(.16,1,.3,1)}@keyframes ds-menu-in{from{opacity:0;transform:translateY(4px) scale(.98)}}.ds-menu-item{display:flex;width:100%;padding:8px 10px;border:none;border-radius:10px;background:none;color:var(--fg,#09090b);font:inherit;font-size:14px;line-height:20px;text-align:left;cursor:pointer}.ds-menu-item:hover,.ds-menu-item:focus-visible{background:var(--surface-2,#f4f4f5);outline:none}.ds-menu-item small{display:block;font-size:12px;line-height:16px;color:var(--fg-3,#71717a)}"
+    },
+    {
+      "name": "Tool Step",
+      "kind": "custom",
+      "refersTo": "tool-step",
+      "description": "Inline disclosure row with live status; detail opens into a mono panel.",
+      "html": "<details class=\"ds-step\"><summary class=\"ds-step-head\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6 9 17l-5-5\"/></svg>Read sales.csv<svg class=\"ds-chev\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m9 18 6-6-6-6\"/></svg></summary><pre class=\"ds-step-detail\">{ \"rows\": 1200 }</pre></details>",
+      "css": ".ds-step{font-family:var(--font,'Geist Variable',system-ui,sans-serif);font-size:13px;line-height:20px;color:var(--fg-2,#52525b)}.ds-step-head{display:inline-flex;align-items:center;gap:8px;padding:3px 8px 3px 6px;border-radius:8px;list-style:none;cursor:pointer}.ds-step-head::-webkit-details-marker{display:none}.ds-step-head:hover{background:var(--surface-2,#f4f4f5);color:var(--fg,#09090b)}.ds-step-head:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:2px}.ds-chev{color:var(--fg-3,#71717a);transition:transform 200ms cubic-bezier(.16,1,.3,1)}details[open] .ds-chev{transform:rotate(90deg)}.ds-step-detail{margin:6px 0 10px;padding:12px 14px;border-radius:12px;background:var(--surface-2,#f4f4f5);font-family:var(--font-mono,'Geist Mono Variable',ui-monospace,monospace);font-size:12px;line-height:18px}"
+    },
+    {
+      "name": "Web/Print Toggle",
+      "kind": "chip",
+      "refersTo": "segmented",
+      "description": "Segmented control in the artifact head; pressed segment lifts onto elevated ground.",
+      "html": "<div class=\"ds-seg\"><button aria-pressed=\"true\">Web</button><button aria-pressed=\"false\">Print</button></div>",
+      "css": ".ds-seg{display:inline-flex;padding:2px;border-radius:10px;background:var(--surface-2,#f4f4f5);font-family:var(--font,'Geist Variable',system-ui,sans-serif)}.ds-seg button{height:26px;padding:0 10px;border:none;border-radius:8px;background:none;font:inherit;font-size:12px;color:var(--fg-2,#52525b);cursor:pointer}.ds-seg button:hover{color:var(--fg,#09090b)}.ds-seg button:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:2px}.ds-seg button[aria-pressed=true]{background:var(--bg-elevated,#fff);color:var(--fg,#09090b);box-shadow:0 1px 2px rgb(9 9 11 / .08)}"
+    },
+    {
+      "name": "Version Row",
+      "kind": "card",
+      "refersTo": "version-row",
+      "description": "Full-width fill row linking to an earlier report version.",
+      "html": "<button class=\"ds-version\"><span class=\"ds-version-title\">Revenue by region</span><span>v2 · 3 changes</span></button>",
+      "css": ".ds-version{display:flex;align-items:center;gap:10px;width:420px;padding:10px 14px;border:none;border-radius:14px;background:var(--surface-2,#f4f4f5);color:var(--fg-2,#52525b);font-family:var(--font,'Geist Variable',system-ui,sans-serif);font-size:13px;text-align:left;cursor:pointer}.ds-version:hover{background:var(--surface-3,#e9e9ec)}.ds-version:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:2px}.ds-version-title{flex:1;color:var(--fg,#09090b);font-weight:500}"
+    },
+    {
+      "name": "User Bubble",
+      "kind": "custom",
+      "refersTo": "user-bubble",
+      "description": "Right-aligned surface-2 bubble for the user's message.",
+      "html": "<p class=\"ds-bubble\">Show monthly revenue by region</p>",
+      "css": ".ds-bubble{display:inline-block;max-width:640px;margin:0;padding:10px 16px;border-radius:20px;background:var(--surface-2,#f4f4f5);color:var(--fg,#09090b);font-family:var(--font,'Geist Variable',system-ui,sans-serif);font-size:15px;line-height:26px;font-feature-settings:'calt' 0}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Familiar Room",
+    "overview": "The playground is an AI chat app played straight, at the craft level of the category's best shells, so a visitor learns nothing about the frame and spends all their attention on the report. Zinc neutrals on a white or near-black ground, one blue reserved for focus and caret, Geist for everything the UI says and Geist Mono for everything the machine says.\n\nSeparation comes from fills and space, never from lines. The sidebar is one tonal step off the ground, the composer and user bubble one step further, hover one step beyond that. Shadows exist only where something floats above the page (composer, menu, sheet, drawer). The report itself renders bare in the thread in Web mode; it is re-themed through the `--ra-*` and `--ra-theme-c1..8` variables, so it reads as part of the same room in dark mode.",
+    "keyCharacteristics": [
+      "Three-step tonal ladder (surface-1, -2, -3) does all structural work.",
+      "One accent, used for focus rings, caret and selection only.",
+      "Rounded, soft geometry (6–28px), circles for avatar and send.",
+      "Ghost controls: icon buttons, suggestions, menu items and history rows have no fill until hover.",
+      "Motion is quiet and eased; the one expressive moment is report blocks rising as they land."
+    ],
+    "rules": [
+      {
+        "name": "The One Blue Rule",
+        "body": "The accent marks focus and the caret only; active state is shown with fill and ink, never blue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tonal Ladder Rule",
+        "body": "Structure is expressed by stepping ground → surface-1 → surface-2 → surface-3. If a line seems needed, step a fill instead.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Ligature Rule",
+        "body": "Message bubbles and the composer disable contextual alternates (`calt` 0) so code like `-->` stays literal.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float-Only Shadow Rule",
+        "body": "Only things that sit above the page get a shadow; nothing inline in the thread does.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** separate regions with the surface-1/2/3 ladder and space.",
+      "**Do** keep controls ghost until hover, then fill one step.",
+      "**Do** use lucide icons at their default stroke, 14–18px.",
+      "**Do** let report blocks rise once while the report is building (520ms, 10px up, 3px blur clearing, ease-out) and nowhere else.",
+      "**Do** honour reduced motion: all animations and transitions collapse to 1ms."
+    ],
+    "donts": [
+      "**Don't** put borders, cards or outlined boxes in the chat; errors and files included.",
+      "**Don't** use pills or gradients.",
+      "**Don't** use the accent for active, selected or brand color.",
+      "**Don't** add shadows to inline thread elements."
+    ]
+  }
+}

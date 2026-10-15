@@ -49,7 +49,7 @@ export type { OpInput, ApplyResult } from "./ops.js";
 export { validateReport, analyzeReport } from "./validate.js";
 export type { Analysis, ValidationResult } from "./validate.js";
 export { createReportSession, SpecError } from "./session.js";
-export type { ReportSession, ReportSnapshot, SessionResult } from "./session.js";
+export type { ReportSession, ReportSessionOptions, ReportSnapshot, SessionResult } from "./session.js";
 export { inspectReport } from "./inspect.js";
 export type { Inspection } from "./inspect.js";
 export { createOpParser } from "./stream.js";

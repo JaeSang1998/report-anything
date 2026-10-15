@@ -34,6 +34,8 @@ export default defineConfig(({ mode }) => ({
   // GitHub Pages serves the static build under /<repo>/; the workflow sets PLAYGROUND_BASE.
   base: process.env.PLAYGROUND_BASE ?? "/",
   plugins: [react(), reportAgent(loadEnv(mode, fileURLToPath(new URL(".", import.meta.url)), ""))],
+  // Design working files (decision mocks, surface briefs) are never served.
+  server: { fs: { deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "**/.impeccable/**"] } },
   resolve: {
     alias: {
       "@report-anything/core": repo("packages/core/src/index.ts"),

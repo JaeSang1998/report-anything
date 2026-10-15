@@ -5,3 +5,5 @@ dist
 /out
 .env.local
 .env.*.local
+**/.impeccable/mocks
+**/.impeccable/review

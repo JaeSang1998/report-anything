@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { X } from "lucide-react";
 import { profileDataset } from "@report-anything/core";
 import type { Dataset, ResolvedDataset, Scalar } from "@report-anything/core";
 
@@ -39,8 +40,8 @@ export function DataViewer({ id, dataset, resolved, onClose }: { id: string; dat
               {[dataset?.description, dataset?.source, resolved ? `${resolved.rows.length} rows · ${resolved.fields.length} fields` : "not resolved"].filter(Boolean).join(" · ")}
             </p>
           </div>
-          <button type="button" className="link" onClick={onClose}>
-            Close
+          <button type="button" className="icon-btn" aria-label="Close" title="Close (Esc)" onClick={onClose}>
+            <X size={18} />
           </button>
         </header>
 

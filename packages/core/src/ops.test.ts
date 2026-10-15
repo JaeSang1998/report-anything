@@ -151,6 +151,13 @@ describe("createReportSession", () => {
   it("throws SpecError with issues for schema-invalid initial specs", () => {
     expect(() => createReportSession({ sections: [] })).toThrow(SpecError);
   });
+
+  it("continues counting from the revision a restored session starts at", () => {
+    const s = createReportSession(base, { revision: 12 });
+    expect(s.getSnapshot().revision).toBe(12);
+    s.apply({ op: "updateBlock", id: "t1", patch: { content: "changed" } });
+    expect(s.getSnapshot().revision).toBe(13);
+  });
 });
 
 describe("createOpParser", () => {

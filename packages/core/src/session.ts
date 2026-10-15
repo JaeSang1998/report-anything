@@ -42,7 +42,12 @@ export class SpecError extends Error {
 
 const EMPTY: ReportSpec = ReportSpec.parse({ title: "Untitled report", sections: [] });
 
-export function createReportSession(initial?: unknown): ReportSession {
+export interface ReportSessionOptions {
+  /** Revision of `initial` when a session is restored from storage, so revision numbers keep counting up. Default 0. */
+  revision?: number;
+}
+
+export function createReportSession(initial?: unknown, options: ReportSessionOptions = {}): ReportSession {
   let spec = EMPTY;
   if (initial !== undefined) {
     const parsed = ReportSpec.safeParse(initial);
@@ -51,7 +56,7 @@ export function createReportSession(initial?: unknown): ReportSession {
   }
   const listeners = new Set<() => void>();
   let cache: AnalysisCache | undefined;
-  let snapshot = build(spec, 0);
+  let snapshot = build(spec, options.revision ?? 0);
 
   function build(next: ReportSpec, revision: number): ReportSnapshot {
     const analysis = analyzeReport(next, cache);

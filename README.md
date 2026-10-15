@@ -155,11 +155,20 @@ The report is written **into the conversation**. While the agent streams its ops
 <td align="center"><sub>Building live — ops apply while the model is still writing them</sub></td>
 <td align="center"><sub>"Make the first chart a bar chart" — earlier versions stay in the thread</sub></td>
 </tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/playground-start.png" alt="Empty chat: composer, sample questions and the chat history sidebar" /></td>
+<td width="50%"><img src="docs/screenshots/playground-report-dark.png" alt="The same report in dark mode" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Start from a sample question or attach CSV / JSON</sub></td>
+<td align="center"><sub>Dark mode re-themes the report through its CSS variables</sub></td>
+</tr>
 </table>
 
 - **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) in the shape your question implies ("why did…" → bridge, "compare…" → comparison, "one-page…" → brief), handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename — and turns a pasted ```` ```mermaid ```` block into a diagram.
 - **Locally with a key**, the same UI talks to Claude or GPT through the AI SDK. The system prompt *is* the [agent skill](skills/report-anything/SKILL.md); the browser owns the report session and executes the agent's tools, so the model always sees the real validation and layout result.
-- **See what the agent sees.** Click any data chip to open the dataset: the table the engine actually works on (after CSV parsing, JSON flattening and transforms), the raw source, and each field's inferred type and role.
+- **See what the agent sees.** Click any attached dataset to open it: the table the engine actually works on (after CSV parsing, JSON flattening and transforms), the raw source, and each field's inferred type and role.
+- **Chats stay in your browser.** The sidebar keeps your conversations (with their reports and data) in local storage; light and dark themes follow the system, and the report re-themes with them through its CSS variables.
 
 Five sample datasets, deliberately different in shape:
 
@@ -321,7 +330,7 @@ report-anything chart spec.json trend -o trend.svg
 
 | Level | How |
 | --- | --- |
-| Colors & palette | `--ra-*` CSS variables, or `spec.theme` (`palette`, `accent`, `density`) |
+| Colors & palette | `--ra-*` CSS variables (`--ra-fg`, `--ra-grid`, `--ra-surface`, …) and `--ra-theme-c1`…`--ra-theme-c8` for the default series palette, so a host dark mode re-themes reports without touching specs; `spec.theme` (`palette`, `accent`, `density`) wins when an author sets it |
 | Sizes | `METRICS` in core — they also drive the layout estimator, so change them there |
 | One block type | `<Report components={{ chart: MyChart }} />` |
 | Everything | Build on the headless models: `buildChart`, `buildTableModel`, `buildKpiModels`, `layoutReport` |
