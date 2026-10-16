@@ -46,8 +46,11 @@ const t = (lang: Lang, ko: string, en: string) => (lang === "ko" ? ko : en);
 
 // ─── Prompt reading ─────────────────────────────────────────────────────────
 
-/** Text of the last user message (without the playground's attachment note) and the tool results after it. */
-function readTurn(prompt: LanguageModelV4Prompt): { text: string; turn: number; results: unknown[] } {
+/**
+ * Text of the last user message (without the playground's attachment note), the tool results after it, and the id of
+ * the block the last earlier apply_ops call touched.
+ */
+function readTurn(prompt: LanguageModelV4Prompt): { text: string; turn: number; results: unknown[]; lastEdited: string | undefined } {
   let lastUser = -1;
   prompt.forEach((m, i) => {
     if (m.role === "user") lastUser = i;
@@ -65,7 +68,29 @@ function readTurn(prompt: LanguageModelV4Prompt): { text: string; turn: number; 
     if (m.role !== "tool") continue;
     for (const part of m.content) if (part.type === "tool-result" && part.output.type === "json") results.push(part.output.value);
   }
-  return { text, turn: prompt.filter((m) => m.role === "user").length, results };
+  let lastEdited: string | undefined;
+  for (const m of prompt.slice(0, lastUser)) {
+    if (m.role !== "assistant") continue;
+    for (const part of m.content) {
+      if (part.type !== "tool-call" || part.toolName !== "apply_ops") continue;
+      const input = typeof part.input === "string" ? safeJson(part.input) : part.input;
+      const ops = EditedOps.safeParse(input);
+      for (const op of ops.success ? ops.data.ops : []) if (BLOCK_OPS[op.op]) lastEdited = op.block?.id ?? op.id ?? lastEdited;
+    }
+  }
+  return { text, turn: prompt.filter((m) => m.role === "user").length, results, lastEdited };
+}
+
+/** apply_ops input, read only for the block ids it touched. */
+const EditedOps = z.object({ ops: z.array(z.object({ op: z.string(), id: z.string().optional(), block: z.object({ id: z.string() }).optional() }).loose()) });
+const BLOCK_OPS: Record<string, true> = { addBlock: true, updateBlock: true, replaceBlock: true, moveBlock: true, removeBlock: true };
+
+function safeJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return undefined;
+  }
 }
 
 const ApplyResultShape = z.object({
@@ -223,9 +248,60 @@ function findTarget(text: string, spec: ReportSpec, lang: Lang): Target | undefi
   return { block, ordinal: t(lang, `${label} 블록`, `the ${label} block`) };
 }
 
-function editPlan(text: string, lang: Lang, session: ReportSession): Plan | undefined {
+/** "show the detail as tabs", "as a carousel", "as normal" → the section's web view. */
+const VIEWS: Array<[RegExp, "tabs" | "carousel" | null]> = [
+  [/\b(?:as|into|in|to)\s+(?:a\s+)?tabs?\b|\btabbed\b|탭\s*(?:으로|형태|보기)/i, "tabs"],
+  [/\b(?:as|into|in|to)\s+(?:a\s+)?carousel\b|캐러셀|슬라이드\s*형태/i, "carousel"],
+  [/\b(?:as|to|back to)\s+(?:a\s+)?(?:normal|usual|flow|regular)\b|\bno (?:tabs|carousel)\b|\bun-?tab\b|원래대로|일반\s*보기|탭\s*(?:해제|없이)/i, null],
+];
+const VIEW_NAMES: Record<"tabs" | "carousel" | "flow", [ko: string, en: string]> = { tabs: ["탭", "tabs"], carousel: ["캐러셀", "a carousel"], flow: ["일반 보기", "a normal page flow"] };
+const VIEW_STOPWORDS: Record<string, true> = Object.fromEntries(
+  ["show", "make", "turn", "put", "display", "render", "the", "section", "part", "please", "into", "as", "tabs", "tab", "tabbed", "carousel", "normal", "usual", "flow", "regular", "back", "and", "with", "this", "that"].map((w) => [w, true]),
+);
+
+/** Section named by title words; else the one holding the last edited block; else the largest with ≥ 2 blocks. */
+function findSection(text: string, spec: ReportSpec, lastEdited: string | undefined): ReportSpec["sections"][number] | undefined {
+  const words = (s: string) => s.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length >= 3 && !VIEW_STOPWORDS[w]);
+  const asked = words(text);
+  let best: { section: ReportSpec["sections"][number]; score: number } | undefined;
+  for (const section of spec.sections) {
+    const own = new Set(words(`${section.title ?? ""} ${section.id.replaceAll("_", " ")}`));
+    const score = asked.filter((w) => own.has(w)).length;
+    if (score > 0 && score > (best?.score ?? 0)) best = { section, score };
+  }
+  if (best) return best.section;
+  const edited = spec.sections.find((s) => s.blocks.some((b) => b.id === lastEdited));
+  if (edited) return edited;
+  return spec.sections.filter((s) => s.blocks.length >= 2).reduce<ReportSpec["sections"][number] | undefined>((a, s) => (a && a.blocks.length >= s.blocks.length ? a : s), undefined);
+}
+
+function viewPlan(text: string, lang: Lang, spec: ReportSpec, lastEdited: string | undefined): Plan | undefined {
+  const match = VIEWS.find(([re]) => re.test(text));
+  if (!match) return undefined;
+  const view = match[1];
+  const name = VIEW_NAMES[view ?? "flow"];
+  const section = findSection(text, spec, lastEdited);
+  if (!section) {
+    return { intro: t(lang, `${name[0]}로 보여줄 블록이 두 개 이상인 섹션이 없어요.`, `No section has two or more blocks to show as ${name[1]}.`), batches: [], done: () => "" };
+  }
+  const label = section.title ? `“${section.title}”` : section.id;
+  const untitled = view === "tabs" ? section.blocks.filter((b) => !b.title).length : 0;
+  const note = untitled ? t(lang, ` 제목 없는 블록 ${untitled}개는 탭 이름이 비어 보이니 제목을 붙여 주세요.`, ` ${plural(untitled, "block")} without a title will have a blank tab label; give them titles.`) : "";
+  return {
+    intro: "",
+    batches: [[{ op: "updateSection", id: section.id, patch: { view } }]],
+    done: (r) =>
+      t(lang, `${label} 섹션을 ${name[0]}로 바꿨습니다`, `Showing the ${label} section as ${name[1]}`) +
+      ` (revision ${r?.revision ?? "?"}${errorsNote(r, lang)}).${view ? t(lang, " 인쇄와 슬라이드에서는 그대로 이어서 보입니다.", " Print and slides still show it as a normal flow.") : ""}${note}`,
+  };
+}
+
+function editPlan(text: string, lang: Lang, session: ReportSession, lastEdited: string | undefined): Plan | undefined {
   const { spec } = session.getSnapshot();
   const reply = (ko: string, en: string): Plan["done"] => (r) => `${t(lang, ko, en)} (revision ${r?.revision ?? "?"}${errorsNote(r, lang)})`;
+
+  const view = viewPlan(text, lang, spec, lastEdited);
+  if (view) return view;
 
   const titleMatch = /(?:제목|title)[^"“'‘]*["“'‘](.+?)["”'’]/i.exec(text);
   if (titleMatch) {
@@ -297,19 +373,19 @@ function diagramPlan(text: string, lang: Lang, session: ReportSession): Plan | u
 
 const BUILD_WORDS = /(리포트|보고서|분석|만들|작성|초안|다시|report|build|draft|analy[sz]e|create|make|instead|as an?\b)/i;
 
-function plan(text: string, session: ReportSession): Plan {
+function plan(text: string, session: ReportSession, lastEdited: string | undefined): Plan {
   const lang: Lang = /[가-힣]/.test(text) ? "ko" : "en";
   const hasReport = session.getSnapshot().spec.sections.length > 0;
   const diagram = diagramPlan(text, lang, session);
   if (diagram) return diagram;
-  const edit = hasReport ? editPlan(text, lang, session) : undefined;
+  const edit = hasReport ? editPlan(text, lang, session, lastEdited) : undefined;
   if (edit) return edit;
   if (!hasReport || BUILD_WORDS.test(text) || INTENTS.some(([, re]) => re.test(text))) return buildPlan(text, lang, session);
   return {
     intro: t(
       lang,
-      "API 키 없이 동작하는 로컬 에이전트라서 정해진 요청만 처리해요: 리포트 만들기/다시 만들기, “두 번째 차트를 표로 바꿔줘”, “첫 번째 차트를 선 차트로”, “마지막 차트 삭제”, “가로 막대로”, “누적으로”, 제목을 \"…\"로 바꾸기. 자유로운 요청은 .env.local에 API 키를 넣으면 LLM 에이전트가 처리합니다.",
-      'This keyless local agent handles a fixed set of requests: build the report in one of six shapes (overview, one-page brief, trend, comparison, breakdown, what-changed bridge), "turn the second chart into a table", "make the first chart a line chart", "remove the last chart", "horizontal", "stacked", title "…", and pasting a ```mermaid diagram```. Put an API key in .env.local for free-form requests.',
+      "API 키 없이 동작하는 로컬 에이전트라서 정해진 요청만 처리해요: 리포트 만들기/다시 만들기, “두 번째 차트를 표로 바꿔줘”, “첫 번째 차트를 선 차트로”, “마지막 차트 삭제”, “가로 막대로”, “누적으로”, 제목을 \"…\"로 바꾸기, “상세 섹션을 탭으로/캐러셀로/원래대로”. 자유로운 요청은 .env.local에 API 키를 넣으면 LLM 에이전트가 처리합니다.",
+      'This keyless local agent handles a fixed set of requests: build the report in one of six shapes (overview, one-page brief, trend, comparison, breakdown, what-changed bridge), "turn the second chart into a table", "make the first chart a line chart", "remove the last chart", "horizontal", "stacked", title "…", "show the detail section as tabs / as a carousel / as normal", and pasting a ```mermaid diagram```. Put an API key in .env.local for free-form requests.',
     ),
     batches: [],
     done: () => "",
@@ -330,10 +406,10 @@ export function createLocalReportModel(getSession: () => ReportSession): Languag
   const plans = new Map<number, Plan>();
 
   const step = (options: LanguageModelV4CallOptions): { parts: LanguageModelV4StreamPart[]; content: LanguageModelV4Content[] } => {
-    const { text, turn, results } = readTurn(options.prompt);
+    const { text, turn, results, lastEdited } = readTurn(options.prompt);
     let current = plans.get(turn);
     if (!current || results.length === 0) {
-      current = plan(text, getSession());
+      current = plan(text, getSession(), lastEdited);
       plans.set(turn, current);
     }
     const index = results.length;

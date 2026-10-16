@@ -127,6 +127,17 @@ describe("estimateBlockHeight", () => {
     expect(estimateBlockHeight(text, 400, ctx, "compact")).toBe(estimateBlockHeight(text, 400, ctx));
   });
 
+  it("paged (interactive web) table: one page of rows + pager; no pager when everything fits", () => {
+    const T = METRICS.table;
+    const est = (input: unknown) => estimateBlockHeight(block(input), 600, ctx, "comfortable", true);
+    expect(est({ id: "x", type: "table", data: "t" })).toBe(T.header + 10 * T.row + T.pager);
+    expect(est({ id: "x", type: "table", data: "t", maxRows: 20, totals: true })).toBe(T.header + 20 * T.row + T.totals + T.pager);
+    // pageSize wins over maxRows (maxRows still caps the printed table)
+    expect(est({ id: "x", type: "table", data: "t", maxRows: 20, pageSize: 5 })).toBe(T.header + 5 * T.row + T.pager);
+    expect(estimateBlockHeight(block({ id: "x", type: "table", data: "t", maxRows: 20, pageSize: 5 }), 600, ctx)).toBe(T.header + 20 * T.row + T.truncationNote);
+    expect(est({ id: "x", type: "table", data: "t", pageSize: 50 })).toBe(T.header + 50 * T.row);
+  });
+
   it("text grows with content", () => {
     const short = estimateBlockHeight(block({ id: "a", type: "text", content: "Short." }), 400, ctx);
     const long = estimateBlockHeight(block({ id: "a", type: "text", content: "Longer sentence here. ".repeat(40) }), 400, ctx);

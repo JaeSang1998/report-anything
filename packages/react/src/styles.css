@@ -582,3 +582,358 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ─── Table pager (web) ──────────────────────────────────────────────────── */
+/* Header buttons sort a paged table; the arrow shows on the sorted column and as a hint on hover/focus. */
+.ra-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+/* Right-aligned (numeric) headers put the arrow first so the label stays flush with the figures. */
+.ra-align--right > .ra-table__sort {
+  flex-direction: row-reverse;
+}
+.ra-table__arrow {
+  flex: none;
+  opacity: 0;
+  transition: opacity 120ms, transform 120ms;
+}
+.ra-table__sort:hover .ra-table__arrow,
+.ra-table__sort:focus-visible .ra-table__arrow {
+  opacity: 0.45;
+}
+.ra-table__sort--asc .ra-table__arrow,
+.ra-table__sort--desc .ra-table__arrow,
+.ra-table__sort--asc:hover .ra-table__arrow,
+.ra-table__sort--desc:hover .ra-table__arrow {
+  opacity: 1;
+}
+.ra-table__sort--desc .ra-table__arrow {
+  transform: rotate(180deg);
+}
+.ra-pager {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--ra-m-table-pager);
+  font-size: 12px;
+}
+.ra-pager__range {
+  padding-bottom: 6px;
+  color: var(--ra-secondary);
+  white-space: nowrap;
+}
+.ra-pager__pages {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.ra-pager__step,
+.ra-pager__page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ra-secondary);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.ra-pager__step:hover,
+.ra-pager__page:hover {
+  background: color-mix(in srgb, var(--ra-fg) 6%, transparent);
+  color: var(--ra-fg);
+}
+.ra-pager__page[aria-current="page"] {
+  background: color-mix(in srgb, var(--ra-fg) 9%, transparent);
+  color: var(--ra-fg);
+  font-weight: 650;
+  cursor: default;
+}
+.ra-pager__step[aria-disabled="true"] {
+  opacity: 0.35;
+  background: none;
+  cursor: default;
+}
+.ra-pager__chevron--next {
+  transform: rotate(180deg);
+}
+.ra-pager__gap {
+  min-width: 20px;
+  color: var(--ra-muted);
+  text-align: center;
+}
+.ra-table__sort:focus-visible,
+.ra-pager__step:focus-visible,
+.ra-pager__page:focus-visible {
+  outline: 2px solid var(--ra-fg);
+  outline-offset: 1px;
+}
+@media print {
+  .ra-pager__pages {
+    display: none;
+  }
+}
+
+/* ─── Slides ─────────────────────────────────────────────────────────────── */
+/* Stacked slide sheets (static HTML, print to PDF) reuse .ra-page; the deck shows one slide scaled to fit. */
+.ra-report--slides {
+  display: flex;
+  flex-direction: column;
+  align-items: safe center;
+  gap: 32px;
+}
+.ra-report--slides:not(.ra-report--deck) {
+  padding: 32px 0;
+  background: color-mix(in srgb, var(--ra-fg) 6%, var(--ra-surface));
+}
+.ra-slide--title .ra-page__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.ra-scaled {
+  flex: none;
+  overflow: hidden;
+}
+.ra-scaled__inner {
+  transform-origin: 0 0;
+}
+.ra-deck {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.ra-deck:focus-visible {
+  outline: 2px solid var(--ra-fg);
+  outline-offset: 4px;
+}
+/* The tinted stage frames the slide (a surface-coloured canvas) so its edges read without a border. */
+.ra-deck__stage {
+  display: flex;
+  padding: 16px;
+  background: color-mix(in srgb, var(--ra-fg) 6%, var(--ra-surface));
+}
+.ra-deck__fit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.ra-deck__bar,
+.ra-carousel__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ra-secondary);
+}
+.ra-deck__counter,
+.ra-carousel__counter {
+  min-width: 56px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.ra-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ra-fg);
+  font: inherit;
+  cursor: pointer;
+}
+.ra-nav-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ra-fg) 6%, transparent);
+}
+.ra-nav-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.ra-nav-button:focus-visible,
+.ra-deck__thumb:focus-visible,
+.ra-carousel__dot:focus-visible,
+.ra-tabs__tab:focus-visible,
+.ra-carousel:focus-visible {
+  outline: 2px solid var(--ra-fg);
+  outline-offset: 1px;
+}
+.ra-icon {
+  flex: none;
+}
+.ra-deck__present {
+  margin-left: auto;
+  padding: 0 10px;
+}
+.ra-deck__thumbs {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  overflow-x: auto;
+  background: color-mix(in srgb, var(--ra-fg) 6%, var(--ra-surface));
+}
+/* Thumbnails: the current slide at full opacity with a 3px bar beneath it; the others recede. */
+.ra-deck__thumb {
+  position: relative;
+  flex: none;
+  margin: 0;
+  padding: 0 0 7px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 120ms;
+}
+.ra-deck__thumb::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+}
+.ra-deck__thumb:hover {
+  opacity: 0.8;
+}
+.ra-deck__thumb[aria-current="true"] {
+  opacity: 1;
+}
+.ra-deck__thumb[aria-current="true"]::after {
+  background: var(--ra-fg);
+}
+/* Presenting: the slide fills the screen; the strip stays laid out (it is measured) but is not shown. */
+.ra-deck:fullscreen {
+  height: 100vh;
+  padding: 16px 24px;
+  background: color-mix(in srgb, var(--ra-fg) 6%, var(--ra-surface));
+}
+.ra-deck:fullscreen .ra-deck__stage {
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+}
+.ra-deck:fullscreen .ra-deck__fit {
+  height: 100%;
+}
+.ra-deck:fullscreen .ra-deck__thumbs {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+@media print {
+  .ra-report--slides {
+    display: block;
+    padding: 0;
+    background: none;
+  }
+}
+
+/* ─── Section views (web tabs & carousel) ────────────────────────────────── */
+/* A pane (one tab or slide) stacks its bands like the flow does: separated by the grid gap. */
+.ra-pane > * + * {
+  margin-top: var(--ra-m-grid-gap);
+}
+.ra-tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: var(--ra-m-grid-gap);
+}
+.ra-tabs__tab {
+  margin: 0;
+  padding: 4px 0 6px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--ra-secondary);
+  font: inherit;
+  cursor: pointer;
+}
+.ra-tabs__tab:hover {
+  color: var(--ra-fg);
+}
+.ra-tabs__tab[aria-selected="true"] {
+  border-bottom-color: var(--ra-fg);
+  color: var(--ra-fg);
+  font-weight: 650;
+}
+.ra-carousel__viewport {
+  overflow: hidden;
+  transition: height 280ms ease;
+}
+.ra-carousel__track {
+  display: flex;
+  align-items: flex-start;
+  transition: transform 280ms ease;
+}
+.ra-carousel__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+.ra-carousel__controls {
+  margin-top: 12px;
+}
+.ra-carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: auto;
+}
+.ra-carousel__dot {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.ra-carousel__dot::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: auto;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ra-fg) 22%, transparent);
+}
+.ra-carousel__dot:hover::before {
+  background: color-mix(in srgb, var(--ra-fg) 45%, transparent);
+}
+.ra-carousel__dot[aria-current="true"]::before {
+  background: var(--ra-fg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ra-carousel__viewport,
+  .ra-carousel__track,
+  .ra-deck__thumb {
+    transition: none;
+  }
+}

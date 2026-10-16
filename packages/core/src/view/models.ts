@@ -29,17 +29,52 @@ export interface TableColumnModel {
 
 export interface TableModel {
   columns: TableColumnModel[];
-  /** Visible body rows after sort + maxRows. */
+  /** Body rows shown: the current page on the web, the first maxRows when printed. Keys are dataset row indices. */
   rows: Array<{ key: string; cells: TableCell[] }>;
+  /** Sum row over every dataset row, whatever the page or cap. */
   totals?: TableCell[];
   /** Rows in the dataset. */
   totalRows: number;
-  /** Rows hidden by maxRows. */
+  /** Rows hidden by maxRows (print only; paged tables hide nothing). */
   hiddenRows: number;
+  /** Set when the table is paged (web). */
+  page?: TablePage;
 }
 
-/** Resolve a table block into display-ready cells. Missing dataset → empty model. */
-export function buildTableModel(block: BlockOf<"table">, ctx: DataContext): TableModel {
+/** Window of a paged table. */
+export interface TablePage {
+  /** 1-based page shown, clamped to [1, pages]. */
+  page: number;
+  pages: number;
+  /** Row range [from, to) of the sorted rows. */
+  from: number;
+  to: number;
+}
+
+export interface TableSort {
+  field: string;
+  dir: "asc" | "desc";
+}
+
+export interface TableModelOptions {
+  /** 1-based page; pages the table (every row reachable) instead of capping it at maxRows. */
+  page?: number;
+  /** Rows per page (default {@link tablePageSize}); setting it also pages the table. */
+  pageSize?: number;
+  /** Reader's column sort; overrides the spec's sortBy, which then only breaks ties. */
+  sort?: TableSort;
+}
+
+/** Web rows per page: `pageSize`, else `maxRows`, else 10. */
+export function tablePageSize(block: BlockOf<"table">): number {
+  return block.pageSize ?? block.maxRows ?? 10;
+}
+
+/**
+ * Resolve a table block into display-ready cells. Missing dataset → empty model.
+ * Without paging options the table is capped at maxRows (print); with them it shows one page of every row (web).
+ */
+export function buildTableModel(block: BlockOf<"table">, ctx: DataContext, opts: TableModelOptions = {}): TableModel {
   const ds = ctx.datasets.get(block.data);
   if (!ds) return { columns: [], rows: [], totalRows: 0, hiddenRows: 0 };
   const byName = new Map<string, FieldInfo>(ds.fields.map((f) => [f.name, f]));
@@ -57,15 +92,35 @@ export function buildTableModel(block: BlockOf<"table">, ctx: DataContext): Tabl
     };
   });
 
-  let rows = ds.rows;
-  if (block.sortBy !== undefined) rows = [...rows].sort(sortComparator(Array.isArray(block.sortBy) ? block.sortBy : [block.sortBy]));
-  const visible = block.maxRows !== undefined ? rows.slice(0, block.maxRows) : rows;
+  const specKeys = block.sortBy === undefined ? [] : Array.isArray(block.sortBy) ? block.sortBy : [block.sortBy];
+  const keys = opts.sort ? [opts.sort.dir === "desc" ? `-${opts.sort.field}` : opts.sort.field, ...specKeys] : specKeys;
+  // Array#sort is stable: ties keep spec order, then dataset order. Indices become stable row keys.
+  let order = ds.rows.map((row, index) => ({ row, index }));
+  if (keys.length) {
+    const compare = sortComparator(keys);
+    order = order.sort((a, b) => compare(a.row, b.row));
+  }
 
-  // Per-column numeric extents for emphasis (computed on visible rows so bars are comparable on screen).
+  const total = order.length;
+  let page: TablePage | undefined;
+  let shown = order;
+  let visible = order;
+  if (opts.page !== undefined || opts.pageSize !== undefined) {
+    const size = Math.max(1, opts.pageSize ?? tablePageSize(block));
+    const pages = Math.max(1, Math.ceil(total / size));
+    const n = Math.min(pages, Math.max(1, Math.floor(opts.page ?? 1)));
+    const from = (n - 1) * size;
+    page = { page: n, pages, from, to: Math.min(total, from + size) };
+    visible = order.slice(page.from, page.to);
+  } else if (block.maxRows !== undefined) {
+    shown = visible = order.slice(0, block.maxRows);
+  }
+
+  // Per-column numeric extents for emphasis, over every row a reader can reach so bars compare across pages.
   const extents = new Map<string, { min: number; max: number; absMax: number }>();
   for (const c of specs) {
     if (!c.emphasis || c.emphasis === "delta") continue;
-    const nums = visible.map((r) => toNumber(r[c.field])).filter((n): n is number => n !== null);
+    const nums = shown.map(({ row }) => toNumber(row[c.field])).filter((n): n is number => n !== null);
     if (nums.length) extents.set(c.field, { min: Math.min(...nums), max: Math.max(...nums), absMax: Math.max(...nums.map(Math.abs)) });
   }
 
@@ -89,9 +144,10 @@ export function buildTableModel(block: BlockOf<"table">, ctx: DataContext): Tabl
 
   const model: TableModel = {
     columns,
-    rows: visible.map((r, i) => ({ key: String(i), cells: specs.map((s, j) => cell(s, columns[j]!, r[s.field] ?? null)) })),
-    totalRows: rows.length,
-    hiddenRows: rows.length - visible.length,
+    rows: visible.map(({ row, index }) => ({ key: String(index), cells: specs.map((s, j) => cell(s, columns[j]!, row[s.field] ?? null)) })),
+    totalRows: total,
+    hiddenRows: total - shown.length,
+    ...(page ? { page } : {}),
   };
 
   if (block.totals) {
@@ -101,13 +157,25 @@ export function buildTableModel(block: BlockOf<"table">, ctx: DataContext): Tabl
     model.totals = specs.map((s, j) => {
       const col = columns[j]!;
       if (fields.has(s.field)) {
-        const v = aggregate(rows.map((r) => r[s.field] ?? null), "sum");
+        const v = aggregate(ds.rows.map((r) => r[s.field] ?? null), "sum");
         return { field: s.field, value: v, text: formatValue(v, col.format, ctx) };
       }
       return { field: s.field, value: null, text: j === 0 ? uiStrings(ctx.locale).total : "" };
     });
   }
   return model;
+}
+
+/**
+ * Page buttons of a pager, `null` marking a gap ("…"): every page up to 7, else first, last and the current page with its
+ * neighbours, always 7 items so the controls keep their place. A gap always hides at least two pages.
+ */
+export function pagerItems(page: number, pages: number): Array<number | null> {
+  const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+  if (pages <= 7) return range(1, pages);
+  if (page <= 4) return [...range(1, 5), null, pages];
+  if (page >= pages - 3) return [1, null, ...range(pages - 4, pages)];
+  return [1, null, page - 1, page, page + 1, null, pages];
 }
 
 // ─── KPI ───────────────────────────────────────────────────────────────────────

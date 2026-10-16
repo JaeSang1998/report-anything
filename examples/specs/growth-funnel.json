@@ -354,6 +354,7 @@
       "id": "channels_section",
       "title": "Channels",
       "description": "Visit-to-paid conversion by channel, and how each channel moved signups from Q2 to Q3.",
+      "view": "tabs",
       "blocks": [
         {
           "id": "rate_dumbbell",

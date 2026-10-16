@@ -82,6 +82,8 @@ export const METRICS = {
     totals: 34,
     /** "Showing N of M rows" note under a truncated table. */
     truncationNote: 24,
+    /** Web pager under a paged table: row range, previous/next and page buttons. */
+    pager: 44,
     fontSize: 13,
     cellPaddingX: 10,
   },
@@ -180,6 +182,15 @@ export const METRICS = {
     margin: 48,
     A4: { width: 794, height: 1123 },
     Letter: { width: 816, height: 1056 },
+  },
+  /**
+   * Slides mode: a 16:9 canvas; the footer (title, slide number) sits in the bottom margin. The canvas is small
+   * (960×540) so type set at document sizes reads presentation-sized once the deck scales it up.
+   */
+  slide: {
+    width: 960,
+    height: 540,
+    margin: 40,
   },
   web: {
     /** Default web content width. */

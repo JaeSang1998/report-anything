@@ -18,7 +18,7 @@ export const reportTools = {
   }),
   inspect_report: tool({
     description: "Read the current report outline (section compositions, block placements, estimated heights, pages), datasets and every validation/layout issue.",
-    inputSchema: z.object({ mode: z.enum(["web", "print"]).describe("print reports page assignment and page diagnostics.") }),
+    inputSchema: z.object({ mode: z.enum(["web", "print", "slides"]).describe("print and slides report page/slide assignment and overflow diagnostics.") }),
   }),
   profile_dataset: tool({
     description: "Profile one dataset already in the report: field roles (time/measure/dimension/identifier), stats, distinct counts, suggested formats and ranked chart suggestions.",

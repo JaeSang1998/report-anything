@@ -764,6 +764,28 @@ function barChart(b: Breakdown, d: ByDimension, trend: Trend | undefined): Draft
   };
 }
 
+/** Every category of a ranked breakdown (byDimension with `ranked`): rank, value, share and rate, with totals when summable. */
+function rankedTable(id: string, b: Breakdown, dd: ByDimension, title: string): BlockInput {
+  const { table: t, dim, measure: m } = b;
+  const format = m.field === undefined ? "integer" : fieldFormat(t, m.field);
+  return {
+    id,
+    type: "table",
+    title,
+    data: dd.id,
+    columns: [
+      { field: dd.rankField!, label: "Rank", format: "integer" },
+      { field: dim.name },
+      { field: dd.valueField, label: m.label, ...(format ? { format } : {}) },
+      ...(dd.shareField ? [{ field: dd.shareField, label: "Share", format: "percent" }] : []),
+      ...(dd.rateField ? [{ field: dd.rateField, format: "percent" }] : []),
+    ],
+    sortBy: dd.rankField!,
+    maxRows: 20,
+    ...(dd.shareField ? { totals: [dd.valueField, dd.shareField] } : {}),
+  };
+}
+
 /** Dimensions of a table worth splitting by: chartable breakdowns (best first), then two-category fields. */
 function dimsOf(t: Table, plan: Plan): FieldProfile[] {
   const prefix = t.source.childPrefix;
@@ -1036,11 +1058,14 @@ function overview(d: Draft): Outline {
     usedX.add(facet.dim.name);
     addChart(facetChart(d, trend, facet.dim.name));
   }
+  let ranked: BlockInput | undefined;
   for (const b of all) {
     if (charts >= MAX_CHARTS) break;
     if (usedX.has(b.dim.name)) continue;
     usedX.add(b.dim.name);
-    const dd = byDimension(b.table, b.dim.name, b.measure, b.table === primary ? derivedRate : undefined, makeId, datasets);
+    // The primary table's leading bar breakdown also gets a full ranking in the detail section.
+    const rank = ranked === undefined && b.table === primary;
+    const dd = byDimension(b.table, b.dim.name, b.measure, b.table === primary ? derivedRate : undefined, makeId, datasets, rank);
     // A donut adds variety only as a later view of a small split.
     if (analysisBlocks.length > 0 && canDonut(b, dd) && analysisBlocks.some((x) => x.type === "chart" && x.chart.kind === "bar")) {
       addChart({
@@ -1051,6 +1076,7 @@ function overview(d: Draft): Outline {
       continue;
     }
     addChart(barChart(b, dd, trend));
+    if (rank) ranked = rankedTable("ranked_table", b, dd, `${fieldLabel(b.dim.name)} ranking${latestSuffix(dd, trend)}`);
   }
   const splits = primary.profile.fields
     .filter((f) => f.role === "dimension" && f.distinct === 2 && !usedX.has(f.name))
@@ -1065,22 +1091,17 @@ function overview(d: Draft): Outline {
   if (analysisBlocks.length) sections.push({ id: "analysis", title: "Analysis", role: "analysis", blocks: analysisBlocks });
   const columns = tableColumns(primary);
   const sortName = trend?.axis.time.name ?? plan.head.field;
-  sections.push({
-    id: "detail",
-    title: "Detail",
-    role: "detail",
-    blocks: [
-      {
-        id: "detail_table",
-        type: "table",
-        title: `${fieldLabel(primary.ds.id)} records`,
-        data: primary.ds.id,
-        ...(columns.length ? { columns } : {}),
-        ...(sortName !== undefined ? { sortBy: `-${sortName}` } : {}),
-        maxRows: 20,
-      },
-    ],
-  });
+  const records: BlockInput = {
+    id: "detail_table",
+    type: "table",
+    title: `${fieldLabel(primary.ds.id)} records`,
+    data: primary.ds.id,
+    ...(columns.length ? { columns } : {}),
+    ...(sortName !== undefined ? { sortBy: `-${sortName}` } : {}),
+    maxRows: 20,
+  };
+  // A category ranking and the raw records answer "show me the numbers" two ways: the web reader picks a tab.
+  sections.push({ id: "detail", title: "Detail", role: "detail", ...(ranked ? { view: "tabs" as const, blocks: [ranked, records] } : { blocks: [records] }) });
   return { title: `${fieldLabel(primary.ds.id)} report`, sections };
 }
 
@@ -1103,7 +1124,7 @@ function brief(d: Draft): Outline {
   return { title: `${d.subject} brief`, sections: [{ id: "brief", title: `${plan.head.label} at a glance`, role: "summary", blocks }], targetPages: 1 };
 }
 
-/** Trajectory with a 3-period moving average, period-over-period growth, and the best/worst periods. */
+/** Trajectory with a 3-period moving average, small multiples, period-over-period growth, and best vs worst periods (tabs). */
 function trendReport(d: Draft): Outline | undefined {
   const { plan, primary } = d;
   const trend = plan.trend;
@@ -1128,19 +1149,33 @@ function trendReport(d: Draft): Outline | undefined {
       ...(head.field === undefined ? [{ name: trend.countField, label: plan.countLabel, format: "integer" }] : []),
     ],
   };
+  const dateFormat = trend.axis.unit ? `date:${trend.axis.unit}` : undefined;
+  // Best and worst periods are two views of one question: separate (non-overlapping) datasets, read as tabs on the web.
   const n = trend.axis.periods.length;
-  const extremes = d.makeId(`${id}_extremes`);
-  d.datasets[extremes] = {
-    from: id,
-    transform: [
-      { op: "window", fn: "rank", field: trend.value, as: rank },
-      { op: "filter", expr: `\`${rank}\` <= ${EXTREME_PERIODS} or \`${rank}\` > ${n - EXTREME_PERIODS}` },
-      { op: "sort", by: `-${trend.value}` },
-    ],
-    description: `Top and bottom ${EXTREME_PERIODS} ${unit}s by ${head.inline}`,
+  const k = Math.max(1, Math.min(EXTREME_PERIODS, Math.floor(n / 2)));
+  const extremeTable = (name: "best" | "worst", sortBy: string, keep: string): BlockInput => {
+    const data = d.makeId(`${id}_${name}`);
+    d.datasets[data] = {
+      from: id,
+      transform: [{ op: "window", fn: "rank", field: trend.value, as: rank }, { op: "filter", expr: `\`${rank}\` ${keep}` }, { op: "sort", by: sortBy }],
+      description: `${name === "best" ? "Top" : "Bottom"} ${k} ${unit}s by ${head.inline}`,
+    };
+    return {
+      id: `${name}_table`,
+      type: "table",
+      title: `${name === "best" ? "Best" : "Worst"} ${k} ${unit}s`,
+      data,
+      columns: [
+        { field: time, label: fieldLabel(time), ...(dateFormat ? { format: dateFormat } : {}) },
+        { field: trend.value, label: head.label, ...(format ? { format } : {}) },
+        { field: trend.changeField, label: `vs previous ${unit}`, format: "percent" },
+        { field: rank, label: "Rank", format: "integer" },
+      ],
+      sortBy,
+      maxRows: k,
+    };
   };
 
-  const dateFormat = trend.axis.unit ? `date:${trend.axis.unit}` : undefined;
   const xFormat = dateFormat ? { xFormat: dateFormat } : {};
   const ref = (agg: string, f: string, pipe = "") => `{{${agg}(${id}.${f})${pipe}}}`;
   const safe = !unsafe(time, trend.value, trend.changeField, ma);
@@ -1178,28 +1213,14 @@ function trendReport(d: Draft): Outline | undefined {
         id: "extremes",
         title: `Best and worst ${unit}s`,
         role: "detail",
-        blocks: [
-          {
-            id: "extremes_table",
-            type: "table",
-            title: `Top and bottom ${EXTREME_PERIODS} ${unit}s by ${head.inline}`,
-            data: extremes,
-            columns: [
-              { field: time, label: fieldLabel(time), ...(dateFormat ? { format: dateFormat } : {}) },
-              { field: trend.value, label: head.label, ...(format ? { format } : {}) },
-              { field: trend.changeField, label: `vs previous ${unit}`, format: "percent" },
-              { field: rank, label: "Rank", format: "integer" },
-            ],
-            sortBy: `-${trend.value}`,
-            maxRows: 2 * EXTREME_PERIODS,
-          },
-        ],
+        view: "tabs",
+        blocks: [extremeTable("best", `-${trend.value}`, `<= ${k}`), extremeTable("worst", trend.value, `> ${n - k}`)],
       },
     ],
   };
 }
 
-/** Latest window vs the previous one: headline comparison, a dumbbell by the main dimension, the biggest movers. */
+/** Latest window vs the previous one: headline comparison, a dumbbell per dimension (tabs when there are two), the biggest movers. */
 function compare(d: Draft): Outline | undefined {
   const { plan, primary } = d;
   const trend = plan.trend;
@@ -1236,16 +1257,44 @@ function compare(d: Draft): Outline | undefined {
   if (!main) return { title, sections };
   const dims = fieldLabel(main.name, true);
   const s = periodSplit(d, w, [main.name], head);
-  sections.push({
-    id: "by_dimension",
-    title: `${head.label} by ${dims}`,
-    role: "analysis",
-    blocks: chartBlocks(
-      "dumbbell",
-      { chart: { kind: "dumbbell", data: s.id, x: main.name, y: [s.from, s.to] }, title: `${head.label} by ${dims}, ${w.prevLabel} → ${w.latestLabel}`, text: moverText(s, main.name, head) },
-      "lead",
-    ),
+  const dumbbell = (id: string, split: Split, dim: FieldProfile, importance: Importance, chartTitle: string): BlockInput => ({
+    id,
+    type: "chart",
+    title: chartTitle,
+    chart: { kind: "dumbbell", data: split.id, x: dim.name, y: [split.from, split.to] },
+    height: "md",
+    importance,
   });
+  if (second) {
+    // One dumbbell per dimension: alternative views of the same change, so the web reader picks one as a tab.
+    // Tabs show one block at a time, so the bound mover sentences sit beside the comparison instead.
+    const s2 = periodSplit(d, w, [second.name], head);
+    const dims2 = fieldLabel(second.name, true);
+    sections[0]!.blocks.push({
+      id: "movers_note",
+      type: "text",
+      title: "What moved",
+      content: [`- **By ${dims}:** ${moverText(s, main.name, head)}`, `- **By ${dims2}:** ${moverText(s2, second.name, head)}`].join("\n"),
+      importance: "supporting",
+    });
+    sections.push({
+      id: "by_dimension",
+      title: `${head.label} by ${dims} and ${dims2}, ${w.prevLabel} → ${w.latestLabel}`,
+      role: "analysis",
+      view: "tabs",
+      blocks: [dumbbell("dumbbell_chart", s, main, "lead", `${head.label} by ${dims}`), dumbbell("dumbbell_2_chart", s2, second, "normal", `${head.label} by ${dims2}`)],
+    });
+  } else {
+    sections.push({
+      id: "by_dimension",
+      title: `${head.label} by ${dims}`,
+      role: "analysis",
+      blocks: [
+        dumbbell("dumbbell_chart", s, main, "lead", `${head.label} by ${dims}, ${w.prevLabel} → ${w.latestLabel}`),
+        { id: "dumbbell_note", type: "text", content: moverText(s, main.name, head), importance: "supporting" },
+      ],
+    });
+  }
   const index = second ? [main.name, second.name] : [main.name];
   const movers = second ? periodSplit(d, w, index, head) : s;
   const format = head.field === undefined ? "integer" : fieldFormat(primary, head.field);
@@ -1443,30 +1492,7 @@ function breakdownReport(d: Draft): Outline | undefined {
   const sections: SectionInput[] = [
     { id: "ranking", title: second && views.some(([id]) => id === "mix") ? `${fieldLabel(dim.name)} ranking and ${fieldLabel(second.name, true)} mix` : `${fieldLabel(dim.name)} ranking`, role: "analysis", blocks: ranking },
   ];
-  const format = m.field === undefined ? "integer" : fieldFormat(t, m.field);
-  sections.push({
-    id: "ranked",
-    title: `Full ${dims} ranking`,
-    role: "detail",
-    blocks: [
-      {
-        id: "ranked_table",
-        type: "table",
-        title: `${fieldLabel(dim.name)} ranked by ${m.inline}${suffix}`,
-        data: dd.id,
-        columns: [
-          { field: dd.rankField!, label: "Rank", format: "integer" },
-          { field: dim.name },
-          { field: dd.valueField, label: m.label, ...(format ? { format } : {}) },
-          ...(dd.shareField ? [{ field: dd.shareField, label: "Share", format: "percent" }] : []),
-          ...(dd.rateField ? [{ field: dd.rateField, format: "percent" }] : []),
-        ],
-        sortBy: dd.rankField!,
-        maxRows: 20,
-        ...(dd.shareField ? { totals: [dd.valueField, dd.shareField] } : {}),
-      },
-    ],
-  });
+  sections.push({ id: "ranked", title: `Full ${dims} ranking`, role: "detail", blocks: [rankedTable("ranked_table", b, dd, `${fieldLabel(dim.name)} ranked by ${m.inline}${suffix}`)] });
   return { title: `${d.subject} by ${dims}`, sections };
 }
 
@@ -1586,8 +1612,9 @@ function outline(d: Draft, archetype: Archetype): Outline {
  * Headless "any data → draft report".
  * Accepts an array of records, an object of named arrays / CSV strings, nested JSON, or a CSV string.
  * The archetype picks the structure (see AutoReportOptions); "overview" reads headline stat + KPIs → trend of the headline
- * measure → its small multiples by a second dimension → category breakdowns → two-way splits → detail table.
- * Blocks carry `importance` (lead stats/charts, supporting narrative) so the layout solver composes varied bands.
+ * measure → its small multiples by a second dimension → category breakdowns → two-way splits → detail (ranking vs records
+ * as tabs when a breakdown exists). Blocks carry `importance` (lead stats/charts, supporting narrative) so the layout
+ * solver composes varied bands; sections holding alternative views of one question use `view: "tabs"` on the web.
  * Every number in the output is data-bound (Measure objects or {{...}} placeholders).
  */
 export function autoReport(input: unknown, opts: AutoReportOptions = {}): ReportSpecInput {

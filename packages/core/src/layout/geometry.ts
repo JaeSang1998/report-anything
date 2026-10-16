@@ -13,6 +13,12 @@ export function pageGeometry(page?: ReportSpec["page"]): PageGeometry {
   return { size, orientation, width, height, margin, contentWidth: width - 2 * margin, contentHeight: height - 2 * margin };
 }
 
+/** Slide canvas (slides mode): a 16:9 virtual canvas (METRICS.slide) the deck scales to the screen. */
+export function slideGeometry(): PageGeometry {
+  const { width, height, margin } = METRICS.slide;
+  return { size: "slide", orientation: "landscape", width, height, margin, contentWidth: width - 2 * margin, contentHeight: height - 2 * margin };
+}
+
 /**
  * Left edge (px) of 1-based grid column `start`, and pixel width of a cell spanning `span` columns.
  * Edges are rounded so that integer cell widths plus gaps sum exactly to an integer content width.

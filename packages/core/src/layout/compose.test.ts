@@ -32,6 +32,7 @@ const ctx: DataContext = {
 
 const env = (width: number, measured?: Record<string, number>): ComposeEnv => ({
   ctx,
+  interactive: width !== PRINT,
   contentWidth: width,
   gap: GAP,
   density: "comfortable",

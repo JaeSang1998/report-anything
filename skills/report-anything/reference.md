@@ -12,7 +12,7 @@ Authoritative schema: `report-anything schema`. This page is the cheat sheet.
   "page": { "size": "A4", "orientation": "portrait", "targetPages": 3 },
   "theme": { "palette": ["#1f4e79", "…"], "density": "compact" },
   "datasets": { "<id>": Dataset },
-  "sections": [{ "id": "…", "title": "…", "description": "…", "layout": "auto", "breakBefore": false, "blocks": [Block] }]
+  "sections": [{ "id": "…", "title": "…", "description": "…", "layout": "auto", "view": "flow", "breakBefore": false, "blocks": [Block] }]
 }
 ```
 
@@ -59,7 +59,7 @@ Common: `id`, `type`, `title`, `caption` (footnote/source), `sourceRefs`, `impor
 | `kpi` | `items[1..8]`: `label`, `value`, `format`, `compareTo` or `delta` (ratio), `deltaLabel`, `goodWhen: up|down`, `description`, `sparkline: { data, x, y }` |
 | `stat` | one figure in display type: `label`, `value`, `format`, `compareTo`/`delta`, `deltaLabel`, `goodWhen`, `description` (markdown, templates) — the number a reader must remember; usually `importance: "lead"` |
 | `chart` | `chart` (below), `height: sm|md|lg` |
-| `table` | `data`, `columns: [{ field, label, format, align, emphasis: bar|heat|delta }]`, `sortBy`, `maxRows`, `totals: true | [fields]`, `density`, `paginate` |
+| `table` | `data`, `columns: [{ field, label, format, align, emphasis: bar|heat|delta }]`, `sortBy`, `maxRows` (print: rows printed, rest noted "showing N of M"), `pageSize` (web: rows per page, default `maxRows` else 10; readers page through every row and sort by clicking headers; static HTML shows the print cap), `totals: true | [fields]` (sums every row), `density`, `paginate` |
 | `callout` | `content`, `tone: neutral|info|positive|warning|critical`, `variant: insight|recommendation|note|risk` |
 | `list` | `style: bullet|numbered|check`, `items: [{ text, detail, tag, tone }]` |
 | `comparison` | `entities[2..4]`, `metrics: [{ label, values (one per entity), format, goodWhen }]`, `showDelta` |
@@ -107,6 +107,9 @@ Steer it with meaning, not coordinates:
 - `importance: "lead"` on the one or two blocks that carry the section (they get feature/hero slots); `"supporting"` on notes and callouts (they become asides or stack beside a chart). Order blocks as they should be read: a lead chart followed by two short companions forms a feature; a callout followed by charts forms a sidebar.
 - Section `layout` restricts the candidates: `auto` (default, recommended) · `feature` · `sidebar` · `grid` · `stack` (one per row) · `main-side` 8/4 · `side-main` 4/8 · `split` 6/6 · `thirds` 4/4/4 · `quarters` 3/3/3/3.
 - KPI strips, wide tables and many-category bar charts always take the full width; minimum widths (chart 300px, table 320px, diagram 300px, stat 260px, text 220px) apply at the real page width, so print and web compositions differ by design. `inspect` lists each section's compositions under `outline[].bands`.
+- Section `view` changes how a web reader moves through the blocks: `flow` (default, the grid composition above) · `tabs` (one tab per pane; use for alternative views of one question, e.g. a chart and its detail table) · `carousel` (one pane per slide with arrows and dots; use for a short sequence the reader steps through). A pane is one chart, table, diagram, comparison, stat or kpi block plus the text, callout and list blocks right after it (leading notes join the first pane), composed like a small flow section, so a chart and its note sit together. The pane's first non-narrative block names it: give those blocks a `title` (in tabs the title moves into the tab). Print, slides and static HTML always render `flow`.
+
+Modes: `web` (one responsive page), `print` (pages of `page.size`), `slides` (16:9 slides laid out on a 960×540 canvas with 40px margins — content 880×460 — and scaled up to the screen, so keep slides sparse: the title, subtitle, meta and summary form a title slide; every section starts a new slide; bands and table slices continue on following slides with repeated table headers; footer shows title and `n / N`). `inspect --mode slides` reports each block's slide as `page`, the slide count as `pages`, and `block_too_tall` when a band cannot fit one slide; `targetPages` applies to print only.
 
 ## Ops (JSONL, one per line; these apply cleanly to the example below)
 

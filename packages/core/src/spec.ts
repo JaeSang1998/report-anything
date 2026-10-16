@@ -318,7 +318,13 @@ export const TableBlock = z.object({
   data: Id,
   columns: z.array(TableColumn).optional().describe("Default: all fields."),
   sortBy: z.union([SortKey, z.array(SortKey)]).optional(),
-  maxRows: z.number().int().positive().optional(),
+  maxRows: z
+    .number()
+    .int()
+    .positive()
+    .optional()
+    .describe("Print: most rows printed (the rest are noted as 'showing N of M'). Web: rows per page; readers page through every row. For a true top-N, filter or limit the dataset instead."),
+  pageSize: z.number().int().min(3).max(200).optional().describe("Web: rows per page (default maxRows, else 10). Headers sort on click."),
   totals: z.union([z.boolean(), z.array(z.string())]).optional().describe("Sum row for numeric (or listed) columns."),
   density: z.enum(["compact", "normal"]).optional(),
   paginate: z.boolean().optional().describe("Allow splitting across printed pages (default true)."),
@@ -422,6 +428,12 @@ export const Section = z.object({
   role: z.enum(["summary", "analysis", "detail", "appendix"]).optional(),
   layout: LayoutPattern.optional(),
   breakBefore: z.boolean().optional().describe("Start this section on a new printed page."),
+  view: z
+    .enum(["flow", "tabs", "carousel"])
+    .optional()
+    .describe(
+      "Web presentation of the section's blocks. flow (default): composed on the grid. tabs: one tab per pane (a chart, table or diagram plus the notes right after it), labelled by its title, for alternative views of one question. carousel: one pane per slide with arrows, for a sequence the reader steps through. Print and slides always use flow.",
+    ),
   blocks: z.array(Block),
 });
 export type Section = z.infer<typeof Section>;

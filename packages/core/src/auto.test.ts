@@ -105,7 +105,7 @@ function check(input: unknown, opts?: AutoReportOptions) {
   const kpiItems = blocks.flatMap((b) => (b.type === "stat" ? [b] : b.type === "kpi" ? b.items : []));
   expect(kpiItems.length).toBeLessThanOrEqual(3);
   for (const k of kpiItems) expect("sparkline" in k ? k.sparkline : undefined).toBeUndefined();
-  const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
+  const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table" && b.id === "detail_table")!;
   expect(table.maxRows).toBe(20);
   for (const col of table.columns ?? []) expect(col.emphasis).toBeUndefined();
   return { spec, context, blocks, charts, table, kpis: kpiItems };
@@ -348,18 +348,31 @@ describe("autoReport archetypes", () => {
     const sep = (r: Row) => r.month === "2026-09-01";
     expect(sum(panels.filter(sep), "mrr")).toBe(sum(rows.filter(sep), "mrr"));
     expect(growth).toMatchObject({ kind: "bar", x: "month", yFormat: "percent", reference: [{ value: 0 }] });
-    const table = blocks.find((b): b is Extract<Block, { type: "table" }> => b.type === "table")!;
-    const extremes = rowsOf(context, table.data).map((r) => r[mrr!] as number);
+    // Best and worst months are separate tabs over disjoint datasets, each listed from the extreme inward.
+    const extremes = spec.sections.find((s) => s.id === "extremes")!;
+    expect(extremes.view).toBe("tabs");
+    expect(extremes.blocks.map((b) => b.title)).toEqual(["Best 3 months", "Worst 3 months"]);
+    const [best, worst] = extremes.blocks.map((b) => rowsOf(context, (b as Extract<Block, { type: "table" }>).data).map((r) => r[mrr!] as number));
     const all = trend.map((r) => r[mrr!] as number).sort((a, b) => b - a);
-    expect(extremes).toEqual([...all.slice(0, 3), ...all.slice(-3)]);
+    expect(best).toEqual(all.slice(0, 3));
+    expect(worst).toEqual(all.slice(-3).reverse());
     expect(blocks.find((b) => b.type === "callout")).toMatchObject({ variant: "insight" });
     // Narrative is supporting so the layout sets it beside the charts.
     for (const b of blocks) if (b.type === "text" || b.type === "callout") expect(b.importance).toBe("supporting");
   });
 
-  it("compare: latest six months vs the previous six, dumbbell by region, movers across region × channel", () => {
+  it("compare: latest six months vs the previous six, a dumbbell per dimension as tabs, movers across region × channel", () => {
     const rows = salesRows();
-    const { context, blocks, charts } = checkDraft(rows, { archetype: "compare" });
+    const { spec, context, blocks, charts } = checkDraft(rows, { archetype: "compare" });
+    const byDimension = spec.sections.find((s) => s.id === "by_dimension")!;
+    expect(byDimension.view).toBe("tabs");
+    expect(byDimension.blocks.map((b) => [b.type, b.title])).toEqual([
+      ["chart", "Revenue by region"],
+      ["chart", "Revenue by channel"],
+    ]);
+    // Tabs show one block at a time, so the bound mover sentences sit with the comparison.
+    expect(spec.sections[0]!.blocks.map((b) => b.type)).toEqual(["comparison", "text"]);
+    expect(textOf(blocks, context)).toMatch(/By region:.*added the most[\s\S]*By channel:.*added the most/);
     const cmp = blocks.find((b): b is Extract<Block, { type: "comparison" }> => b.type === "comparison")!;
     expect(cmp.entities).toEqual(["Jul 2025–Dec 2025", "Jan 2026–Jun 2026"]);
     const between = (from: string, to: string) => sum(rows.filter((r) => (r.month as string) >= from && (r.month as string) <= to), "revenue");
@@ -493,6 +506,43 @@ describe("autoReport archetypes", () => {
         expect(block(bands(sample(), "bridge").blocks, "waterfall_chart")).toMatchObject({ importance: "lead" });
       });
     }
+
+    it("tabs only hold titled alternative views, and print composes them as flow", () => {
+      const tabbed: Record<string, string[]> = {};
+      for (const archetype of ["overview", "brief", "trend", "compare", "breakdown", "bridge"] as Archetype[]) {
+        const { spec, context } = checkDraft(salesRows(), { archetype });
+        for (const s of spec.sections) {
+          expect(s.view === undefined || s.view === "tabs", `${archetype}/${s.id}`).toBe(true);
+          if (s.view !== "tabs") continue;
+          (tabbed[archetype] ??= []).push(s.id);
+          expect(s.blocks.length).toBeGreaterThanOrEqual(2);
+          for (const b of s.blocks) {
+            expect(b.title, `${archetype}/${b.id}`).toBeTruthy();
+            expect(b.title!.length, b.title).toBeLessThanOrEqual(40);
+            expect(["chart", "table"]).toContain(b.type);
+          }
+        }
+        const flow = { ...spec, sections: spec.sections.map(({ view: _view, ...s }) => s) };
+        const web = inspectReport({ spec, context, issues: [] }, { mode: "web" });
+        // Print ignores the view; interactive web gives each tab (one chart/table each) its own full-width pane.
+        expect(inspectReport({ spec, context, issues: [] }, { mode: "print" }).outline).toEqual(inspectReport({ spec: flow, context, issues: [] }, { mode: "print" }).outline);
+        spec.sections.forEach((s, i) => {
+          if (s.view === "tabs") expect(web.outline[i]!.bands.map((c) => (c === "hero" ? "full" : c))).toEqual(s.blocks.map(() => "full"));
+        });
+      }
+      expect(tabbed).toEqual({ overview: ["detail"], trend: ["extremes"], compare: ["by_dimension"] });
+    });
+
+    it("overview detail tabs: the leading breakdown's full ranking, then the raw records", () => {
+      const { spec, context } = checkDraft(salesRows());
+      const detail = spec.sections.find((s) => s.id === "detail")!;
+      expect(detail.blocks.map((b) => b.id)).toEqual(["ranked_table", "detail_table"]);
+      const ranked = detail.blocks[0] as Extract<Block, { type: "table" }>;
+      expect(rowsOf(context, ranked.data).map((r) => r.region)).toHaveLength(5);
+      // Without a dimension there is nothing to rank: one table, plain flow.
+      const monthly = checkDraft([{ month: "2026-01", revenue: 1 }, { month: "2026-02", revenue: 2 }, { month: "2026-03", revenue: 3 }]).spec;
+      expect(monthly.sections.at(-1)).not.toHaveProperty("view");
+    });
 
     it("overview facets the trend by a dimension no other chart uses", () => {
       const { charts } = bands(salesRows(), "overview");

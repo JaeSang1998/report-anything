@@ -25,6 +25,8 @@ export interface PaginationInput {
   sections: readonly PaginationSection[];
   /** Usable page height; `Infinity` produces a single page (web mode). */
   contentHeight: number;
+  /** What a page is called in diagnostics. */
+  unit: "page" | "slide";
   /** Vertical gap between bands of a section. */
   gap: number;
   /** Vertical gap between consecutive sections on one page. */
@@ -138,7 +140,7 @@ export function paginate(input: PaginationInput): { pages: Page[]; issues: Issue
           severity: "warning",
           code: "block_too_tall",
           path: r.tallest.path,
-          message: `Block is ${Math.round(r.height)}px tall but a page holds ${Math.round(freshAvailable)}px; it overflows its page.`,
+          message: `Block is ${Math.round(r.height)}px tall but a ${input.unit} holds ${Math.round(freshAvailable)}px; it overflows its ${input.unit}.`,
           hint: r.tallest.hint,
         });
       }

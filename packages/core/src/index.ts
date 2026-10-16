@@ -40,8 +40,8 @@ export type { UiStrings } from "./i18n.js";
 // Headless view models (adapters only map these to elements)
 export { parseMarkdown, parseInline } from "./view/markdown.js";
 export type { Inline, MdBlock } from "./view/markdown.js";
-export { buildTableModel, buildKpiModels, buildStatModel, buildComparisonModel, sparklinePath } from "./view/models.js";
-export type { TableModel, TableCell, TableColumnModel, CellEmphasis, KpiModel, ComparisonModel, Sentiment } from "./view/models.js";
+export { buildTableModel, buildKpiModels, buildStatModel, buildComparisonModel, pagerItems, sparklinePath, tablePageSize } from "./view/models.js";
+export type { TableModel, TableModelOptions, TablePage, TableSort, TableCell, TableColumnModel, CellEmphasis, KpiModel, ComparisonModel, Sentiment } from "./view/models.js";
 
 // Editing, validation, sessions
 export { Op, applyOps, mergePatch } from "./ops.js";

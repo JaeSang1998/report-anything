@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
-import { Check, ChevronDown, Copy, Download, FileChartColumn, Monitor, Printer } from "lucide-react";
+import { Check, ChevronDown, Copy, Download, FileChartColumn, Monitor, Presentation, Printer } from "lucide-react";
 import type { LayoutMode, ReportSession, ReportSpec } from "@report-anything/core";
 import { Report, useReportSnapshot } from "@report-anything/react";
 
@@ -16,6 +16,7 @@ function download(spec: ReportSpec): void {
 const MODES: Array<{ mode: LayoutMode; label: string; Icon: typeof Monitor }> = [
   { mode: "web", label: "Web", Icon: Monitor },
   { mode: "print", label: "Print", Icon: Printer },
+  { mode: "slides", label: "Slides", Icon: Presentation },
 ];
 
 function Toolbar({ spec, mode, onMode }: { spec: ReportSpec; mode: LayoutMode; onMode(m: LayoutMode): void }) {

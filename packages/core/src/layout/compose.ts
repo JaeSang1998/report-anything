@@ -6,15 +6,17 @@ import { blockBox, tableMetrics } from "./estimate.js";
 import type { BlockBox, Density } from "./estimate.js";
 import { cellBox } from "./geometry.js";
 import { METRICS } from "./metrics.js";
-import type { Band, Composition, Placement } from "./types.js";
+import type { Band, Composition, Pane, Placement } from "./types.js";
 
 export interface ComposeEnv {
   ctx: DataContext;
+  /** Interactive web output: tables page through their rows, tabs/carousel sections show one block at a time. */
+  interactive: boolean;
   contentWidth: number;
   gap: number;
   density: Density;
   measured: Readonly<Record<string, number>> | undefined;
-  /** Print page content height; undefined on the web. */
+  /** Print page / slide content height; undefined on the web. */
   pageHeight: number | undefined;
 }
 
@@ -153,6 +155,49 @@ const LAYOUT_RULES: Record<LayoutPattern, { primary: CompositionSet; fallback: C
 
 const FULL_WIDTH: CompositionSet = { full: true, stack: true };
 
+/** Blocks that comment on a neighbour rather than stand alone: they join the pane of the block before them. */
+const NARRATIVE: Partial<Record<Block["type"], true>> = { text: true, callout: true, list: true };
+
+/**
+ * Tabs/carousel panes: each non-narrative block (chart, table, diagram, comparison, stat, kpi) with the narrative
+ * blocks (text, callout, list) that follow it. Leading narrative joins the first pane; a section of narrative only
+ * is one pane.
+ */
+export function paneGroups(blocks: readonly Block[]): Block[][] {
+  const panes: Block[][] = [];
+  let leading: Block[] = [];
+  for (const block of blocks) {
+    if (NARRATIVE[block.type]) {
+      const last = panes.at(-1);
+      if (last) last.push(block);
+      else leading.push(block);
+    } else {
+      panes.push([...leading, block]);
+      leading = [];
+    }
+  }
+  if (leading.length > 0) panes.push(leading);
+  return panes;
+}
+
+/**
+ * Interactive web tabs/carousel section: one pane per `paneGroups` group, each composed by the flow solver, bands
+ * concatenated in pane order. A tab pane renders without its label block's title (the tab carries it), so that
+ * block is sized without it.
+ */
+export function composePanes(section: Section, env: ComposeEnv): { bands: Band[]; panes: Pane[] } {
+  const bands: Band[] = [];
+  const panes: Pane[] = [];
+  for (const group of paneGroups(section.blocks)) {
+    const label = group.find((b) => !NARRATIVE[b.type]) ?? group[0]!;
+    const blocks = section.view === "tabs" ? group.map((b) => (b === label ? { ...b, title: undefined } : b)) : group;
+    const from = bands.length;
+    bands.push(...composeSection({ ...section, blocks }, env));
+    panes.push({ from, to: bands.length, labelBlockId: label.id });
+  }
+  return { bands, panes };
+}
+
 /**
  * Solve a section's bands: dynamic programming over the block sequence (reading order preserved). Each step
  * consumes the next blocks with one feasible template; the plan minimises Σ band cost + rhythm, ties broken toward
@@ -233,7 +278,7 @@ function describe(block: Block, env: ComposeEnv): Item {
     case "table":
       min = METRICS.minWidth.table;
       // Wide tables (columns beyond two thirds of the width) and long ones (which may split across pages) own the band.
-      full = tableMetrics(block, env.contentWidth, ctx).rows > 8 || fit.lo > cellBox(1, 8, env.contentWidth, env.gap).width;
+      full = tableMetrics(block, env.contentWidth, ctx, env.density, env.interactive).rows > 8 || fit.lo > cellBox(1, 8, env.contentWidth, env.gap).width;
       break;
     case "chart": {
       min = METRICS.minWidth.chart;
@@ -256,7 +301,7 @@ function describe(block: Block, env: ComposeEnv): Item {
 function boxAt(item: Item, width: number, env: ComposeEnv): BlockBox {
   let box = item.boxes.get(width);
   if (!box) {
-    box = blockBox(item.block, width, env.ctx, env.density);
+    box = blockBox(item.block, width, env.ctx, env.density, env.interactive);
     const measured = env.measured?.[item.block.id];
     // Measured elastic blocks report their chrome only; their body stays solvable.
     if (measured !== undefined) box = { ...box, chrome: measured };

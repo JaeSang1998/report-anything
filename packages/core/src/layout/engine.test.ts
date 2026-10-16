@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DataContext, ResolvedDataset } from "../data/types.js";
 import { ReportSpec } from "../spec.js";
+import { paneGroups } from "./compose.js";
 import { layoutReport } from "./engine.js";
 import { tableMetrics } from "./estimate.js";
 import { METRICS } from "./metrics.js";
@@ -293,5 +294,125 @@ describe("layoutReport — print", () => {
     const plan = layout(s, context(), { mode: "print" });
     expect(plan.page).toMatchObject({ width: 1056, height: 816, contentWidth: 960, contentHeight: 720 });
     expect(plan.contentWidth).toBe(960);
+  });
+});
+
+describe("layoutReport — slides", () => {
+  const SLIDE_H = 540 - 2 * 40;
+  const chart = (id: string) => ({ id, type: "chart", chart: { kind: "line", data: "big", x: "name", y: "value" } });
+  const deck = spec({
+    title: "Quarterly review",
+    subtitle: "Board deck",
+    summary: "Revenue grew while churn held.",
+    page: { targetPages: 1 },
+    sections: [
+      { id: "a", title: "Overview", blocks: [text("t1"), chart("c1"), text("t2", "word ".repeat(60)), chart("c2")] },
+      { id: "b", title: "Detail", blocks: [{ id: "tbl", type: "table", data: "big", title: "Orders", totals: true }] },
+      { id: "c", title: "Next steps", blocks: [text("t3")] },
+    ],
+  });
+  const ctx = context(table("big", 120));
+
+  it("uses a 16:9 canvas: title slide, every section on a new slide, nothing overflows", () => {
+    const plan = layout(deck, ctx, { mode: "slides" });
+    expect(plan.page).toMatchObject({ size: "slide", width: 960, height: 540, contentWidth: 960 - 80, contentHeight: SLIDE_H });
+    expect(plan.contentWidth).toBe(880);
+    expect(kinds(plan.pages[0]!.items)).toEqual(["report-header"]);
+    for (const p of plan.pages) expect(p.usedHeight).toBeLessThanOrEqual(SLIDE_H);
+    for (const id of ["a", "b", "c"]) {
+      const first = plan.pages.find((p) => p.items.some((i) => i.kind !== "report-header" && i.sectionId === id))!;
+      expect(first.items[0]).toMatchObject({ kind: "section-header", sectionId: id, spacingBefore: 0 });
+    }
+    // No slide mixes sections; targetPages is a print budget.
+    for (const p of plan.pages.slice(1)) expect(new Set(p.items.map((i) => (i.kind === "report-header" ? "" : i.sectionId))).size).toBe(1);
+    expect(plan.diagnostics).toEqual([]);
+  });
+
+  it("slices a long table across slides, each slice with its own header row", () => {
+    const plan = layout(deck, ctx, { mode: "slides" });
+    const slides = plan.pages.filter((p) => p.items.some((i) => i.kind === "table-slice"));
+    expect(slides.length).toBeGreaterThan(1);
+    const block = deck.sections[1]!.blocks[0]!;
+    if (block.type !== "table") throw new Error("table expected");
+    const t = tableMetrics(block, plan.contentWidth, ctx, "comfortable");
+    let next = 0;
+    slides.forEach((p, k) => {
+      const slice = p.items.find((i) => i.kind === "table-slice")!;
+      if (slice.kind !== "table-slice") throw new Error("slice expected");
+      expect(slice).toMatchObject({ from: next, continued: k > 0 });
+      const rows = slice.to - slice.from;
+      // Header row accounted on every slide (the renderer repeats it); totals only on the last.
+      const own = t.top + t.header + rows * t.row + (slice.to === t.rows ? t.footer : 0);
+      const header = k === 0 ? plan.sections[1]!.headerHeight : 0;
+      expect(p.usedHeight).toBeCloseTo(header + own, 6);
+      next = slice.to;
+    });
+    expect(next).toBe(120);
+  });
+
+  it("warns block_too_tall in slide terms when a band cannot fit one slide", () => {
+    const s = spec({ title: "T", sections: [{ id: "a", title: "A", blocks: [text("x", "word ".repeat(40))] }] });
+    const plan = layout(s, context(), { mode: "slides", measured: { x: 900 } });
+    expect(plan.diagnostics).toEqual([expect.objectContaining({ code: "block_too_tall", path: "sections[0].blocks[0]" })]);
+    expect(plan.diagnostics[0]!.message).toMatch(/slide/);
+  });
+
+  it("is deterministic", () => {
+    expect(layoutReport(deck, ctx, { mode: "slides" })).toEqual(layoutReport(deck, ctx, { mode: "slides" }));
+  });
+});
+
+describe("layoutReport — section views", () => {
+  const chart = (id: string, title: string) => ({ id, type: "chart", title, chart: { kind: "line", data: "big", x: "name", y: "value" } });
+  const blocks = [text("t0"), chart("c1", "Trend"), text("t1"), chart("c2", "Mix")];
+  const ctx = context(table("big", 6));
+  const withView = (view?: "tabs" | "carousel", list: unknown[] = blocks) => spec({ title: "T", sections: [{ id: "a", title: "A", ...(view ? { view } : {}), blocks: list }] });
+  const ids = (plan: LayoutPlan, from: number, to: number) => plan.sections[0]!.bands.slice(from, to).flatMap((b) => b.placements.map((p) => p.blockId));
+
+  it("groups each non-narrative block with the narrative blocks after it; leading narrative joins the first pane", () => {
+    const types = (list: unknown[]) => paneGroups(spec({ title: "T", sections: [{ id: "a", blocks: list }] }).sections[0]!.blocks).map((g) => g.map((b) => b.id));
+    expect(types(blocks)).toEqual([["t0", "c1", "t1"], ["c2"]]);
+    expect(types([chart("c1", "A"), text("t1"), { id: "l1", type: "list", items: [{ text: "x" }] }, { id: "k", type: "kpi", items: [{ label: "K", value: 1 }] }])).toEqual([["c1", "t1", "l1"], ["k"]]);
+    expect(types([text("t0"), text("t1")])).toEqual([["t0", "t1"]]);
+    expect(types([])).toEqual([]);
+  });
+
+  it("composes each pane with the flow solver and labels it by its first non-narrative block", () => {
+    for (const view of ["tabs", "carousel"] as const) {
+      const plan = layout(withView(view), ctx, { mode: "web" });
+      const { bands, panes } = plan.sections[0]!;
+      expect(panes?.map((p) => p.labelBlockId)).toEqual(["c1", "c2"]);
+      expect(panes![0]!.from).toBe(0);
+      expect(panes![0]!.to).toBe(panes![1]!.from);
+      expect(panes![1]!.to).toBe(bands.length);
+      expect(ids(plan, panes![0]!.from, panes![0]!.to)).toEqual(["t0", "c1", "t1"]);
+      expect(ids(plan, panes![1]!.from, panes![1]!.to)).toEqual(["c2"]);
+      expect(bands[panes![1]!.from]!.placements[0]).toMatchObject({ col: 1, span: 12, width: plan.contentWidth });
+      expect(bands[panes![1]!.from]!.placements[0]!.plotHeight).toBeGreaterThan(0);
+    }
+    // A carousel pane (titles kept) is exactly the flow composition of its blocks.
+    const carousel = layout(withView("carousel"), ctx, { mode: "web" }).sections[0]!;
+    const firstPane = layout(withView(undefined, blocks.slice(0, 3)), ctx, { mode: "web" }).sections[0]!.bands;
+    expect(carousel.bands.slice(0, carousel.panes![0]!.to)).toEqual(firstPane);
+  });
+
+  it("composes tabs/carousel sections as flow in print, slides and static web output", () => {
+    const flowWeb = layout(withView(), ctx, { mode: "web" }).sections;
+    for (const view of ["tabs", "carousel"] as const) {
+      const staticWeb = layout(withView(view), ctx, { mode: "web", interactive: false }).sections;
+      expect(staticWeb[0]!.panes).toBeUndefined();
+      expect(staticWeb).toEqual(flowWeb);
+      expect(layout(withView(view), ctx, { mode: "print" }).sections).toEqual(layout(withView(), ctx, { mode: "print" }).sections);
+      expect(layout(withView(view), ctx, { mode: "slides" }).sections).toEqual(layout(withView(), ctx, { mode: "slides" }).sections);
+    }
+  });
+
+  it("sizes a tab pane without its label block's title (the tab shows it); carousel slides keep it", () => {
+    const last = (view: "tabs" | "carousel") => layout(withView(view), ctx, { mode: "web" }).sections[0]!.bands.at(-1)!;
+    const tabs = last("tabs");
+    const carousel = last("carousel");
+    expect(tabs.placements[0]!.blockId).toBe("c2");
+    expect(tabs.placements[0]!.plotHeight).toBe(carousel.placements[0]!.plotHeight);
+    expect(carousel.height - tabs.height).toBe(METRICS.blockTitle.line + METRICS.blockTitle.marginBottom);
   });
 });

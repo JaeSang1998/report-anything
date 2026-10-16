@@ -30,15 +30,17 @@ const HELP = `report-anything — headless report engine CLI
 Usage:
   report-anything schema [report|op]                     JSON Schema for LLM tools
   report-anything validate <spec.json>                   schema + data/field checks (exit 1 on errors)
-  report-anything inspect  <spec.json> [--mode print]    outline, spans, pages, layout diagnostics
+  report-anything inspect  <spec.json> [--mode print|slides|web]  outline, spans, pages/slides, layout diagnostics
   report-anything profile  <data.json|csv> [--path a.b]  field roles/stats + chart suggestions
   report-anything auto     <data.json|csv> [--shape overview|brief|trend|compare|breakdown|bridge]
                            [--title T] [--locale ko-KR] [--currency KRW] [-o spec.json]
   report-anything apply    <spec.json> <ops.jsonl|-> [-o out.json]
-  report-anything render   <spec.json> [-o report.html] [--mode web|print]
+  report-anything render   <spec.json> [-o report.html] [--mode web|print|slides]  (slides: stacked 16:9 sheets)
   report-anything chart    <spec.json> <blockId> [-o chart.svg] [--width 640]
 
 '-' reads stdin. Output is JSON on stdout unless -o is given.`;
+
+const MODES: Record<string, LayoutMode> = { web: "web", print: "print", slides: "slides" };
 
 async function readInput(path: string): Promise<string> {
   if (path !== "-") return readFile(path, "utf8");
@@ -97,7 +99,8 @@ async function loadSpec(path: string): Promise<ReportSpec> {
 async function renderHtml(spec: ReportSpec, mode: LayoutMode): Promise<string> {
   const cssPath = fileURLToPath(import.meta.resolve("@report-anything/react/styles.css"));
   const css = await readFile(cssPath, "utf8");
-  const body = renderToStaticMarkup(<Report spec={spec} mode={mode} />);
+  // Static HTML has no scripts: tables cap at maxRows, section views render as flow, slides stack as sheets.
+  const body = renderToStaticMarkup(<Report spec={spec} mode={mode} interactive={false} />);
   const lang = spec.meta?.locale ?? "en";
   const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
   // Mermaid needs a browser: static HTML ships the source in `.mermaid` elements and upgrades them on load.
@@ -146,8 +149,9 @@ async function main(argv: string[]): Promise<number> {
     process.stdout.write(`${HELP}\n`);
     return command ? 0 : 1;
   }
-  const mode = (values.mode ?? (command === "render" ? "web" : "print")) as LayoutMode;
-  if (mode !== "web" && mode !== "print") throw new UsageError("--mode must be web or print");
+  const modeArg = values.mode ?? (command === "render" ? "web" : "print");
+  const mode = Object.hasOwn(MODES, modeArg) ? MODES[modeArg] : undefined;
+  if (!mode) throw new UsageError("--mode must be web, print or slides");
   const need = (n: number) => {
     if (args.length < n) throw new UsageError(`'${command}' needs ${n} argument(s)\n\n${HELP}`);
   };

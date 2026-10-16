@@ -4254,6 +4254,7 @@
     {
       "id": "volume",
       "title": "Volume and speed",
+      "view": "carousel",
       "blocks": [
         {
           "id": "weekly",

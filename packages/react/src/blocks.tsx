@@ -11,10 +11,11 @@ import {
   FACET_KINDS,
   facetGrid,
   METRICS,
+  pagerItems,
   sparklinePath,
   uiStrings,
 } from "@report-anything/core";
-import type { BlockOf, BlockType, DataContext, LayoutMode, Placement, TableCell } from "@report-anything/core";
+import type { BlockOf, BlockType, DataContext, LayoutMode, Placement, TableCell, TablePage, TableSort } from "@report-anything/core";
 import { ChartView, FacetChartView } from "./ChartView.js";
 import { Markdown } from "./Markdown.js";
 
@@ -31,6 +32,8 @@ export interface BlockProps<T extends BlockType = BlockType> {
   /** Placement from the layout plan: pixel width and estimated height. */
   cell: Placement;
   mode: LayoutMode;
+  /** False for static HTML (no hydration): blocks render without controls (tables capped at maxRows, unsortable). */
+  interactive: boolean;
   paletteSize: number;
   slice?: TableSlice;
   /**
@@ -175,21 +178,91 @@ function TableCellView({ c, align }: { c: TableCell; align: string }) {
   return <td className={cls}>{c.text}</td>;
 }
 
-function TableBody({ block, context, slice }: BlockProps<"table">) {
-  const model = useMemo(() => buildTableModel(block, context), [block, context]);
+const ARIA_SORT: Record<TableSort["dir"], "ascending" | "descending"> = { asc: "ascending", desc: "descending" };
+
+function TablePager({ page, pages, from, to, total, locale, onPage }: TablePage & { total: number; locale: string; onPage: (page: number) => void }) {
+  const s = uiStrings(locale).pager;
+  const fmt = (n: number) => n.toLocaleString(locale);
+  // aria-disabled keeps the edge buttons focusable, so keyboard focus survives reaching the first or last page.
+  const step = (target: number, label: string, flip: boolean) => {
+    const off = target < 1 || target > pages;
+    return (
+      <button type="button" className="ra-pager__step" aria-label={label} aria-disabled={off} onClick={off ? undefined : () => onPage(target)}>
+        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className={flip ? "ra-pager__chevron--next" : undefined}>
+          <path d="M7.5 2.5 4 6l3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+    );
+  };
+  return (
+    <nav className="ra-pager" aria-label={s.label}>
+      <span className="ra-pager__range" aria-live="polite">
+        {s.range(fmt(from + 1), fmt(to), fmt(total))}
+      </span>
+      <span className="ra-pager__pages">
+        {step(page - 1, s.previous, false)}
+        {pagerItems(page, pages).map((p, i) =>
+          p === null ? (
+            <span key={`gap${i}`} className="ra-pager__gap" aria-hidden="true">
+              …
+            </span>
+          ) : (
+            <button
+              key={p}
+              type="button"
+              className="ra-pager__page"
+              aria-label={s.page(fmt(p))}
+              aria-current={p === page ? "page" : undefined}
+              onClick={p === page ? undefined : () => onPage(p)}
+            >
+              {fmt(p)}
+            </button>
+          ),
+        )}
+        {step(page + 1, s.next, true)}
+      </span>
+    </nav>
+  );
+}
+
+/**
+ * Interactive web: one page of every row with a pager, and headers that sort on click (asc → desc → spec order).
+ * Print, slides and static HTML: the first maxRows rows (sliced across printed pages) with a "showing N of M" note.
+ */
+function TableBody({ block, context, slice, mode, interactive }: BlockProps<"table">) {
+  const paged = mode === "web" && interactive;
+  const [page, setPage] = useState(1);
+  const [sort, setSort] = useState<TableSort | null>(null);
+  const model = useMemo(() => buildTableModel(block, context, paged ? { page, ...(sort ? { sort } : {}) } : {}), [block, context, paged, page, sort]);
   const rows = slice ? model.rows.slice(slice.from, slice.to) : model.rows;
   const last = !slice || slice.to >= model.rows.length;
+  const cycleSort = (field: string) => {
+    setSort(sort?.field !== field ? { field, dir: "asc" } : sort.dir === "asc" ? { field, dir: "desc" } : null);
+    setPage(1);
+  };
   return (
     <>
       <div className="ra-table-scroll">
         <table className={`ra-table${block.density === "compact" ? " ra-table--compact" : ""}`}>
           <thead>
             <tr>
-              {model.columns.map((c) => (
-                <th key={c.field} className={`ra-align--${c.align}`} scope="col">
-                  {c.label}
-                </th>
-              ))}
+              {model.columns.map((c) => {
+                const dir = sort?.field === c.field ? sort.dir : undefined;
+                return (
+                  <th key={c.field} className={`ra-align--${c.align}`} scope="col" aria-sort={dir ? ARIA_SORT[dir] : undefined}>
+                    {paged ? (
+                      <button type="button" className={`ra-table__sort${dir ? ` ra-table__sort--${dir}` : ""}`} onClick={() => cycleSort(c.field)}>
+                        {c.label}
+                        <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true" className="ra-table__arrow">
+                          <path d="M4 1v6M1.5 3.5 4 1l2.5 2.5" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+                    ) : (
+                      c.label
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -214,6 +287,7 @@ function TableBody({ block, context, slice }: BlockProps<"table">) {
           ) : null}
         </table>
       </div>
+      {model.page && model.page.pages > 1 ? <TablePager {...model.page} total={model.totalRows} locale={context.locale} onPage={setPage} /> : null}
       {model.hiddenRows > 0 && last ? <div className="ra-table__note">{uiStrings(context.locale).showingRows(model.rows.length, model.totalRows)}</div> : null}
     </>
   );

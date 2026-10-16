@@ -1,13 +1,19 @@
 import type { Issue, PageSize } from "../spec.js";
 
-export type LayoutMode = "web" | "print";
+/** web: one responsive flow. print: paginated sheets on the spec's page size. slides: 16:9 slides (title slide, one section per slide run). */
+export type LayoutMode = "web" | "print" | "slides";
 
 export interface LayoutOptions {
   mode: LayoutMode;
-  /** Content width in CSS px. Web default 1040; print derives from page size/orientation minus margins. */
+  /** Content width in CSS px. Web default 1040; print and slides derive it from the page/slide size minus margins. */
   contentWidth?: number;
   /** Gap between grid cells / rows in px (default 16). */
   gap?: number;
+  /**
+   * Web only (default true): the output can page tables and switch panes. False (static HTML) lays tables out
+   * capped at maxRows and tabs/carousel sections as flow.
+   */
+  interactive?: boolean;
   /**
    * Measured block heights (px) from a real renderer; override estimates. Keyed by block id.
    * Elastic blocks (charts, diagrams) report their height without the assigned `plotHeight` (title, legend, caption):
@@ -21,7 +27,8 @@ export interface LayoutOptions {
 }
 
 export interface PageGeometry {
-  size: PageSize;
+  /** Page size, or "slide" for the 16:9 slide canvas. */
+  size: PageSize | "slide";
   orientation: "portrait" | "landscape";
   /** Full page in CSS px at 96 dpi. */
   width: number;
@@ -72,6 +79,16 @@ export interface SectionLayout {
   id: string;
   headerHeight: number;
   bands: Band[];
+  /** Interactive web tabs/carousel sections: the bands grouped into panes, shown one at a time. */
+  panes?: Pane[];
+}
+
+/** Bands `[from, to)` of a tabs/carousel section shown as one tab or slide. */
+export interface Pane {
+  from: number;
+  to: number;
+  /** The pane's first non-narrative block (else its first block): its title names the tab / slide. */
+  labelBlockId: string;
 }
 
 /** `spacingBefore`: vertical space (px) the renderer puts above the item, exactly as the paginator accounted it. */
@@ -94,11 +111,11 @@ export interface LayoutPlan {
   columns: 12;
   gap: number;
   contentWidth: number;
-  /** Print geometry (print mode only). */
+  /** Sheet geometry: the print page (print mode) or the slide canvas (slides mode). */
   page?: PageGeometry;
   reportHeaderHeight: number;
   sections: SectionLayout[];
-  /** Print mode: paginated items. Web mode: a single page containing everything. */
+  /** Print/slides: paginated items (one entry per sheet). Web mode: a single page containing everything. */
   pages: Page[];
   diagnostics: Issue[];
 }

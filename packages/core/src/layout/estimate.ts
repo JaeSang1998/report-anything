@@ -2,6 +2,7 @@ import type { DataContext } from "../data/types.js";
 import type { Block, BlockOf, ReportSpec, Section } from "../spec.js";
 import { FACET_KINDS } from "../chart/facet.js";
 import { METRICS } from "./metrics.js";
+import { tablePageSize } from "../view/models.js";
 import { CJK_RANGES, estimateTextWidth } from "../text.js";
 
 export type Density = "comfortable" | "compact";
@@ -108,20 +109,25 @@ export interface TableMetrics {
   header: number;
   /** Body row height. */
   row: number;
-  /** Body rows shown (after maxRows). */
+  /** Body rows shown (after maxRows; one page on the web). */
   rows: number;
-  /** Totals row + truncation note + caption (rendered on the last slice only). */
+  /** Totals row + truncation note or pager + caption (rendered on the last slice only). */
   footer: number;
 }
 
-export function tableMetrics(block: BlockOf<"table">, width: number, ctx: DataContext, density: Density = "comfortable"): TableMetrics {
+/**
+ * `paged` (interactive web): one page of rows with a pager under it. Otherwise (print, slides, static HTML) rows are
+ * capped at maxRows with a "showing N of M" note.
+ */
+export function tableMetrics(block: BlockOf<"table">, width: number, ctx: DataContext, density: Density = "comfortable", paged = false): TableMetrics {
   const total = ctx.datasets.get(block.data)?.rows.length;
-  const rows = total === undefined ? (block.maxRows ?? 10) : Math.min(total, block.maxRows ?? total);
+  const cap = paged ? tablePageSize(block) : block.maxRows;
+  const rows = total === undefined ? (cap ?? 10) : Math.min(total, cap ?? total);
   const compact = (block.density ?? (density === "compact" ? "compact" : "normal")) === "compact";
   const totals = block.totals === true || (Array.isArray(block.totals) && block.totals.length > 0);
   const footer =
     (totals ? METRICS.table.totals : 0) +
-    (total !== undefined && total > rows ? METRICS.table.truncationNote : 0) +
+    (total !== undefined && total > rows ? (paged ? METRICS.table.pager : METRICS.table.truncationNote) : 0) +
     captionHeight(block.caption, width);
   return {
     top: titleHeight(block.title, width),
@@ -180,11 +186,14 @@ export interface BlockBox {
   max: number;
 }
 
-/** Height decomposition of a block at `width` px (no card padding). `density` only affects table row height. */
-export function blockBox(block: Block, width: number, ctx: DataContext, density: Density = "comfortable"): BlockBox {
+/**
+ * Height decomposition of a block at `width` px (no card padding). `density` only affects table row height;
+ * `paged` estimates tables at one web page of rows plus the pager.
+ */
+export function blockBox(block: Block, width: number, ctx: DataContext, density: Density = "comfortable", paged = false): BlockBox {
   const fixed = (chrome: number): BlockBox => ({ chrome, body: 0, min: 0, max: 0 });
   if (block.type === "table") {
-    const t = tableMetrics(block, width, ctx, density);
+    const t = tableMetrics(block, width, ctx, density, paged);
     return fixed(t.top + t.header + t.rows * t.row + t.footer);
   }
   // Callouts with a variant read "Recommendation: <title>" (the label alone without a title).
@@ -247,8 +256,8 @@ export function blockBox(block: Block, width: number, ctx: DataContext, density:
 }
 
 /** Total block height at `width` px with elastic bodies at their preset: title + body + caption. */
-export function estimateBlockHeight(block: Block, width: number, ctx: DataContext, density: Density = "comfortable"): number {
-  const box = blockBox(block, width, ctx, density);
+export function estimateBlockHeight(block: Block, width: number, ctx: DataContext, density: Density = "comfortable", paged = false): number {
+  const box = blockBox(block, width, ctx, density, paged);
   return box.chrome + box.body;
 }
 

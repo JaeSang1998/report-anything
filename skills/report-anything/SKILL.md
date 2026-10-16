@@ -1,6 +1,6 @@
 ---
 name: report-anything
-description: Turn data (JSON, CSV, API payloads, query results) into a validated, paginated report — web page or print/PDF — by writing a ReportSpec JSON instead of UI code. Use when asked to build a report, analysis write-up, KPI summary or chart document from data, or to revise an existing ReportSpec.
+description: Turn data (JSON, CSV, API payloads, query results) into a validated, paginated report — web page, print/PDF or 16:9 slide deck — by writing a ReportSpec JSON instead of UI code. Use when asked to build a report, analysis write-up, KPI summary, presentation or chart document from data, or to revise an existing ReportSpec.
 ---
 
 # report-anything
@@ -17,10 +17,10 @@ CLI: `report-anything <command>` (in this repo: `node packages/cli/dist/bin.js <
    - Put raw data in one dataset; derive every aggregate with `from` + `transform` (`aggregate`, `filter`, `window`, `timeUnit`, `top`, `fold`, `pivot`, `lookup`, `derive`). Compute in the data layer, not in your head.
    - Numbers in prose and KPIs are **bound**, never typed: KPI `value`/`compareTo` are Measures `{ "data", "field", "agg", "where" }`; text uses `{{sum(sales.revenue) | currency:KRW}}`. A literal number in a spec is a hallucination risk.
    - Give fields `label` and `format` in `datasets.<id>.fields` once; charts, tables and templates reuse them.
-   - Steer the layout with `importance` (`lead` for the block that carries a section, `supporting` for notes and callouts) and reading order, not `span`. Open with a `stat` when one number is the story. Choose a section `layout` (`feature`, `sidebar`, `grid`, …) only when the auto composition is wrong for the content.
+   - Steer the layout with `importance` (`lead` for the block that carries a section, `supporting` for notes and callouts) and reading order, not `span`. Open with a `stat` when one number is the story. Choose a section `layout` (`feature`, `sidebar`, `grid`, …) only when the auto composition is wrong for the content. A section `view` of `tabs` (alternative views of one question) or `carousel` (a short step-through sequence) shows one pane at a time — a titled chart/table/diagram with the notes that follow it — in interactive web only; print and slides stay `flow`.
 4. **Validate until clean.** `report-anything validate spec.json`. Fix every error using its `hint` (did-you-mean field names, wrong encodings). Done when `"ok": true` with zero errors.
-5. **Inspect the layout.** `report-anything inspect spec.json --mode print` shows each section's compositions, each block's placement, estimated height, page and layout diagnostics (`block_too_tall`, `page_target_exceeded`). Fix by cutting blocks, `height: "sm"`, `maxRows`, `limit` or `importance` — not by adding `span`s. Done when diagnostics are empty or each remaining one is a deliberate choice.
-6. **Render.** `report-anything render spec.json -o report.html` (`--mode print` for paginated sheets; print to PDF from the browser). Single chart preview: `report-anything chart spec.json <blockId> -o chart.svg`.
+5. **Inspect the layout.** `report-anything inspect spec.json --mode print` (or `--mode slides` for a deck) shows each section's compositions, each block's placement, estimated height, page/slide and layout diagnostics (`block_too_tall`, `page_target_exceeded`). Fix by cutting blocks, `height: "sm"`, `maxRows`, `limit` or `importance` — not by adding `span`s. Done when diagnostics are empty or each remaining one is a deliberate choice.
+6. **Render.** `report-anything render spec.json -o report.html` (`--mode print` for paginated sheets; `--mode slides` for 16:9 slides, a title slide then each section on new slides; print either to PDF from the browser). Static HTML is not interactive: tables show `maxRows`, tabs/carousel sections render as flow. Single chart preview: `report-anything chart spec.json <blockId> -o chart.svg`.
 7. **Revise with ops, not rewrites.** For "make the second chart a table" or "shorten the conclusion", write JSONL ops and run `report-anything apply spec.json ops.jsonl -o spec.json`. Ops are id-addressed and transactional: `setReport`, `setDataset`, `removeDataset`, `addSection`, `updateSection`, `removeSection`, `moveSection`, `addBlock`, `updateBlock` (deep merge, `null` deletes), `replaceBlock`, `removeBlock`, `moveBlock`. Re-run step 4.
 
 ## Editorial rules

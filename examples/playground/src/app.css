@@ -38,8 +38,9 @@
   --shadow-menu: 0 2px 6px rgb(0 0 0 / 0.3), 0 16px 40px rgb(0 0 0 / 0.5);
 }
 
-/* The report re-themed through its public tokens (spec palettes still win over --ra-theme-c*). */
-:root[data-theme="dark"] .artifact__body--web .ra-report {
+/* The report re-themed through its public tokens (spec palettes still win over --ra-theme-c*). Print stays paper. */
+:root[data-theme="dark"] .artifact__body--web .ra-report,
+:root[data-theme="dark"] .artifact__body--slides .ra-report {
   --ra-fg: #ededed;
   --ra-secondary: #a1a1aa;
   --ra-rule: #ededed;

@@ -125,6 +125,33 @@ Costs it minimises: whitespace left after **levelling** (charts and diagrams hav
 
 Small multiples are part of the vocabulary too: `chart.facet` draws one mini chart per category with shared axes, sized by the same solver.
 
+## Read it on screen, on paper, or as a deck
+
+One spec, three outputs. The same composition solver lays out each one at its own width, so nothing is re-authored:
+
+- **Web** is interactive. Tables page through every row and sort when you click a header (`pageSize`, default `maxRows`). A section can be shown as **tabs**, for alternative views of one question, or as a **carousel**, for a sequence the reader steps through (`section.view`). Each tab or slide is a *pane*: a chart, table or diagram together with the notes that follow it, laid out by the solver.
+- **Print** paginates onto A4/Letter. Headers stay with the content after them, and tables split across pages with their headers repeated.
+- **Slides** lays the report out as a 16:9 deck: a title slide, then each section starting on a new slide. The deck viewer has thumbnails, arrow keys and fullscreen presenting, and `render --mode slides` writes static slides you can print to PDF.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/playground-slides.png" alt="Slides mode: deck viewer with thumbnails" /></td>
+<td width="50%"><img src="docs/screenshots/playground-carousel.png" alt="A section shown as a carousel of panes" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Slides: the same report as a 16:9 deck</sub></td>
+<td align="center"><sub>Carousel: one pane (chart and its note) per step</sub></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/playground-tabs.png" alt="A section shown as tabs" /></td>
+<td width="50%"><img src="docs/screenshots/playground-pager.png" alt="A paged, sortable table" /></td>
+</tr>
+<tr>
+<td align="center"><sub>Tabs: alternative views of one question</sub></td>
+<td align="center"><sub>Paged, sortable tables: all 270 rows, 20 per page</sub></td>
+</tr>
+</table>
+
 ## One dataset, six shapes
 
 A report should be shaped by its question. `autoReport` (CLI: `report-anything auto --shape …`, playground: just ask) drafts six different structures from the same data — here, the regional sales sample:
@@ -165,7 +192,7 @@ The report is written **into the conversation**. While the agent streams its ops
 </tr>
 </table>
 
-- **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) in the shape your question implies ("why did…" → bridge, "compare…" → comparison, "one-page…" → brief), handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename — and turns a pasted ```` ```mermaid ```` block into a diagram.
+- **[Hosted playground](https://jaesang1998.github.io/report-anything/)** runs a keyless local agent entirely in your browser: it builds reports from your CSV/JSON (nothing is uploaded) in the shape your question implies ("why did…" → bridge, "compare…" → comparison, "one-page…" → brief), handles a fixed set of edits — chart type, chart → table, horizontal, stacked, remove a block, rename, show a section as tabs or a carousel — and turns a pasted ```` ```mermaid ```` block into a diagram.
 - **Locally with a key**, the same UI talks to Claude or GPT through the AI SDK. The system prompt *is* the [agent skill](skills/report-anything/SKILL.md); the browser owns the report session and executes the agent's tools, so the model always sees the real validation and layout result.
 - **See what the agent sees.** Click any attached dataset to open it: the table the engine actually works on (after CSV parsing, JSON flattening and transforms), the raw source, and each field's inferred type and role.
 - **Chats stay in your browser.** The sidebar keeps your conversations (with their reports and data) in local storage; light and dark themes follow the system, and the report re-themes with them through its CSS variables.
@@ -230,7 +257,7 @@ No spans, no heights, no page breaks — the engine pairs the chart and the call
 
 ## Examples
 
-Four hand-written specs in [`examples/specs`](examples/specs), each with its data embedded. Render any of them with `report-anything render <file> [--mode print]`.
+Four hand-written specs in [`examples/specs`](examples/specs), each with its data embedded. Render any of them with `report-anything render <file> [--mode print|slides]`.
 
 <table>
 <tr>
@@ -278,7 +305,7 @@ flowchart LR
 | Package | |
 | --- | --- |
 | [`@report-anything/core`](packages/core) | ReportSpec schema (Zod → JSON Schema), data normalization, transforms, safe expressions, measures and templates, chart scene graphs, layout + pagination, ops, sessions, JSONL streaming, `autoReport`. |
-| [`@report-anything/react`](packages/react) | `<Report spec \| session mode="web" \| "print">`, per-block renderer overrides, `ChartView`, hooks, `styles.css`. |
+| [`@report-anything/react`](packages/react) | `<Report spec \| session mode="web" \| "print" \| "slides">` (slides: a deck viewer with thumbnails, keys and fullscreen presenting; `interactive={false}` for static HTML), web tabs/carousel section views, per-block renderer overrides, `ChartView`, hooks, `styles.css`. |
 | [`@report-anything/cli`](packages/cli) | `schema · validate · inspect · profile · auto · apply · render · chart` |
 | [`skills/report-anything`](skills/report-anything) | Agent skill: workflow, editorial rules, spec cheat sheet. Drop it into Claude Code / Codex. |
 | [`examples/playground`](examples/playground) | The chat playground (Vite + AI SDK). |
@@ -323,6 +350,7 @@ report-anything validate spec.json                   # schema + data checks, did
 report-anything inspect spec.json --mode print       # spans, heights, pages, layout diagnostics
 report-anything apply spec.json edits.jsonl -o spec.json
 report-anything render spec.json --mode print -o report.html
+report-anything render spec.json --mode slides -o deck.html  # stacked 16:9 slides; print to PDF in landscape
 report-anything chart spec.json trend -o trend.svg
 ```
 

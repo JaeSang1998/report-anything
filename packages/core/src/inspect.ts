@@ -91,7 +91,7 @@ export function inspectReport(
           type: b.type,
           summary: blockSummary(b),
           ...(cell ? { span: cell.span, height: Math.round(cell.height) } : {}),
-          ...(mode === "print" && page !== undefined ? { page } : {}),
+          ...(mode !== "web" && page !== undefined ? { page } : {}),
         };
       }),
     })),
